@@ -8,7 +8,7 @@ function execInBackground($cmd) {
 		echo 'run command '.$cmd.'<br>';
     }
 }
-execInBackground('php job_calc_user.php');
-execInBackground('php job_update_groups.php');
-execInBackground('php job_clean.php');
+execInBackground('php jobs/job_calc_user.php');
+execInBackground('php jobs/job_update_groups.php');
+execInBackground('php jobs/job_clean.php');
 ?>
