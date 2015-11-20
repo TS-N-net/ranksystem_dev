@@ -47,6 +47,7 @@ try {
         }
     }
 	
+	$total_user = 0;
 	$total_online_time = 0;
 	$total_active_time = 0;
 	$total_inactive_time = 0;
