@@ -1,22 +1,21 @@
 <?PHP
 $starttime = microtime(true);
-set_time_limit(600);
 ?>
 <!doctype html>
 <html>
 <head>
   <title>TS-N.NET Ranksystem</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="other/style.css.php" />
+  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
 <?PHP
 echo '</head><body>';
-require_once('other/config.php');
+require_once('../other/config.php');
 if ($mysqlprob === false) {
 	echo '<span class="wncolor">',$sqlconerr,'</span><br>';
 	exit;
 }
-require_once('lang.php');
-require_once('ts3_lib/TeamSpeak3.php');
+require_once('../lang.php');
+require_once('../ts3_lib/TeamSpeak3.php');
 
 $debug = 'off';
 if (isset($_GET['debug'])) {
@@ -96,43 +95,20 @@ try {
         if ($mysqlcon->exec("UPDATE $dbname.lastscan SET timestamp='$nowtime'") === false) {
             echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
         }
-		echo 'before load userdate: ' . memory_get_usage() . "<br>";
-		$dbuserdata = $mysqlcon->query("SELECT uuid,cldbid,count,lastseen,grpid,nextup,idle,cldgroup,boosttime,rank,platform,nation,version FROM $dbname.user");
-		echo 'after load userdate: ' . memory_get_usage() . "<br>";
+		$dbuserdata = $mysqlcon->query("SELECT uuid,cldbid,count,grpid,nextup,idle,boosttime FROM $dbname.user");
 		$uuids = $dbuserdata->fetchAll();
-		echo 'after load uuids: ' . memory_get_usage() . "<br>";
-		$total_online_time = 0;
-		$total_active_time = 0;
-		$total_inactive_time = 0;
-		$country_string = '';
-		$platform_string = '';
         foreach($uuids as $uuid) {
             $sqlhis[$uuid['uuid']] = array(
 				"uuid" => $uuid['uuid'],
                 "cldbid" => $uuid['cldbid'],
                 "count" => $uuid['count'],
-                "lastseen" => $uuid['lastseen'],
                 "grpid" => $uuid['grpid'],
                 "nextup" => $uuid['nextup'],
                 "idle" => $uuid['idle'],
-                "cldgroup" => $uuid['cldgroup'],
-                "boosttime" => $uuid['boosttime'],
-				"rank" => $uuid['rank'],
-				"platform" => $uuid['platform'],
-				"nation" => $uuid['nation'],
-				"version" => $uuid['version']
+                "boosttime" => $uuid['boosttime']
             );
             $uidarr[] = $uuid['uuid'];
-			$total_online_time = $total_online_time + $uuid['count'];
-			$total_active_time = $total_active_time + $uuid['count'] - $uuid['idle'];
-			$total_inactive_time = $total_inactive_time + $uuid['idle'];
-			if ($uuid['nation']!=NULL) $country_string .= $uuid['nation'] . ' ';
-			if ($uuid['platform']!=NULL) {
-				$uuid_platform = str_replace(' ','',$uuid['platform']);
-				$platform_string .= $uuid_platform . ' ';
-			}
         }
-		echo 'after load sqlhis: ' . memory_get_usage() . "<br>";
     }
 	unset($uuids);
 	if ($debug == 'on') {
@@ -160,7 +136,6 @@ try {
         $uid      = htmlspecialchars($client['client_unique_identifier'], ENT_QUOTES);
         $cldgroup = $client['client_servergroups'];
         $sgroups  = explode(",", $cldgroup);
-		$rank=0;
 		$platform=$client['client_platform'];
 		$nation=$client['client_country'];
 		$version=$client['client_version'];
@@ -286,7 +261,6 @@ try {
                     "idle" => $idle,
                     "cldgroup" => $cldgroup,
 					"boosttime" => $boosttime,
-					"rank" => $rank,
 					"platform" => $platform,
 					"nation" => $nation,
 					"version" => $version
@@ -340,11 +314,11 @@ try {
     if ($insertdata != '') {
         $allinsertdata = '';
         foreach ($insertdata as $insertarr) {
-            $allinsertdata = $allinsertdata . "('" . $insertarr['uuid'] . "', '" . $insertarr['cldbid'] . "', '" . $insertarr['count'] . "', '" . $insertarr['ip'] . "', '" . $insertarr['name'] . "', '" . $insertarr['lastseen'] . "', '" . $insertarr['grpid'] . "', '" . $insertarr['nextup'] . "', '" . $insertarr['cldgroup'] . "', '" . $insertarr['platform'] . "', '" . $insertarr['nation'] . "', '" . $insertarr['version'] . "','0','1'),";
+            $allinsertdata = $allinsertdata . "('" . $insertarr['uuid'] . "', '" . $insertarr['cldbid'] . "', '" . $insertarr['count'] . "', '" . $insertarr['ip'] . "', '" . $insertarr['name'] . "', '" . $insertarr['lastseen'] . "', '" . $insertarr['grpid'] . "', '" . $insertarr['nextup'] . "', '" . $insertarr['cldgroup'] . "', '" . $insertarr['platform'] . "', '" . $insertarr['nation'] . "', '" . $insertarr['version'] . "','1'),";
         }
         $allinsertdata = substr($allinsertdata, 0, -1);
         if ($allinsertdata != '') {
-            if ($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, rank, online) VALUES $allinsertdata") === false) {
+            if ($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, online) VALUES $allinsertdata") === false) {
                 echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
             }
         }
@@ -366,7 +340,6 @@ try {
         $allupdateidle     = '';
         $allupdatecldgroup = '';
 		$allupdateboosttime = '';
-		$allupdaterank = '';
 		$allupdateplatform = '';
 		$allupdatenation = '';
 		$allupdateversion = '';
@@ -382,13 +355,12 @@ try {
             $allupdateidle     = $allupdateidle . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['idle'] . "' ";
             $allupdatecldgroup = $allupdatecldgroup . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['cldgroup'] . "' ";
             $allupdateboosttime = $allupdateboosttime . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['boosttime'] . "' ";
-            $allupdaterank = $allupdaterank . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['rank'] . "' ";
             $allupdateplatform = $allupdateplatform . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['platform'] . "' ";
             $allupdatenation = $allupdatenation . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['nation'] . "' ";
             $allupdateversion = $allupdateversion . "WHEN '" . $updatearr['uuid'] . "' THEN '" . $updatearr['version'] . "' ";
         }
         $allupdateuuid = substr($allupdateuuid, 0, -1);
-        if ($mysqlcon->exec("UPDATE $dbname.user set cldbid = CASE uuid $allupdatecldbid END, count = CASE uuid $allupdatecount END, ip = CASE uuid $allupdateip END, name = CASE uuid $allupdatename END, lastseen = CASE uuid $allupdatelastseen END, grpid = CASE uuid $allupdategrpid END, nextup = CASE uuid $allupdatenextup END, idle = CASE uuid $allupdateidle END, cldgroup = CASE uuid $allupdatecldgroup END, boosttime = CASE uuid $allupdateboosttime END, rank = CASE uuid $allupdaterank END, platform = CASE uuid $allupdateplatform END, nation = CASE uuid $allupdatenation END, version = CASE uuid $allupdateversion END, online = 1 WHERE uuid IN ($allupdateuuid)") === false) {
+        if ($mysqlcon->exec("UPDATE $dbname.user set cldbid = CASE uuid $allupdatecldbid END, count = CASE uuid $allupdatecount END, ip = CASE uuid $allupdateip END, name = CASE uuid $allupdatename END, lastseen = CASE uuid $allupdatelastseen END, grpid = CASE uuid $allupdategrpid END, nextup = CASE uuid $allupdatenextup END, idle = CASE uuid $allupdateidle END, cldgroup = CASE uuid $allupdatecldgroup END, boosttime = CASE uuid $allupdateboosttime END, platform = CASE uuid $allupdateplatform END, nation = CASE uuid $allupdatenation END, version = CASE uuid $allupdateversion END, online = 1 WHERE uuid IN ($allupdateuuid)") === false) {
             echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
         }
     }
@@ -397,65 +369,6 @@ try {
     }
 	unset($updatedata);
     unset($allupdateuuid);
-	
-	/*
-
-    // calc next rankup
-	$upnextuptime = $nowtime - 600;
-    $dbdata = $mysqlcon->query("SELECT * FROM $dbname.user WHERE online<>1 AND lastseen>$upnextuptime");
-    if ($dbdata->rowCount() != 0) {
-		
-		$uuidsoff = $dbdata->fetchAll(PDO::FETCH_ASSOC);
-        foreach($uuidsoff as $uuid) {
-            $idle     = $uuid['idle'];
-            $count    = $uuid['count'];
-            $grpid    = $uuid['grpid'];
-            $cldgroup = $uuid['cldgroup'];
-            $sgroups  = explode(",", $cldgroup);
-            if ($substridle == 1) {
-                $activetime = $count - $idle;
-                $dtF        = new DateTime("@0");
-                $dtT        = new DateTime("@$activetime");
-            } else {
-                $activetime = $count;
-                $dtF        = new DateTime("@0");
-                $dtT        = new DateTime("@$count");
-            }
-            foreach ($grouptime as $time => $groupid) {
-                if ($activetime > $time) {
-                    $nextup = 0;
-                } else {
-                    $nextup = $time - $activetime;
-                }
-            }
-			$updatenextup[] = array(
-				"uuid" => $uuid['uuid'],
-				"nextup" => $nextup
-			);
-        }
-    }
-	
-    if (isset($updatenextup)) {
-        $allupdateuuid   = '';
-        $allupdatenextup = '';
-        foreach ($updatenextup as $updatedata) {
-            $allupdateuuid   = $allupdateuuid . "'" . $updatedata['uuid'] . "',";
-            $allupdatenextup = $allupdatenextup . "WHEN '" . $updatedata['uuid'] . "' THEN '" . $updatedata['nextup'] . "' ";
-        }
-        $allupdateuuid = substr($allupdateuuid, 0, -1);
-        if ($mysqlcon->exec("UPDATE $dbname.user set nextup = CASE uuid $allupdatenextup END WHERE uuid IN ($allupdateuuid)") === false) {
-            echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
-        }
-    }
-	
-    if ($debug == 'on') {
-        echo '<br>allupdateuuid:<br>', $allupdateuuid, '<br><br>allupdatenextup:<br>', $allupdatenextup, '<br>';
-    }
-    unset($updatedata);
-    unset($allupdateuuid);
-	
-	
-	*/
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
