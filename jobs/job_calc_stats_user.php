@@ -75,42 +75,50 @@ try {
 		$userdatamonthbegin = $userdatamonthbegin->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
 		$userdatamonthend = $mysqlcon->query("SELECT uuid,count,idle FROM $dbname.user_snapshot WHERE timestamp=(SELECT MAX(s2.timestamp) AS value1 FROM (SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 120) AS s2, $dbname.user_snapshot AS s1 WHERE s1.timestamp=s2.timestamp)");
 		$userdatamonthend = $userdatamonthend->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
-		
-		echo 'after sql select snapshot: ' . memory_get_usage() . "<br>";
-		
+
 		$allupdateuuid = '';
 		$allupdaterank = '';
-		$allupdateweek = '';
-		$allupdatemonth = '';
+		$allupdatecountw = '';
+		$allupdatecountm = '';
+		$allupdateidlew = '';
+		$allupdateidlem = '';
 		$allinsertuserstats = '';
 		
 		foreach ($sqlhis as $userstats) {
 			if(isset($userdataweekend[$userstats['uuid']]) && isset($userdataweekbegin[$userstats['uuid']])) {
 				$count_week = $userdataweekend[$userstats['uuid']][0]['count'] - $userdataweekbegin[$userstats['uuid']][0]['count'];
+				$idle_week = $userdataweekend[$userstats['uuid']][0]['idle'] - $userdataweekbegin[$userstats['uuid']][0]['idle'];
 			} else {
 				$count_week = 0;
+				$idle_week = 0;
 			}
 			if(isset($userdatamonthend[$userstats['uuid']]) && isset($userdatamonthbegin[$userstats['uuid']])) {
 				$count_month = $userdatamonthend[$userstats['uuid']][0]['count'] - $userdatamonthbegin[$userstats['uuid']][0]['count'];
+				$idle_month = $userdatamonthend[$userstats['uuid']][0]['idle'] - $userdatamonthbegin[$userstats['uuid']][0]['idle'];
 			} else {
 				$count_month = 0;
+				$idle_month = 0;
 			}
 
 			if(isset($uidarrstats[$userstats['uuid']])) {
 				$allupdateuuid = $allupdateuuid . "'" . $userstats['uuid'] . "',";
 				$allupdaterank = $allupdaterank . "WHEN '" . $userstats['uuid'] . "' THEN '" . $userstats['rank'] . "' ";
-				$allupdateweek = $allupdateweek . "WHEN '" . $userstats['uuid'] . "' THEN '" . $count_week . "' ";
-				$allupdatemonth = $allupdatemonth . "WHEN '" . $userstats['uuid'] . "' THEN '" . $count_month . "' ";
+				$allupdatecountw = $allupdatecountw . "WHEN '" . $userstats['uuid'] . "' THEN '" . $count_week . "' ";
+				$allupdatecountm = $allupdatecountm . "WHEN '" . $userstats['uuid'] . "' THEN '" . $count_month . "' ";
+				$allupdateidlew = $allupdateidlew . "WHEN '" . $userstats['uuid'] . "' THEN '" . $idle_week . "' ";
+				$allupdateidlem = $allupdateidlem . "WHEN '" . $userstats['uuid'] . "' THEN '" . $idle_month . "' ";
 			} else {
-				$allinsertuserstats = $allinsertuserstats . "('" . $userstats['uuid'] . "', '" .$userstats['rank'] . "', '" . $count_week . "', '" . $count_month . "'),";
+				$allinsertuserstats = $allinsertuserstats . "('" . $userstats['uuid'] . "', '" .$userstats['rank'] . "', '" . $count_week . "', '" . $count_month . "', '" . $idle_week . "', '" . $idle_month . "'),";
 			}
 		}
+
 		if ($allupdateuuid != '') {
 			$allupdateuuid = substr($allupdateuuid, 0, -1);
-			if ($mysqlcon->exec("UPDATE $dbname.stats_user set rank = CASE uuid $allupdaterank END, count_week = CASE uuid $allupdateweek END, count_month = CASE uuid $allupdatemonth END WHERE uuid IN ($allupdateuuid)") === false) {
+			if ($mysqlcon->exec("UPDATE $dbname.stats_user set rank = CASE uuid $allupdaterank END, count_week = CASE uuid $allupdatecountw END, count_month = CASE uuid $allupdatecountm END, idle_week = CASE uuid $allupdateidlew END, idle_month = CASE uuid $allupdateidlem END WHERE uuid IN ($allupdateuuid)") === false) {
 				echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
 			}
 		}
+
 		if($allinsertuserstats != '') {
 			$allinsertuserstats = substr($allinsertuserstats, 0, -1);
 			if ($mysqlcon->exec("INSERT INTO $dbname.stats_user (uuid, rank, count_week, count_month) VALUES $allinsertuserstats") === false) {
