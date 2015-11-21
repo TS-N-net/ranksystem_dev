@@ -12,6 +12,9 @@ if(isset($_POST['username'])) {
 if(isset($_GET["search"])) {
 	$getstring = $_GET["search"]; 
 	$searchmysql = 'WHERE uuid LIKE \'%'.$getstring.'%\' OR cldbid LIKE \'%'.$getstring.'%\' OR name LIKE \'%'.$getstring.'%\'';
+} else {
+	$getstring = '';
+	$searchmysql = '';
 }
 if(!isset($_GET["seite"])) {
 	$seite = 1;
@@ -181,7 +184,7 @@ function pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$
 	</nav>
 	<?PHP
 }
-if($_GET['user'] != "all") {
+if(isset($_GET['user']) != "all") {
 	pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$getstring);
 }
 $uuids = $dbdata->fetchAll();
@@ -402,7 +405,7 @@ if ($countentries > 0) {
     echo '<tr><td colspan="6">' , $lang['noentry'] , '</td></tr>';
 }
 echo '</tbody></table></div>';
-if($_GET['user'] != "all") {
+if(isset($_GET['user']) != "all") {
 	pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$getstring);
 }
 if ($showgen == 1 || $adminlogin == 1) {
