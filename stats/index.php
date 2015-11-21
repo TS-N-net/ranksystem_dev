@@ -186,7 +186,7 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="stats_index.php">Ranksystem - Statistics</a>
+                <a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -218,7 +218,7 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="stats_index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
+                        <a href="index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
                     </li>
                     <li>
                         <a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>

@@ -256,7 +256,7 @@ function get_percentage($max_value, $value) {
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="stats_index.php">Ranksystem - Statistics</a>
+                <a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -288,7 +288,7 @@ function get_percentage($max_value, $value) {
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="stats_index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
+                        <a href="index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
                     </li>
                     <li class="active">
                         <a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>
