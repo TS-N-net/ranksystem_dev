@@ -58,7 +58,7 @@ $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . 
                 $_SESSION['tscreated']      = date('d-m-Y',$client['client_created']);
                 //$_SESSION['tsgroups']       = $client['client_servergroups'];
                 $_SESSION['tsconnections']  = $client['client_totalconnections'];
-                $avatarfilepath = 'other/avatars/'.$_SESSION['tsavatar'];
+                $avatarfilepath = '../other/avatars/'.$_SESSION['tsavatar'];
                 file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
                 break;
             } else {
