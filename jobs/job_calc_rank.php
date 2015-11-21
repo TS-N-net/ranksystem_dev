@@ -94,7 +94,9 @@ try {
             echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
         }
     }
-
+	if ($mysqlcon->exec("set @a:=0; UPDATE user u INNER JOIN (SELECT @a:=@a+1 nr,uuid FROM user ORDER BY count DESC) s USID (uuid) SET u.rank=s.nr;") === false) {
+		echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+	}	
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
