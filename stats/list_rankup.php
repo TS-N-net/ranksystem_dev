@@ -2,8 +2,8 @@
 session_start();
 $starttime = microtime(true);
 
-require_once('other/config.php');
-require_once('lang.php');
+require_once('../other/config.php');
+require_once('../lang.php');
 
 if(isset($_POST['username'])) {
 	$_GET["search"] = $_POST['usersuche'];
@@ -49,10 +49,10 @@ if (isset($_GET['admin'])) {
 <head>
   <title>TS-N.NET Ranksystem</title>
   <meta charset="utf-8"/>
-  <link rel="icon" href="icons/rs.png">
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+  <link rel="icon" href="../icons/rs.png">
+  <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="../bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript">
   ;(function($) {
    $.fn.fixMe = function() {
@@ -213,7 +213,7 @@ $dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups");
 $servergroups = $dbgroups->fetchAll(PDO::FETCH_ASSOC);
 foreach($servergroups as $servergroup) {
 	$sqlhisgroup[$servergroup['sgid']] = $servergroup['sgidname'];
-	if(file_exists('icons/'.$servergroup['sgid'].'.png')) {
+	if(file_exists('images/'.$servergroup['sgid'].'.png')) {
 		$sqlhisgroup_file[$servergroup['sgid']] = true;
 	} else {
 		$sqlhisgroup_file[$servergroup['sgid']] = false;
@@ -357,7 +357,7 @@ if ($countentries > 0) {
 					if ($sqlhis[$uid]['grpid'] == 0) {
 						echo '<td class="text-center"></td>';
 					} elseif ($sqlhisgroup_file[$sqlhis[$uid]['grpid']]==true) {
-						echo '<td class="text-center"><img src="icons/'.$sqlhis[$uid]['grpid'].'.png">&nbsp;&nbsp;' , $sqlhisgroup[$usergroupid] , '</td>';
+						echo '<td class="text-center"><img src="images/'.$sqlhis[$uid]['grpid'].'.png">&nbsp;&nbsp;' , $sqlhisgroup[$usergroupid] , '</td>';
 					} else {
 						$usergroupid = $sqlhis[$uid]['grpid'];
 						echo '<td class="text-center">' , $sqlhisgroup[$usergroupid] , '</td>';
@@ -386,7 +386,7 @@ if ($countentries > 0) {
 						echo '<td class="text-center">',$lang['highest'],'</td>';
 						$highest++;
 					} elseif ($sqlhisgroup_file[$groupid]==true) {
-						echo '<td class="text-center"><img src="icons/'.$groupid.'.png">&nbsp;&nbsp;' , $sqlhisgroup[$groupid] , '</td>';
+						echo '<td class="text-center"><img src="images/'.$groupid.'.png">&nbsp;&nbsp;' , $sqlhisgroup[$groupid] , '</td>';
 					} else {
 						echo '<td class="text-center">' , $sqlhisgroup[$groupid] , '</td>';
 					}

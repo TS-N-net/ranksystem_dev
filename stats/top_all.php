@@ -2,9 +2,9 @@
 session_start();
 $starttime = microtime(true);
 
-require_once('other/config.php');
-require_once('ts3_lib/TeamSpeak3.php');
-require_once('lang.php');
+require_once('../other/config.php');
+require_once('../ts3_lib/TeamSpeak3.php');
+require_once('../lang.php');
 
 if(isset($_POST['refresh'])) {
     $_SESSION = array();
@@ -104,32 +104,32 @@ function get_percentage($max_value, $value) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/rs.png">
+    <link rel="icon" href="../icons/rs.png">
 
     <title>TS-N.NET Ranksystem</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="bootstrap/addons/sb-admin.css" rel="stylesheet">
+    <link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="bootstrap/addons/morris.css" rel="stylesheet">
+    <link href="../bootstrap/addons/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- jQuery -->
-    <script src="bootstrap/js/jquery.js"></script>
+    <script src="../bootstrap/js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
-    <script src="bootstrap/addons/js-plugins/morris/morris.min.js"></script>
-    <script src="bootstrap/addons/js-plugins/morris/morris-data.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris-data.js"></script>
 </head>
 
 <body>

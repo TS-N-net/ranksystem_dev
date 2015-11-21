@@ -2,9 +2,9 @@
 session_start();
 $starttime = microtime(true);
 
-require_once('other/config.php');
-require_once('ts3_lib/TeamSpeak3.php');
-require_once('lang.php');
+require_once('../other/config.php');
+require_once('../ts3_lib/TeamSpeak3.php');
+require_once('../lang.php');
 
 if(isset($_POST['refresh'])) {
     $_SESSION = array();
@@ -53,8 +53,8 @@ $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . 
                 $_SESSION['tscreated']      = date('d-m-Y',$client['client_created']);
                 //$_SESSION['tsgroups']       = $client['client_servergroups'];
                 $_SESSION['tsconnections']  = $client['client_totalconnections'];
-				$avatarfilepath = 'other/avatars/'.$_SESSION['tsavatar'];
-				file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
+                $avatarfilepath = 'other/avatars/'.$_SESSION['tsavatar'];
+                file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
                 break;
             } else {
                 $requestconnect = true;
@@ -104,33 +104,33 @@ function get_percentage($max_value, $value) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/rs.png">
+    <link rel="icon" href="../icons/rs.png">
 
     <title>TS-N.NET Ranksystem</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="bootstrap/addons/sb-admin.css" rel="stylesheet">
-    <link href="bootstrap/addons/legendaryIcons.css" rel="stylesheet">
+    <link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
+    <link href="../bootstrap/addons/legendaryIcons.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="bootstrap/addons/morris.css" rel="stylesheet">
+    <link href="../bootstrap/addons/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- jQuery -->
-    <script src="bootstrap/js/jquery.js"></script>
+    <script src="../bootstrap/js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
-    <script src="bootstrap/addons/js-plugins/morris/morris.min.js"></script>
-    <script src="bootstrap/addons/js-plugins/morris/morris-data.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris-data.js"></script>
 </head>
 
 <body>
@@ -204,43 +204,43 @@ function get_percentage($max_value, $value) {
                     <br>
                     <p><h4>Criterias</h4></p>
                     <p><b>Online Time</b></p>
-                    <p><img src="images/MyStats/Unranked_Time.png" width="35" height="35" alt=""> 0 - 49 Hours: Unranked</p>
-                    <p><img src="images/MyStats/Bronze_Time.png" width="35" height="35" alt=""> 50 - 99 Hours: Bronze</p>
-                    <p><img src="images/MyStats/Silver_Time.png" width="35" height="35" alt=""> 100 - 249 Hours: Silver</p>
-                    <p><img src="images/MyStats/Gold_Time.png" width="35" height="35" alt=""> 250 - 499 Hours: Gold</p>
+                    <p><img src="../icons/MyStats/Unranked_Time.png" width="35" height="35" alt=""> 0 - 49 Hours: Unranked</p>
+                    <p><img src="../icons/MyStats/Bronze_Time.png" width="35" height="35" alt=""> 50 - 99 Hours: Bronze</p>
+                    <p><img src="../icons/MyStats/Silver_Time.png" width="35" height="35" alt=""> 100 - 249 Hours: Silver</p>
+                    <p><img src="../icons/MyStats/Gold_Time.png" width="35" height="35" alt=""> 250 - 499 Hours: Gold</p>
                     <p><div id="cf4a" class="shadow">
-                            <img src="images/MyStats/Legendary_Time_Red.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Time_Orange.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Time_Yellow.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Time_Green.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Time_Blue.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Time_Purple.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Time_Red.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Time_Orange.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Time_Yellow.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Time_Green.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Time_Blue.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Time_Purple.png" width="35" height="35"/>
                         </div> 500+ Hours: Legendary</p>
                     <p><b>Connections To Server</b></p>
-                    <p><img src="images/MyStats/Unranked_Connects.png" width="42" height="35" alt=""> 0 - 9 Connections: Unranked</p>
-                    <p><img src="images/MyStats/Bronze_Connects.png" width="42" height="35" alt=""> 10 - 49 Connections: Bronze</p>
-                    <p><img src="images/MyStats/Silver_Connects.png" width="42" height="35" alt=""> 50 - 99 Connections: Silver</p>
-                    <p><img src="images/MyStats/Gold_Connects.png" width="42" height="35" alt=""> 100 - 249 Connections: Gold</p>
+                    <p><img src="../icons/MyStats/Unranked_Connects.png" width="42" height="35" alt=""> 0 - 9 Connections: Unranked</p>
+                    <p><img src="../icons/MyStats/Bronze_Connects.png" width="42" height="35" alt=""> 10 - 49 Connections: Bronze</p>
+                    <p><img src="../icons/MyStats/Silver_Connects.png" width="42" height="35" alt=""> 50 - 99 Connections: Silver</p>
+                    <p><img src="../icons/MyStats/Gold_Connects.png" width="42" height="35" alt=""> 100 - 249 Connections: Gold</p>
                     <p><div id="cf4a" class="shadow">
-                            <img src="images/MyStats/Legendary_Connects_Red.png" width="42" height="35"/>
-                            <img src="images/MyStats/Legendary_Connects_Orange.png" width="42" height="35"/>
-                            <img src="images/MyStats/Legendary_Connects_Yellow.png" width="42" height="35"/>
-                            <img src="images/MyStats/Legendary_Connects_Green.png" width="42" height="35"/>
-                            <img src="images/MyStats/Legendary_Connects_Blue.png" width="42" height="35"/>
-                            <img src="images/MyStats/Legendary_Connects_Purple.png" width="42" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Connects_Red.png" width="42" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Connects_Orange.png" width="42" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Connects_Yellow.png" width="42" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Connects_Green.png" width="42" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Connects_Blue.png" width="42" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Connects_Purple.png" width="42" height="35"/>
                         </div> 250+ Connections: Legendary</p>
                     <p><b>Battles Won</b></p>
-                    <p><img src="images/MyStats/Unranked_Battle.png" width="35" height="35" alt=""> 0 - 4 Battles: Unranked</p>
-                    <p><img src="images/MyStats/Bronze_Battle.png" width="35" height="35" alt=""> 5 - 9 Battles: Bronze</p>
-                    <p><img src="images/MyStats/Silver_Battle.png" width="35" height="35" alt=""> 10 - 24 Battles: Silver</p>
-                    <p><img src="images/MyStats/Gold_Battle.png" width="35" height="35" alt=""> 25 - 49 Battles: Gold</p>
+                    <p><img src="../icons/MyStats/Unranked_Battle.png" width="35" height="35" alt=""> 0 - 4 Battles: Unranked</p>
+                    <p><img src="../icons/MyStats/Bronze_Battle.png" width="35" height="35" alt=""> 5 - 9 Battles: Bronze</p>
+                    <p><img src="../icons/MyStats/Silver_Battle.png" width="35" height="35" alt=""> 10 - 24 Battles: Silver</p>
+                    <p><img src="../icons/MyStats/Gold_Battle.png" width="35" height="35" alt=""> 25 - 49 Battles: Gold</p>
                     <p><div id="cf4a" class="shadow">
-                            <img src="images/MyStats/Legendary_Battle_Red.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Battle_Orange.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Battle_Yellow.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Battle_Green.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Battle_Blue.png" width="35" height="35"/>
-                            <img src="images/MyStats/Legendary_Battle_Purple.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Battle_Red.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Battle_Orange.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Battle_Yellow.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Battle_Green.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Battle_Blue.png" width="35" height="35"/>
+                            <img src="../icons/MyStats/Legendary_Battle_Purple.png" width="35" height="35"/>
                         </div> 50+ Battles: Legendary</p>
                 </div>
                 <div class="modal-footer">
@@ -350,14 +350,14 @@ function get_percentage($max_value, $value) {
                                         <div>Rank #1337</div>
                                     </div>
                                     <div class="col-xs-3">
-										<center>
-										<?PHP
-											if($_SESSION['tsavatar']!=NULL) {
-												echo '<img src="other/avatars/'.$_SESSION['tsavatar'].'" class="img-rounded" alt="avatar" height="70" align="right">';
-											} else {
-												echo '<i class="fa fa-user fa-5x" align="right"></i>';
-											}
-										?>
+                                        <center>
+                                        <?PHP
+                                            if($_SESSION['tsavatar']!=NULL) {
+                                                echo '<img src="../other/avatars/'.$_SESSION['tsavatar'].'" class="img-rounded" alt="avatar" height="70" align="right">';
+                                            } else {
+                                                echo '<i class="fa fa-user fa-5x" align="right"></i>';
+                                            }
+                                        ?>
                                         </center>
                                     </div>
                                 </div>
@@ -418,21 +418,21 @@ function get_percentage($max_value, $value) {
                                         <?PHP
                                         if(round(($dbdata_fetched[0]['count']/3600)) >= $time_for_legendary) {
                                             echo '<div id="cf4a" class="shadow">
-                                                    <img src="images/MyStats/Legendary_Time_Red.png" />
-                                                    <img src="images/MyStats/Legendary_Time_Orange.png" />
-                                                    <img src="images/MyStats/Legendary_Time_Yellow.png" />
-                                                    <img src="images/MyStats/Legendary_Time_Green.png" />
-                                                    <img src="images/MyStats/Legendary_Time_Blue.png" />
-                                                    <img src="images/MyStats/Legendary_Time_Purple.png" />
+                                                    <img src="../icons/MyStats/Legendary_Time_Red.png" />
+                                                    <img src="../icons/MyStats/Legendary_Time_Orange.png" />
+                                                    <img src="../icons/MyStats/Legendary_Time_Yellow.png" />
+                                                    <img src="../icons/MyStats/Legendary_Time_Green.png" />
+                                                    <img src="../icons/MyStats/Legendary_Time_Blue.png" />
+                                                    <img src="../icons/MyStats/Legendary_Time_Purple.png" />
                                                 </div>';
                                         } elseif(round(($dbdata_fetched[0]['count']/3600)) >= $time_for_gold) {
-                                            echo '<center><img src="images/MyStats/Gold_Time.png" width="74" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Gold_Time.png" width="74" height="74" alt=""></center>';
                                         } elseif(round(($dbdata_fetched[0]['count']/3600)) >= $time_for_silver) {
-                                            echo '<center><img src="images/MyStats/Silver_Time.png" width="74" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Silver_Time.png" width="74" height="74" alt=""></center>';
                                         } elseif(round(($dbdata_fetched[0]['count']/3600)) >= $time_for_bronze) {
-                                            echo '<center><img src="images/MyStats/Bronze_Time.png" width="74" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Bronze_Time.png" width="74" height="74" alt=""></center>';
                                         } else {
-                                            echo '<center><img src="images/MyStats/Unranked_Time.png" width="74" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Unranked_Time.png" width="74" height="74" alt=""></center>';
                                         }
                                         ?>
                                     </div>
@@ -464,21 +464,21 @@ function get_percentage($max_value, $value) {
                                         <?PHP
                                         if($_SESSION['tsconnections'] >= $connects_for_legendary) {
                                             echo '<div id="cf4a" class="shadow">
-                                                    <img src="images/MyStats/Legendary_Connects_Red.png" />
-                                                    <img src="images/MyStats/Legendary_Connects_Orange.png" />
-                                                    <img src="images/MyStats/Legendary_Connects_Yellow.png" />
-                                                    <img src="images/MyStats/Legendary_Connects_Green.png" />
-                                                    <img src="images/MyStats/Legendary_Connects_Blue.png" />
-                                                    <img src="images/MyStats/Legendary_Connects_Purple.png" />
+                                                    <img src="../icons/MyStats/Legendary_Connects_Red.png" />
+                                                    <img src="../icons/MyStats/Legendary_Connects_Orange.png" />
+                                                    <img src="../icons/MyStats/Legendary_Connects_Yellow.png" />
+                                                    <img src="../icons/MyStats/Legendary_Connects_Green.png" />
+                                                    <img src="../icons/MyStats/Legendary_Connects_Blue.png" />
+                                                    <img src="../icons/MyStats/Legendary_Connects_Purple.png" />
                                                 </div>';
                                         } elseif($_SESSION['tsconnections'] >= $connects_for_gold) {
-                                            echo '<center><img src="images/MyStats/Gold_Connects.png" width="85" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Gold_Connects.png" width="85" height="74" alt=""></center>';
                                         } elseif($_SESSION['tsconnections'] >= $connects_for_silver) {
-                                            echo '<center><img src="images/MyStats/Silver_Connects.png" width="85" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Silver_Connects.png" width="85" height="74" alt=""></center>';
                                         } elseif($_SESSION['tsconnections'] >= $connects_for_bronze) {
-                                            echo '<center><img src="images/MyStats/Bronze_Connects.png" width="85" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Bronze_Connects.png" width="85" height="74" alt=""></center>';
                                         } else {
-                                            echo '<center><img src="images/MyStats/Unranked_Connects.png" width="85" height="74" alt=""></center>';
+                                            echo '<center><img src="../icons/MyStats/Unranked_Connects.png" width="85" height="74" alt=""></center>';
                                         }
                                         ?>
                                     </div>
@@ -508,12 +508,12 @@ function get_percentage($max_value, $value) {
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <div id="cf4a" class="shadow">
-                                            <img src="images/MyStats/Legendary_Battle_Red.png" />
-                                            <img src="images/MyStats/Legendary_Battle_Orange.png" />
-                                            <img src="images/MyStats/Legendary_Battle_Yellow.png" />
-                                            <img src="images/MyStats/Legendary_Battle_Green.png" />
-                                            <img src="images/MyStats/Legendary_Battle_Blue.png" />
-                                            <img src="images/MyStats/Legendary_Battle_Purple.png" />
+                                            <img src="../icons/MyStats/Legendary_Battle_Red.png" />
+                                            <img src="../icons/MyStats/Legendary_Battle_Orange.png" />
+                                            <img src="../icons/MyStats/Legendary_Battle_Yellow.png" />
+                                            <img src="../icons/MyStats/Legendary_Battle_Green.png" />
+                                            <img src="../icons/MyStats/Legendary_Battle_Blue.png" />
+                                            <img src="../icons/MyStats/Legendary_Battle_Purple.png" />
                                         </div>
                                     </div>
                                     <div class="col-xs-9 text-right">

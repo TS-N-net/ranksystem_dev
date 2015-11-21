@@ -2,9 +2,9 @@
 session_start();
 $starttime = microtime(true);
 
-require_once('other/config.php');
-require_once('ts3_lib/TeamSpeak3.php');
-require_once('lang.php');
+require_once('../other/config.php');
+require_once('../ts3_lib/TeamSpeak3.php');
+require_once('../lang.php');
 
 if(isset($_POST['refresh'])) {
     $_SESSION = array();
@@ -74,32 +74,32 @@ catch (Exception $e) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/rs.png">
+    <link rel="icon" href="../icons/rs.png">
 
     <title>TS-N.NET Ranksystem</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="bootstrap/addons/sb-admin.css" rel="stylesheet">
+    <link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="bootstrap/addons/morris.css" rel="stylesheet">
+    <link href="../bootstrap/addons/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- jQuery -->
-    <script src="bootstrap/js/jquery.js"></script>
+    <script src="../bootstrap/js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
-    <script src="bootstrap/addons/js-plugins/morris/morris.min.js"></script>
-    <script src="bootstrap/addons/js-plugins/morris/morris-data.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris-data.js"></script>
 </head>
 
 <body>
@@ -176,7 +176,7 @@ catch (Exception $e) {
                     <p>Battles Lost: 1403</p>
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -192,7 +192,7 @@ catch (Exception $e) {
                     <p>You are currently not in a battle</p>
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -285,7 +285,7 @@ catch (Exception $e) {
                         <div class="col-lg-3 col-md-6">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    <center><img src="images/BattleSite/Main_Colour.png" class="img-responsive"></center>
+                                    <center><img src="../icons/BattleSite/Main_Colour.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
                                 </div>
                                 <a href="battle_area.php">
@@ -300,7 +300,7 @@ catch (Exception $e) {
                         <div class="col-lg-3 col-md-6">
                             <div class="panel panel-green">
                                 <div class="panel-heading">
-                                    <center><img src="images/BattleSite/Top10_Grey.png" class="img-responsive"></center>
+                                    <center><img src="../icons/BattleSite/Top10_Grey.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
                                 </div>
                                 <a href="battle_area_top.php">
@@ -315,7 +315,7 @@ catch (Exception $e) {
                         <div class="col-lg-3 col-md-6">
                             <div class="panel panel-yellow">
                                 <div class="panel-heading">
-                                    <center><img src="images/BattleSite/Reward_Grey.png" class="img-responsive"></center>
+                                    <center><img src="../icons/BattleSite/Reward_Grey.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
                                 </div>
                                 <a href="battle_area_reward.php">
@@ -330,7 +330,7 @@ catch (Exception $e) {
                         <div class="col-lg-3 col-md-6">
                             <div class="panel panel-red">
                                 <div class="panel-heading">
-                                    <center><img src="images/BattleSite/Info_Grey.png" class="img-responsive"></center>
+                                    <center><img src="../icons/BattleSite/Info_Grey.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
                                 </div>
                                 <a href="battle_area_info.php">
