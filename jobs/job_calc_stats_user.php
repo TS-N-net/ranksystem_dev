@@ -121,7 +121,7 @@ try {
 
 		if($allinsertuserstats != '') {
 			$allinsertuserstats = substr($allinsertuserstats, 0, -1);
-			if ($mysqlcon->exec("INSERT INTO $dbname.stats_user (uuid, rank, count_week, count_month) VALUES $allinsertuserstats") === false) {
+			if ($mysqlcon->exec("INSERT INTO $dbname.stats_user (uuid,rank,count_week,count_month,idle_week,idle_month) VALUES $allinsertuserstats") === false) {
 				echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
 			}
 		}
