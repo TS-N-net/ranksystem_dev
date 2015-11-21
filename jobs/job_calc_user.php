@@ -4,18 +4,18 @@ $starttime = microtime(true);
 <!doctype html>
 <html>
 <head>
-  <title>TS-N.NET Ranksystem</title>
+  <title>TS-N.NET Ranksystem - Calc User</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
 <?PHP
 echo '</head><body>';
-require_once('../other/config.php');
+require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 if ($mysqlprob === false) {
 	echo '<span class="wncolor">',$sqlconerr,'</span><br>';
 	exit;
 }
-require_once('../lang.php');
-require_once('../ts3_lib/TeamSpeak3.php');
+require_once(substr(dirname(__FILE__),0,-4).'lang.php');
+require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
 $debug = 'off';
 if (isset($_GET['debug'])) {

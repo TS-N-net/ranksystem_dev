@@ -1,7 +1,16 @@
 <?PHP
-
-require_once('other/config.php');
-require_once('ts3_lib/TeamSpeak3.php');
+$starttime = microtime(true);
+?>
+<!doctype html>
+<html>
+<head>
+  <title>TS-N.NET Ranksystem - Update Groups</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
+<?PHP
+require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
+require_once(substr(dirname(__FILE__),0,-4).'lang.php');
+require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
 try {
     $ts3_VirtualServer = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
@@ -96,7 +105,7 @@ try {
         foreach ($insertgroups as $insertarr) {
             $allinsertdata = $allinsertdata . "('" . $insertarr['sgid'] . "', '" . $insertarr['sgidname'] . "', '" . $insertarr['iconid'] . "'),";
 			if($insertarr['iconid']!=0 && $updatedata['iconid']>300) {
-				file_put_contents(dirname(__FILE__) . "/icons/" . $insertarr['sgid'] . ".png", $insertarr['icon']);
+				file_put_contents(substr(dirname(__FILE__),0,-4) . "icons/" . $insertarr['sgid'] . ".png", $insertarr['icon']);
 			}
         }
         $allinsertdata = substr($allinsertdata, 0, -1);
@@ -120,7 +129,7 @@ try {
             $allupdatesgid   = $allupdatesgid . "WHEN '" . $updatedata['sgid'] . "' THEN '" . $updatedata['sgidname'] . "' ";
             $allupdateiconid = $allupdateiconid . "WHEN '" . $updatedata['sgid'] . "' THEN '" . $updatedata['iconid'] . "' ";
 			if($updatedata['iconid']!=0 && $updatedata['iconid']>300) {
-				file_put_contents(dirname(__FILE__) . "/icons/" . $updatedata['sgid'] . ".png", $updatedata['icon']);
+				file_put_contents(substr(dirname(__FILE__),0,-4). . "icons/" . $updatedata['sgid'] . ".png", $updatedata['icon']);
 			}
         }
         $allsgids = substr($allsgids, 0, -1);
@@ -135,4 +144,10 @@ try {
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
 }
+if ($showgen == 1) {
+    $buildtime = microtime(true) - $starttime;
+    echo '<br>', sprintf($lang['sitegen'], $buildtime, $total_user), '<br>';
+}
 ?>
+</body>
+</html>

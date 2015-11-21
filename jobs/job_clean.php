@@ -1,10 +1,17 @@
 <?PHP
 $starttime = microtime(true);
 $count_tsuser['count'] = 0;
-
-require_once('other/config.php');
-require_once('lang.php');
-require_once('ts3_lib/TeamSpeak3.php');
+?>
+<!doctype html>
+<html>
+<head>
+  <title>TS-N.NET Ranksystem - Clean</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
+<?PHP
+require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
+require_once(substr(dirname(__FILE__),0,-4).'lang.php');
+require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
@@ -113,6 +120,8 @@ catch (Exception $e) {
 }
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $count_tsuser['count']), '<br>';
+    echo '<br>', sprintf($lang['sitegen'], $buildtime, $total_user), '<br>';
 }
 ?>
+</body>
+</html>

@@ -8,7 +8,13 @@ function execInBackground($cmd) {
 		echo 'run command '.$cmd.'<br>';
     }
 }
-execInBackground('php jobs/job_calc_user.php');
-execInBackground('php jobs/job_update_groups.php');
-execInBackground('php jobs/job_clean.php');
+execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_user.php');
+sleep(1);
+execInBackground('php '.dirname(__FILE__).'/jobs/job_update_groups.php');
+sleep(1);
+execInBackground('php '.dirname(__FILE__).'/jobs/job_clean.php');
+sleep(1);
+execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_rank.php');
+sleep(1);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats_user.php');
 ?>
