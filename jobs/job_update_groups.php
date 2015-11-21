@@ -115,10 +115,6 @@ try {
             }
         }
     }
-	
-    unset($insertgroups);
-    unset($allinsertdata);
-	
 
     if (isset($updategroups)) {
         $allsgids        = '';
@@ -129,7 +125,7 @@ try {
             $allupdatesgid   = $allupdatesgid . "WHEN '" . $updatedata['sgid'] . "' THEN '" . $updatedata['sgidname'] . "' ";
             $allupdateiconid = $allupdateiconid . "WHEN '" . $updatedata['sgid'] . "' THEN '" . $updatedata['iconid'] . "' ";
 			if($updatedata['iconid']!=0 && $updatedata['iconid']>300) {
-				file_put_contents(substr(dirname(__FILE__),0,-4). . "icons/" . $updatedata['sgid'] . ".png", $updatedata['icon']);
+				file_put_contents(substr(dirname(__FILE__),0,-4) . "icons/" . $updatedata['sgid'] . ".png", $updatedata['icon']);
 			}
         }
         $allsgids = substr($allsgids, 0, -1);
@@ -137,16 +133,13 @@ try {
             echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
         }
     }
-	unset($updatedata);
-    unset($allsgids);
-    unset($allupdatesgid);
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
 }
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $total_user), '<br>';
+    echo '<br>', sprintf($lang['sitegen'], $buildtime, $dbgroups->rowCount()), '<br>';
 }
 ?>
 </body>
