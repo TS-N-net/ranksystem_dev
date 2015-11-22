@@ -15,11 +15,6 @@ try {
 $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
     $ts3_ClientList = $ts3->clientList();
 
-    $ts3_client_connects = $ts3_ClientList['client_totalconnections'];
-
-    echo $ts3_client_connects;
-    print_r($ts3_client_connects);
-
     if ($slowmode == 1)
         sleep(1);
     try {
@@ -289,7 +284,6 @@ function get_percentage($max_value, $value) {
                                 </a>
                             </div>
                         </h1>
-
                     </div>
                 </div>
                 <!-- /.row -->

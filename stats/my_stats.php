@@ -1,7 +1,5 @@
 <?PHP
 session_start();
-$starttime = microtime(true);
-
 require_once('../other/config.php');
 require_once('../ts3_lib/TeamSpeak3.php');
 require_once('../lang.php');
@@ -12,19 +10,18 @@ if(isset($_POST['refresh'])) {
 }
 
 try {
-$ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
+	$ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
+	if ($slowmode == 1) sleep(1);
     $ts3_ClientList = $ts3->clientList();
 
-    if ($slowmode == 1)
-        sleep(1);
+    if ($slowmode == 1) sleep(1);
     try {
         $ts3->selfUpdate(array(
             'client_nickname' => $queryname
         ));
     }
     catch (Exception $e) {
-        if ($slowmode == 1)
-            sleep(1);
+        if ($slowmode == 1) sleep(1);
         try {
             $ts3->selfUpdate(array(
                 'client_nickname' => $queryname2
@@ -36,25 +33,25 @@ $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . 
     }
 
     if(!isset($_SESSION['tsuid'])) {
-        if ($slowmode == 1)
-        sleep(1);
-        $allclients = $ts3->clientList();
         $hpip = ip2long($_SERVER['REMOTE_ADDR']);
         $matchip = 0;
          
-        foreach ($allclients as $client) {
+        foreach ($ts3_ClientList as $client) {
             $tsip                   = ip2long($client['connection_client_ip']);
             if ($hpip == $tsip) {
                 $_SESSION['tsuid']          = htmlspecialchars($client['client_unique_identifier'], ENT_QUOTES);
                 $_SESSION['tscldbid']       = $client['client_database_id'];
                 $_SESSION['tsname']         = str_replace('\\', '\\\\', htmlspecialchars($client['client_nickname'], ENT_QUOTES));
-                $_SESSION['tsavatar']       = $client['client_flag_avatar'];
                 $_SESSION['tsavatarfile']   = $client->avatarDownload();
                 $_SESSION['tscreated']      = date('d-m-Y',$client['client_created']);
-                //$_SESSION['tsgroups']       = $client['client_servergroups'];
                 $_SESSION['tsconnections']  = $client['client_totalconnections'];
-                $avatarfilepath = '../other/avatars/'.$_SESSION['tsavatar'];
-                file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
+				if ($client['client_flag_avatar'] != NULL) {
+					$_SESSION['tsavatar']   = $client['client_flag_avatar']->toString();
+					$avatarfilepath = '../other/avatars/'.$_SESSION['tsavatar'];
+					file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
+				} else {
+					$_SESSION['tsavatar']   = "none";
+				}
                 break;
             } else {
                 $requestconnect = true;
@@ -64,7 +61,6 @@ $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . 
         }
     }
 }
-
 catch (Exception $e) {
     echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
 }
@@ -352,7 +348,7 @@ function get_percentage($max_value, $value) {
                                     <div class="col-xs-3">
                                         <center>
                                         <?PHP
-                                            if($_SESSION['tsavatar']!=NULL) {
+                                            if(isset($_SESSION['tsavatar']) && $_SESSION['tsavatar'] != "none") {
                                                 echo '<img src="../other/avatars/'.$_SESSION['tsavatar'].'" class="img-rounded" alt="avatar" height="70" align="right">';
                                             } else {
                                                 echo '<i class="fa fa-user fa-5x" align="right"></i>';
