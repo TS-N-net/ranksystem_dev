@@ -1,0 +1,29 @@
+- Option on list_rankup.php  ?lang=de  doesn't work any more.. lost due rework
+- source out session handling out of stats sites into other/session.php
+- what happens, when a user is not connected to teamspeak (-> no session), individual interception for each stats site
+- correct session handling.. handle outdated session for user which idle on homepage
+- every action (stats and jobs) for ts3 has a check for slow mode?
+- missed java/css lib or something else? look at ts-n.net/ranksystem_dev/stats/my_stats.php -> legendary icons
+- my_stats.php: load informations out of database (at now: count_week, count_month, idle_week, idle_month)
+- add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
+- undefined variable $idle_res_final in index.php
+- use for all stats site a queryconnect with a different name.. like in jobs
+- add server-usage graph on index.php with following dropdown options
+	# 1 Tag (alle 60 Minuten)
+	set @a:=0; select u1.timestamp, u1.clients from (select @a:=@a+1,mod(@a,2) as test,timestamp,clients from server_usage) as u2, server_usage as u1 where u1.timestamp=u2.timestamp and u2.test='1' order by u2.timestamp desc limit 24;
+	# 1 Woche (alle 6 Std)
+	set @a:=0; select u1.timestamp, u1.clients from (select @a:=@a+1,mod(@a,12) as test,timestamp,clients from server_usage) as u2, server_usage as u1 where u1.timestamp=u2.timestamp and u2.test='1' order by u2.timestamp desc limit 28;
+	# 1 Monat (alle 24 Stunden)
+	set @a:=0; select u1.timestamp, u1.clients from (select @a:=@a+1,mod(@a,48) as test,timestamp,clients from server_usage) as u2, server_usage as u1 where u1.timestamp=u2.timestamp and u2.test='1' order by u2.timestamp desc limit 30;
+- top_all.php: Take care about client and servergroup exceptions!
+- stats about client version on index.php instead of current server usage (dublicate)
+- thousands delimiter for total bytes on current statsitics (index.php)
+- all textes to lang.php
+- nations to longtext
+- servericon on servername (index.php), if set
+- handle exception NULL value on "Online Time Month" and "Online Time Week" -> something like "not enough data yet"
+- Info on index.php: example "This site gets his informations out of a database. The values get refreshed every minute."
+- what is with sites top user of week and top users of month
+
+- search for errors (stats and jobs) about error-log
+- check all stats site with https://validator.w3.org/ and correct errors
