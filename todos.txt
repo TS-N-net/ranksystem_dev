@@ -27,3 +27,5 @@
 
 - search for errors (stats and jobs) about error-log
 - check all stats site with https://validator.w3.org/ and correct errors
+
+-My_Stats.php info button legendary icons
