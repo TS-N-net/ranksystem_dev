@@ -30,3 +30,6 @@
 - check all stats site with https://validator.w3.org/ and correct errors
 
 -My_Stats.php info button legendary icons
+-webinterface "Admin List" Button funktioniert nichtmehr durch neuen path
+
+-in der index.php ist die Server Usage jetzt sehr "ungenau", da dieser Wert nur jede halbe Stunde geupdated wird
