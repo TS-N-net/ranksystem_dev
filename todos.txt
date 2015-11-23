@@ -1,4 +1,3 @@
-- Option on list_rankup.php  ?lang=de  doesn't work any more.. lost due rework
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - source out session handling out of stats sites into other/session.php
 - what happens, when a user is not connected to teamspeak (-> no session), individual interception for each stats site
