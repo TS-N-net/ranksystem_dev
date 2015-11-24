@@ -32,3 +32,4 @@
 -webinterface "Admin List" Button funktioniert nichtmehr durch neuen path
 
 -in der index.php ist die Server Usage jetzt sehr "ungenau", da dieser Wert nur jede halbe Stunde geupdated wird
+EDIT: die "Current Statistics" stimmen von vorne bis hinten nicht!
