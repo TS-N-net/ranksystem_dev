@@ -6,7 +6,6 @@
 - missed java/css lib or something else? look at ts-n.net/ranksystem_dev/stats/my_stats.php -> legendary icons
 - my_stats.php: load informations out of database (at now: count_week, count_month, idle_week, idle_month)
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
-- undefined variable $idle_res_final in index.php
 - use for all stats site a queryconnect with a different name.. like in jobs
 - add server-usage graph on index.php with following dropdown options
 	# 1 Tag (alle 60 Minuten)
@@ -25,6 +24,7 @@
 - Info on index.php: example "This site gets his informations out of a database. The values get refreshed every minute."
 - what is with sites top user of week and top users of month
 
+- optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
 - search for errors (stats and jobs) about error-log
 - check all stats site with https://validator.w3.org/ and correct errors
 
@@ -32,4 +32,4 @@
 -webinterface "Admin List" Button funktioniert nichtmehr durch neuen path
 
 -in der index.php ist die Server Usage jetzt sehr "ungenau", da dieser Wert nur jede halbe Stunde geupdated wird
-EDIT: die "Current Statistics" stimmen von vorne bis hinten nicht!
+EDIT: die "Current Statistics" stimmen von vorne bis hinten nicht! [Newcomer1989: liegt an der unvollständigen Jobverarbeitung, siehe 1. Punkt auf ToDo; Ansonsten stimmt die Verarbeitung hier!)

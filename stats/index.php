@@ -518,8 +518,8 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
         Morris.Donut({
           element: 'time-gap-donut',
           data: [
-            {label: "Active Time (in Days)", value: <?PHP echo round(($sql_res[0]['total_active_time'] / 86400)) - $idle_res_final; ?>},
-            {label: "Inactive Time (in Days)", value: <?PHP echo round(($sql_res[0]['total_inactive_time'] / 86400)) - $idle_res_final; ?>},
+            {label: "Active Time (in Days)", value: <?PHP echo round(($sql_res[0]['total_active_time'] / 86400)); ?>},
+            {label: "Inactive Time (in Days)", value: <?PHP echo round(($sql_res[0]['total_inactive_time'] / 86400)); ?>},
           ]
         });
         Morris.Donut({
