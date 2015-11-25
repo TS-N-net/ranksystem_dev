@@ -24,24 +24,19 @@ if (isset($_GET['debug'])) {
         $debug = 'on';
     }
 }
+
 try {
-    $ts3_VirtualServer = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-    $nowtime           = time();
-    if ($slowmode == 1)
-        sleep(1);
+    $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
+	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cu' else $queryname = $queryname .'_cu';
+	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_cu2' else $queryname2 = $queryname2.'_cu2';
+    if ($slowmode == 1) sleep(1);
     try {
-        $ts3_VirtualServer->selfUpdate(array(
-            'client_nickname' => $queryname
-        ));
+        $ts3->selfUpdate(array('client_nickname' => $queryname));
     }
     catch (Exception $e) {
-        if ($slowmode == 1)
-            sleep(1);
+        if ($slowmode == 1) sleep(1);
         try {
-            $ts3_VirtualServer->selfUpdate(array(
-                'client_nickname' => $queryname2
-            ));
-            echo $lang['queryname'], '<br><br>';
+            $ts3->selfUpdate(array('client_nickname' => $queryname2));
         }
         catch (Exception $e) {
             echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
@@ -62,7 +57,7 @@ try {
                     if ($slowmode == 1)
                         sleep(1);
                     try {
-                        $ts3_VirtualServer->clientGetByUid($clientid)->message(sprintf($lang['upmsg'], $currvers, $newversion));
+                        $ts3->clientGetByUid($clientid)->message(sprintf($lang['upmsg'], $currvers, $newversion));
                         echo '<span class="sccolor">', sprintf($lang['upusrinf'], $clientid), '</span><br>';
                     }
                     catch (Exception $e) {
@@ -115,7 +110,7 @@ try {
         echo '<br>sqlhis:<br><pre>', print_r($sqlhis), '</pre><br>';
     }
     if ($slowmode == 1) sleep(1);
-    $allclients = $ts3_VirtualServer->clientList();
+    $allclients = $ts3->clientList();
     $yetonline[] = '';
     $insertdata  = '';
 	if(empty($grouptime)) {
@@ -163,7 +158,7 @@ try {
 								} else {
 									if ($nowtime > $sqlhis[$uid]['boosttime'] + $boost['time']) {
 										try {
-											$ts3_VirtualServer->serverGroupClientDel($boost['group'], $cldbid);
+											$ts3->serverGroupClientDel($boost['group'], $cldbid);
 											$boosttime = 0;
 											echo '<span class="ifcolor">', sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid), '</span><br>';
 										}
@@ -208,7 +203,7 @@ try {
                                 if ($slowmode == 1)
                                     sleep(1);
                                 try {
-                                    $ts3_VirtualServer->serverGroupClientDel($sqlhis[$uid]['grpid'], $cldbid);
+                                    $ts3->serverGroupClientDel($sqlhis[$uid]['grpid'], $cldbid);
                                     echo '<span class="ifcolor">', sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid), '</span><br>';
                                 }
                                 catch (Exception $e) {
@@ -219,7 +214,7 @@ try {
                                 if ($slowmode == 1)
                                     sleep(1);
                                 try {
-                                    $ts3_VirtualServer->serverGroupClientAdd($groupid, $cldbid);
+                                    $ts3->serverGroupClientAdd($groupid, $cldbid);
                                     echo '<span class="ifcolor">', sprintf($lang['sgrpadd'], $groupid, $name, $uid, $cldbid), '</span><br>';
                                 }
                                 catch (Exception $e) {
@@ -235,9 +230,9 @@ try {
                                 $mins  = $dtF->diff($dtT)->format('%i');
                                 $secs  = $dtF->diff($dtT)->format('%s');
                                 if ($substridle == 1) {
-                                    $ts3_VirtualServer->clientGetByUid($uid)->message(sprintf($lang['usermsgactive'], $days, $hours, $mins, $secs));
+                                    $ts3->clientGetByUid($uid)->message(sprintf($lang['usermsgactive'], $days, $hours, $mins, $secs));
                                 } else {
-                                    $ts3_VirtualServer->clientGetByUid($uid)->message(sprintf($lang['usermsgonline'], $days, $hours, $mins, $secs));
+                                    $ts3->clientGetByUid($uid)->message(sprintf($lang['usermsgonline'], $days, $hours, $mins, $secs));
                                 }
                             }
                         }
