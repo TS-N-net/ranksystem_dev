@@ -1,6 +1,7 @@
 <?PHP
 $starttime = microtime(true);
 $count_tsuser['count'] = 0;
+$nowtime = time();
 ?>
 <!doctype html>
 <html>
@@ -15,8 +16,8 @@ require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cc' else $queryname = $queryname .'_cc';
-	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_cc2' else $queryname2 = $queryname2.'_cc2';
+	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cc'; else $queryname = $queryname .'_cc';
+	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_cc2'; else $queryname2 = $queryname2.'_cc2';
     if ($slowmode == 1) sleep(1);
     try {
         $ts3->selfUpdate(array('client_nickname' => $queryname));

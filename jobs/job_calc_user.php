@@ -1,5 +1,6 @@
 <?PHP
 $starttime = microtime(true);
+$nowtime = time();
 ?>
 <!doctype html>
 <html>
@@ -27,8 +28,8 @@ if (isset($_GET['debug'])) {
 
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cu' else $queryname = $queryname .'_cu';
-	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_cu2' else $queryname2 = $queryname2.'_cu2';
+	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cu'; else $queryname = $queryname .'_cu';
+	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_cu2'; else $queryname2 = $queryname2.'_cu2';
     if ($slowmode == 1) sleep(1);
     try {
         $ts3->selfUpdate(array('client_nickname' => $queryname));

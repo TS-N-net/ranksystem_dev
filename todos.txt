@@ -1,5 +1,4 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
-- source out session handling out of stats sites into other/session.php
 - what happens, when a user is not connected to teamspeak (-> no session), individual interception for each stats site
 - correct session handling.. handle outdated session for user which idle on homepage
 - every action (stats and jobs) for ts3 has a check for slow mode?

@@ -3,16 +3,12 @@ session_start();
 require_once('../other/config.php');
 require_once('../ts3_lib/TeamSpeak3.php');
 require_once('../lang.php');
-
-if(isset($_POST['refresh'])) {
-    $_SESSION = array();
-    session_destroy();
-}
+require_once('../other/session.php');
 
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st' else $queryname = $queryname .'_st';
-	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2' else $queryname2 = $queryname2.'_st2';
+	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
+	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
     if ($slowmode == 1) sleep(1);
     try {
         $ts3->selfUpdate(array('client_nickname' => $queryname));
@@ -28,32 +24,9 @@ try {
     }
 
     if(!isset($_SESSION['tsuid'])) {
-        $hpip = ip2long($_SERVER['REMOTE_ADDR']);
-        $matchip = 0;
-         
-        foreach ($ts3_ClientList as $client) {
-            $tsip                   = ip2long($client['connection_client_ip']);
-            if ($hpip == $tsip) {
-                $_SESSION['tsuid']          = htmlspecialchars($client['client_unique_identifier'], ENT_QUOTES);
-                $_SESSION['tscldbid']       = $client['client_database_id'];
-                $_SESSION['tsname']         = str_replace('\\', '\\\\', htmlspecialchars($client['client_nickname'], ENT_QUOTES));
-                $_SESSION['tsavatarfile']   = $client->avatarDownload();
-                $_SESSION['tscreated']      = date('d-m-Y',$client['client_created']);
-                $_SESSION['tsconnections']  = $client['client_totalconnections'];
-				if ($client['client_flag_avatar'] != NULL) {
-					$_SESSION['tsavatar']   = $client['client_flag_avatar']->toString();
-					$avatarfilepath = '../other/avatars/'.$_SESSION['tsavatar'];
-					file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
-				} else {
-					$_SESSION['tsavatar']   = "none";
-				}
-                break;
-            } else {
-                $requestconnect = true;
-                //wenn nicht auf ts oder ip adresse nicht mit homepage übereinstimmt
-                //evtl. connect auf ts fordern oder abgespeckte seite anzeigen
-            }
-        }
+		$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
+        if ($slowmode == 1) sleep(1);
+        set_session_ts3($hpclientip, $ts3);
     }
 }
 catch (Exception $e) {
