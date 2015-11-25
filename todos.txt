@@ -3,7 +3,6 @@
 - what happens, when a user is not connected to teamspeak (-> no session), individual interception for each stats site
 - correct session handling.. handle outdated session for user which idle on homepage
 - every action (stats and jobs) for ts3 has a check for slow mode?
-- my_stats.php: load informations out of database (at now: count_week, count_month, idle_week, idle_month)
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - use for all stats site a queryconnect with a different name.. like in jobs
 - add server-usage graph on index.php with following dropdown options

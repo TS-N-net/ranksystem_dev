@@ -71,6 +71,14 @@ $searchmysql = 'WHERE uuid LIKE \'%'.$getstring.'%\'';
 $dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql");
 $dbdata_fetched = $dbdata->fetchAll();
 
+$stats_user = $mysqlcon->query("SELECT * FROM $dbname.stats_user WHERE uuid='$getstring'");
+$stats_user = $stats_user->fetchAll();
+
+$count_week = $stats_user[0]['count_week'];
+$dtF = new DateTime("@0"); $dtT = new DateTime("@$count_week"); $count_week = $dtF->diff($dtT)->format($timeformat);
+$count_month = $stats_user[0]['count_month'];
+$dtF = new DateTime("@0"); $dtT = new DateTime("@$count_month"); $count_month = $dtF->diff($dtT)->format($timeformat);
+
 $time_for_bronze = 50;
 $time_for_silver = 100;
 $time_for_gold = 250;
@@ -373,8 +381,8 @@ function get_percentage($max_value, $value) {
                                         <p align="right"><?PHP echo $dbdata_fetched[0]['cldbid']; ?></p>
                                         <p align="right"><text id="days">00</text> Days, <text id="hours">00</text> Hours, <text id="minutes">00</text> Mins, <text id="seconds">00</text> Secs</p>
                                         <p align="right"><?PHP echo $_SESSION['tsconnections']; ?></p>
-                                        <p align="right">test2</p>
-                                        <p align="right">test3</p>
+                                        <p align="right"><?PHP echo $count_week; ?></p>
+                                        <p align="right"><?PHP echo $count_month; ?></p>
                                         <p align="right">test4</p>
                                         <p align="right"><?PHP
                                                             if(round(($dbdata_fetched[0]['count']/3600)) >= $time_for_legendary) {
