@@ -9,9 +9,9 @@ $nowtime = time();
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
 <?PHP
-require_once('../other/config.php');
-require_once('../lang.php');
-require_once('../ts3_lib/TeamSpeak3.php');
+require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
+require_once(substr(dirname(__FILE__),0,-4).'lang.php');
+require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
 
 try {
