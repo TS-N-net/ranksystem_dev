@@ -138,6 +138,7 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
                 <div class="modal-body">
                     <p>This page contains a overall summary about the user statistics and data on your server.</p>
                     <p>You can see statistics which contain information of all time usage then monthly, weekly and daily usage.</p>
+                    <p>This page receives its values out of a database. So the values might be delayed a bit.</p>
                 </div>
                 <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -17,7 +17,6 @@
 - nations to longtext
 - servericon on servername (index.php), if set
 - handle exception NULL value on "Online Time Month" and "Online Time Week" -> something like "not enough data yet"
-- Info on index.php: example "This site gets his informations out of a database. The values get refreshed every minute."
 - what is with sites top user of week and top users of month
 
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
