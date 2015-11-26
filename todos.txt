@@ -1,4 +1,5 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
+- use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - what happens, when a user is not connected to teamspeak (-> no session), individual interception for each stats site
 - correct session handling.. handle outdated session for user which idle on homepage
 - every action (stats and jobs) for ts3 has a check for slow mode?
@@ -18,6 +19,9 @@
 - servericon on servername (index.php), if set
 - handle exception NULL value on "Online Time Month" and "Online Time Week" -> something like "not enough data yet"
 - what is with sites top user of week and top users of month
+- delete old unused entries in user_snapshot
+- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php
+- add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
 
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
 - search for errors (stats and jobs) about error-log
