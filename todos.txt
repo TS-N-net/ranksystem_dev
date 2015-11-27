@@ -1,6 +1,5 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
-- what happens, when a user is not connected to teamspeak (-> no session), individual interception for each stats site
 - correct session handling.. handle outdated session for user which idle on homepage
 - every action (stats and jobs) for ts3 has a check for slow mode?
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
@@ -27,6 +26,3 @@
 
 -My_Stats.php info button legendary icons
 -webinterface "Admin List" Button funktioniert nichtmehr durch neuen path
-
--in der index.php ist die Server Usage jetzt sehr "ungenau", da dieser Wert nur jede halbe Stunde geupdated wird
-EDIT: die "Current Statistics" stimmen von vorne bis hinten nicht! [Newcomer1989: liegt an der unvollständigen Jobverarbeitung, siehe 1. Punkt auf ToDo; Ansonsten stimmt die Verarbeitung hier!)

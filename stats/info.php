@@ -152,7 +152,7 @@ catch (Exception $e) {
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo ' '.$_SESSION['tsname']; ?><b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo ' ' .($_SESSION['connected'] == 0 ? '(Not Connected To TS3!)' : $_SESSION['tsname']); ?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="my_stats.php"><i class="fa fa-fw fa-user"></i> My Statistics</a>
