@@ -73,7 +73,12 @@ try {
 					echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
 				}
 			}
-		}	
+		}
+		//Delete old Entries in user_snapshot
+		$deletiontime = $nowtime - 2678400;
+		if ($mysqlcon->exec("DELETE FROM $dbname.user_snapshot WHERE timestamp=$deletiontime") === false) {
+			echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+		}
 	}
 
 	// Calc Values for server stats

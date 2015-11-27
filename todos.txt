@@ -18,7 +18,6 @@
 - nations to longtext
 - servericon on servername (index.php), if set
 - what is with sites top user of week and top users of month
-- delete old unused entries in user_snapshot
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php
 - add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
 
