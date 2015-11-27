@@ -17,7 +17,6 @@
 - all textes to lang.php
 - nations to longtext
 - servericon on servername (index.php), if set
-- handle exception NULL value on "Online Time Month" and "Online Time Week" -> something like "not enough data yet"
 - what is with sites top user of week and top users of month
 - delete old unused entries in user_snapshot
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php
