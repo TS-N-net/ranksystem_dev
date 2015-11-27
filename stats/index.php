@@ -38,6 +38,20 @@ $sql_res = $sql->fetchAll();
 
 $server_usage_sql = $mysqlcon->query("SELECT * FROM $dbname.server_usage ORDER BY(timestamp) DESC LIMIT 0, 47");
 $server_usage_sql_res = $server_usage_sql->fetchAll();
+
+if(isset($_GET['usage'])) {
+	if ($_GET["usage"] == 'week') {
+		$usage = 'week';
+	} elseif ($_GET["usage"] == 'month') {
+		$usage = 'month';
+	} else {
+		$usage = 'day';
+	}
+} else {
+	$usage = 'day';
+}
+
+echo $usage;
 ?>
 <!DOCTYPE html>
 <html>
@@ -328,7 +342,23 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Server Usage In The Last 24 Hours</h3>
+								<div class="row">
+									<div class="col-xs-9">
+										<h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Server Usage <i><?PHP if($usage == 'week') { echo 'In The Last 7 Days'; } elseif ($usage == 'month') { echo 'In The Last 30 Days'; } else { echo 'In The Last 24 Hours'; } ?></i></h3>
+									</div>
+									<div class="col-xs-3">
+										<div class="btn-group dropup pull-right">
+										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											select period <span class="caret"></span>
+										  </button>
+										  <ul class="dropdown-menu">
+											<li><a href="<?PHP echo "?usage=day"; ?>">Day</a></li>
+											<li><a href="<?PHP echo "?usage=week"; ?>">Week</a></li>
+											<li><a href="<?PHP echo "?usage=month"; ?>">Month</a></li>
+										  </ul>
+										</div>
+									</div>
+								</div>
                             </div>
                             <div class="panel-body">
                                 <div id="server-usage-chart"></div>
@@ -543,6 +573,32 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
                 '#FF8080'
           ]
         });
+		Morris.Area({
+		  element: 'server-usage-chart',
+		  data: [
+			<?PHP
+				$chart_data = '';
+				$trash_string = $mysqlcon->query("SET @a:=0");
+				if($usage == 'week') { 
+					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,12) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' order by u2.timestamp DESC LIMIT 28");
+				} elseif ($usage == 'month') {
+					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,48) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' order by u2.timestamp DESC LIMIT 30");
+				} else {
+					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,2) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' order by u2.timestamp DESC LIMIT 24");
+				}
+				$server_usage = $server_usage->fetchAll(PDO::FETCH_ASSOC);
+				foreach($server_usage as $chart_value) {
+					$chart_time = date('Y-m-d H:i:s',$chart_value['timestamp']);
+					$chart_data = $chart_data . '{ y: \''.$chart_time.'\', a: '.$chart_value['clients'].' }, ';
+				}
+				$chart_data = substr($chart_data, 0, -2);
+				echo $chart_data;
+			?>
+		  ],
+		  xkey: 'y',
+		  ykeys: ['a'],
+		  labels: ['Clients', 'Date']
+		});
     </script>
     <script type="text/javascript">
         var daysLabel = document.getElementById("days");
