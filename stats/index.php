@@ -25,8 +25,7 @@ try {
 
     if(!isset($_SESSION['tsuid'])) {
 		$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
-        if ($slowmode == 1) sleep(1);
-		set_session_ts3($hpclientip, $ts3);
+ 		set_session_ts3($hpclientip, $ts3);
     }
 }
 catch (Exception $e) {
@@ -137,7 +136,7 @@ echo $usage;
                     <p>You are currently not in a battle</p>
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -155,7 +154,24 @@ echo $usage;
                     <p>This page receives its values out of a database. So the values might be delayed a bit.</p>
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myStatsModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Not available</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You are not connected to the TS3 Server, so it cant display any data for you</p>
+                    <p>Please connect to the TS3 Server and then Refresh your Session by pressing the blue Refresh Button at the top-right corner</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -172,11 +188,11 @@ echo $usage;
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo ' '.$_SESSION['tsname']; ?><b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo ' ' .($_SESSION['connected'] == 0 ? '(Not Connected To TS3!)' : $_SESSION['tsname']); ?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>
+                        <?PHP echo ($requestconnect == 0 ? ' ' : '<li>
                             <a href="my_stats.php"><i class="fa fa-fw fa-user"></i> My Statistics</a>
-                        </li>
+                        </li>'); ?>
                         <li>
                             <a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> Server news</a>
                         </li>
@@ -202,7 +218,11 @@ echo $usage;
                         <a href="index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
                     </li>
                     <li>
-                        <a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>
+                        <?PHP if($_SESSION['connected'] == 0) {
+                            echo '<a href="#myStatsModal" data-toggle="modal"><i class="fa fa-fw fa-exclamation-triangle"></i> *My Statistics</a>';
+                        } else {
+                            echo '<a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>';
+                        }?>
                     </li>
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-trophy"></i> Top Users <i class="fa fa-fw fa-caret-down"></i></a>
