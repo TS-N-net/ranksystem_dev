@@ -185,7 +185,7 @@ try {
 	$max_entry_serverusage = $mysqlcon->query("SELECT MAX(timestamp) AS timestamp FROM $dbname.server_usage");
 	$max_entry_serverusage = $max_entry_serverusage->fetch(PDO::FETCH_ASSOC);
 	$diff_max_serverusage = $nowtime - $max_entry_serverusage['timestamp'];
-	if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 1800) {
+	if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 1770) {
 		if ($mysqlcon->exec("INSERT INTO $dbname.server_usage (timestamp, clients) VALUES ($nowtime,$server_used_slots)") === false) {
 			echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
 		}
