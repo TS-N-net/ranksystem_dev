@@ -6,6 +6,7 @@ if(isset($_POST['refresh'])) {
 
 function set_session_ts3($hpclientip, $ts3) {
 	$allclients = $ts3->clientList();
+	$_SESSION['connected']						= 0;
 	foreach ($allclients as $client) {
 		$tsip									= ip2long($client['connection_client_ip']);
 		if ($hpclientip == $tsip) {
@@ -24,11 +25,8 @@ function set_session_ts3($hpclientip, $ts3) {
 			} else {
 				$_SESSION['tsavatar']			= "none";
 			}
+			$_SESSION['connected']				= 1;
 			break;
-		} else {
-			$requestconnect						= true;
-			//wenn nicht auf ts oder ip adresse nicht mit homepage übereinstimmt
-			//evtl. connect auf ts fordern oder abgespeckte seite anzeigen
 		}
 	}
 }

@@ -252,7 +252,7 @@ catch (Exception $e) {
                     </div>
                     <div class="row">
                         <div class="col-lg-3 col-md-6">
-                            <div class="panel panel-primary">
+                            <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <center><img src="../icons/BattleSite/Main_Grey.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
@@ -267,7 +267,7 @@ catch (Exception $e) {
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <div class="panel panel-green">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <center><img src="../icons/BattleSite/Top10_Grey.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
@@ -282,7 +282,7 @@ catch (Exception $e) {
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <div class="panel panel-yellow">
+                            <div class="panel panel-warning">
                                 <div class="panel-heading">
                                     <center><img src="../icons/BattleSite/Reward_Grey.png" class="img-responsive"></center>
                                     <div class="clearfix"></div>
