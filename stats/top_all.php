@@ -196,9 +196,9 @@ function get_percentage($max_value, $value) {
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo '&nbsp;&nbsp;' .($_SESSION['connected'] == 0 ? '(Not Connected To TS3!)' : $_SESSION['tsname']); ?>&nbsp;<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>
+                        <?PHP echo ($_SESSION['connected'] == 0 ? ' ' : '<li>
                             <a href="my_stats.php"><i class="fa fa-fw fa-user"></i> My Statistics</a>
-                        </li>
+                        </li>'); ?>
                         <li>
                             <a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> Server news</a>
                         </li>
