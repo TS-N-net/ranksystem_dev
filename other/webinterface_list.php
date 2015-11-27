@@ -319,7 +319,7 @@ echo '<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td class="tdheadline size2">
-	<a href="list_rankup.php?admin=true" target="_blank" style="display:block;">', $lang['wihladm'], '</a>
+	<a href="stats/list_rankup.php?admin=true" target="_blank" style="display:block;">', $lang['wihladm'], '</a>
 	</td></tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td class="tdheadline size2">
