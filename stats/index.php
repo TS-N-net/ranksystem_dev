@@ -286,7 +286,7 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"><?PHP echo round(($sql_res[0]['total_online_month'] / 86400)). ' <small>days</small>';?></div>
-                                        <div>Online Time / Month</div>
+										<div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? 'not enough data yet...' : 'Online Time / Month') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -308,7 +308,7 @@ $server_usage_sql_res = $server_usage_sql->fetchAll();
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"><?PHP echo round(($sql_res[0]['total_online_week'] / 86400)). ' <small>days</small>';?></div>
-                                        <div>Online Time / Week</div>
+										<div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? 'not enough data yet...' : 'Online Time / Week') ?></div>
                                     </div>
                                 </div>
                             </div>
