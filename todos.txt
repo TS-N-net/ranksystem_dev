@@ -14,6 +14,7 @@
 - my_stats.php info button legendary icons
 - add new column rank to list_rankup.php as true rank
 - job for avatar download (cause dynamic user page)
+- job update groups doesnt delete deleted servergroups and neither adds new groups
 
 - documentate update / installation
 - new teamspeak permissions needed?
