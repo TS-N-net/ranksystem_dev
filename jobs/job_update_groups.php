@@ -29,6 +29,12 @@ try {
             echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
         }
     }
+
+    //NOOBCODE STARTED HERE FOR TESTS
+    /*$sIconId = $ts3['virtualserver_icon_id'];
+    if($sIconId > 600) {
+        $sIconFile = $ts3->iconDownload();
+    }*/
 	
 	// update groupinformations and download icons
     $dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups");
@@ -49,7 +55,7 @@ try {
         $iconid   = $servergroup['iconid'];
         $iconid   = ($iconid < 0) ? (pow(2, 32)) - ($iconid * -1) : $iconid;
 		$iconfile = 0;
-		if($iconid > 300) {
+		if($iconid > 600) {
 			$iconfile = $servergroup->iconDownload();
 		}
         $sgname   = str_replace('\\', '\\\\', htmlspecialchars($servergroup['name'], ENT_QUOTES));
