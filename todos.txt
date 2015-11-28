@@ -1,4 +1,5 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
+- optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - correct session handling.. handle outdated session for user which idle on homepage
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
@@ -12,7 +13,6 @@
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php
 - add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
 - my_stats.php info button legendary icons
-- rework job_calc_stats_user cause timeout for bigger databases
 - add new column rank to list_rankup.php as true rank
 - job for avatar download (cause dynamic user page)
 

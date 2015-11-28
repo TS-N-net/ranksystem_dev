@@ -86,10 +86,14 @@ if(isset($_POST['updateranksystem'])) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
-	if($mysqlcon->exec("CREATE TABLE $dbname.job_check (job_name text CHARACTER SET utf8 COLLATE utf8_unicode_ci, timestamp bigint(11) NOT NULL default '0')") === false) {
+	if($mysqlcon->exec("CREATE TABLE $dbname.job_check (job_name varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci PRIMARY KEY, timestamp bigint(11) NOT NULL default '0')") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
-	}	
+	}
+	if($mysqlcon->exec("INSERT INTO $dbname.job_check SET job_name='calc_user_limit'") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
 	if ($errcount == 1) {
 		if($mysqlcon->exec("UPDATE $dbname.config set currvers='1.00'") === false) {
 			echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
