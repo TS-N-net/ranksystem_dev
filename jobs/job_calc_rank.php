@@ -34,9 +34,9 @@ try {
 
     // calc next rankup
 	$upnextuptime = $nowtime - 86400;
-    $uuidsoff = $mysqlcon->query("SELECT idle,count,grpid,cldgroup FROM $dbname.user WHERE online<>1 AND lastseen>$upnextuptime");
+    $uuidsoff = $mysqlcon->query("SELECT uuid,idle,count,grpid,cldgroup FROM $dbname.user WHERE online<>1 AND lastseen>$upnextuptime");
+	$total_user = $uuidsoff->rowCount();
     if ($uuidsoff->rowCount() != 0) {
-		
 		$uuidsoff = $uuidsoff->fetchAll(PDO::FETCH_ASSOC);
         foreach($uuidsoff as $uuid) {
             $idle     = $uuid['idle'];
@@ -79,9 +79,12 @@ try {
             echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
         }
     }
-	if ($mysqlcon->exec("set @a:=0; UPDATE user u INNER JOIN (SELECT @a:=@a+1 nr,uuid FROM user ORDER BY count DESC) s USID (uuid) SET u.rank=s.nr;") === false) {
+	if ($mysqlcon->exec("SET @a:=0") === false) {
 		echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
-	}	
+	}
+	if ($mysqlcon->exec("UPDATE $dbname.user u INNER JOIN (SELECT @a:=@a+1 nr,uuid FROM $dbname.user ORDER BY count DESC) s USING (uuid) SET u.rank=s.nr") === false) {
+		echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+	}
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
