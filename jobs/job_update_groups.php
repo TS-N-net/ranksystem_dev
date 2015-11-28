@@ -12,6 +12,8 @@ require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
+$sqlerr = 0;
+
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
 	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_ug'; else $queryname = $queryname .'_ug';
@@ -31,7 +33,10 @@ try {
     }
 	
 	// update groupinformations and download icons
-    $dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups");
+    if(($dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups")) === false) {
+		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$sqlerr++;
+	}
     if ($dbgroups->rowCount() == 0) {
         $sqlhisgroup = "empty";
     } else {
@@ -42,7 +47,7 @@ try {
     }
 	
 	if ($slowmode == 1) sleep(1);
-    $ts3groups   = $ts3_VirtualServer->serverGroupList();
+    $ts3groups   = $ts3->serverGroupList();
 	
     foreach ($ts3groups as $servergroup) {
         $gefunden = 2;
@@ -94,9 +99,10 @@ try {
         }
         $allinsertdata = substr($allinsertdata, 0, -1);
         if ($allinsertdata != '') {
-            if ($mysqlcon->exec("INSERT INTO $dbname.groups (sgid, sgidname, iconid) VALUES $allinsertdata") === false) {
-                echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
-            }
+            if($mysqlcon->exec("INSERT INTO $dbname.groups (sgid, sgidname, iconid) VALUES $allinsertdata") === false) {
+				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				$sqlerr++;
+			}
         }
     }
 
@@ -113,14 +119,21 @@ try {
 			}
         }
         $allsgids = substr($allsgids, 0, -1);
-        if ($mysqlcon->exec("UPDATE $dbname.groups set sgidname = CASE sgid $allupdatesgid END, iconid = CASE sgid $allupdateiconid END WHERE sgid IN ($allsgids)") === false) {
-            echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
-        }
+        if($mysqlcon->exec("UPDATE $dbname.groups set sgidname = CASE sgid $allupdatesgid END, iconid = CASE sgid $allupdateiconid END WHERE sgid IN ($allsgids)") === false) {
+			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			$sqlerr++;
+		}
     }
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlerr++;
 }
+
+if ($sqlerr == 0) {
+	//update job_check, set job as success
+}
+
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
     echo '<br>', sprintf($lang['sitegen'], $buildtime, $dbgroups->rowCount()), '<br>';

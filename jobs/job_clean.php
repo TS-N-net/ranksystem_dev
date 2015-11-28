@@ -14,6 +14,8 @@ require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
+$sqlerr = 0;
+
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
 	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cc'; else $queryname = $queryname .'_cc';
@@ -35,9 +37,15 @@ try {
 	// clean old clients out of the database
 	if ($cleanclients == 1 && $slowmode != 1) {
 		$cleantime = $nowtime - $cleanperiod;
-		$lastclean = $mysqlcon->query("SELECT * FROM $dbname.cleanclients");
+		if(($lastclean = $mysqlcon->query("SELECT * FROM $dbname.cleanclients")) === false) {
+			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			$sqlerr++;
+		}
 		$lastclean = $lastclean->fetchAll();
-		$dbuserdata = $mysqlcon->query("SELECT uuid FROM $dbname.user");
+		if(($dbuserdata = $mysqlcon->query("SELECT uuid FROM $dbname.user")) === false) {
+			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			$sqlerr++;
+		}
 		$countrs = $dbuserdata->rowCount();
 		$uuids = $dbuserdata->fetchAll();
 		if ($lastclean[0]['timestamp'] < $cleantime) {
@@ -83,19 +91,22 @@ try {
 				$alldeldata = substr($alldeldata, 0, -1);
 				$alldeldata = "(".$alldeldata.")";
 				if ($alldeldata != '') {
-					if ($mysqlcon->exec("DELETE FROM $dbname.user WHERE uuid IN $alldeldata") === false) {
-						echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+					if($mysqlcon->exec("DELETE FROM $dbname.user WHERE uuid IN $alldeldata") === false) {
+						echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+						$sqlerr++;
 					} else {
 						echo '<span class="sccolor">',sprintf($lang['cleandel'], $countdel),'</span><br>';
-						if ($mysqlcon->exec("UPDATE $dbname.cleanclients SET timestamp='$nowtime'") === false) {
-							echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+						if($mysqlcon->exec("UPDATE $dbname.cleanclients SET timestamp='$nowtime'") === false) {
+							echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+							$sqlerr++;
 						}
 					}
 				}
 			} else {
 				echo '<span class="ifcolor">',$lang['cleanno'],'</span><br>';
-				if ($mysqlcon->exec("UPDATE $dbname.cleanclients SET timestamp='$nowtime'") === false) {
-					echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+				if($mysqlcon->exec("UPDATE $dbname.cleanclients SET timestamp='$nowtime'") === false) {
+					echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+					$sqlerr++;
 				}
 			}
 		}
@@ -103,10 +114,16 @@ try {
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlerr++;
 }
+
+if ($sqlerr == 0) {
+	//update job_check, set job as success
+}
+
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $total_user), '<br>';
+    echo '<br>', sprintf($lang['sitegen'], $buildtime, $count_tsuser['count']), '<br>';
 }
 ?>
 </body>

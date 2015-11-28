@@ -1,5 +1,4 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
-- optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - correct session handling.. handle outdated session for user which idle on homepage
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
