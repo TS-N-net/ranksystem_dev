@@ -244,6 +244,9 @@ if(!isset($_SESSION['tsuid'])) {
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="test.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+                    </li>
                     <li class="active">
                         <a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
                     </li>
