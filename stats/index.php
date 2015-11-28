@@ -117,7 +117,7 @@ if(isset($_GET['usage'])) {
                 </div>
                 <div class="modal-footer">
                     <form method="post">
-                            <button class="btn btn-primary" type="submit" name="refresh">Refresh</span></button>
+                            <button class="btn btn-primary" type="submit" name="refresh">Refresh</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </form>
                 </div>
@@ -179,7 +179,7 @@ if(isset($_GET['usage'])) {
     <div id="wrapper">
         
         <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
@@ -447,7 +447,7 @@ if(isset($_GET['usage'])) {
                                 <tbody>
                                     <tr>
                                         <td>Server Status</td>
-                                        <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<font color="#00FF00">Online</font>' : '<font color="#FF0000">Offline</font>' ?></td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">Online</span>' : '<span class="text-danger">Offline</span>' ?></td>
                                     </tr>
                                     <tr>
                                         <td>Clients Online</td>
@@ -530,6 +530,7 @@ if(isset($_GET['usage'])) {
                         </div>
                     </div>
                 </div>
+			</div>	
             <!-- /.container-fluid -->
 
         </div>

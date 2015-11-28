@@ -14,9 +14,11 @@
 - add new column rank to list_rankup.php as true rank
 - job for avatar download (cause dynamic user page)
 - client_flag_avatar = md5sum of avatar file; once this changes -> download the new avatar
+- job_calc_stats; set server to offline, if connection to ts3 server failed
+- session.php set "not connected" information in session and do not try to connect with every site change to ts3 server again (prevent spam and better load, when server is down)
 
 - documentate update / installation
 - new teamspeak permissions needed?
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
-- search for errors (stats and jobs) about error-log
+- search for errors (stats and jobs) about error-log (no one at 28.11.2015)
 - check all stats site with https://validator.w3.org/ and correct errors
