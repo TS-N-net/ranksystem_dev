@@ -55,8 +55,7 @@ try {
             if (substr($newversion, 0, 4) != substr($currvers, 0, 4) && $newversion != '') {
                 echo '<b>', $lang['upinf'], '</b><br>';
                 foreach ($uniqueid as $clientid) {
-                    if ($slowmode == 1)
-                        sleep(1);
+                    if ($slowmode == 1) sleep(1);
                     try {
                         $ts3->clientGetByUid($clientid)->message(sprintf($lang['upmsg'], $currvers, $newversion));
                         echo '<span class="sccolor">', sprintf($lang['upusrinf'], $clientid), '</span><br>';
@@ -158,6 +157,7 @@ try {
 									$boosttime = $nowtime;
 								} else {
 									if ($nowtime > $sqlhis[$uid]['boosttime'] + $boost['time']) {
+										if ($slowmode == 1) sleep(1);
 										try {
 											$ts3->serverGroupClientDel($boost['group'], $cldbid);
 											$boosttime = 0;
@@ -201,8 +201,7 @@ try {
                     if ($activetime > $time && !in_array($uid, $exceptuuid) && !array_intersect($sgroups, $exceptgroup)) {
                         if ($sqlhis[$uid]['grpid'] != $groupid) {
                             if ($sqlhis[$uid]['grpid'] != 0 && in_array($sqlhis[$uid]['grpid'], $sgroups)) {
-                                if ($slowmode == 1)
-                                    sleep(1);
+                                if ($slowmode == 1) sleep(1);
                                 try {
                                     $ts3->serverGroupClientDel($sqlhis[$uid]['grpid'], $cldbid);
                                     echo '<span class="ifcolor">', sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid), '</span><br>';
@@ -212,8 +211,7 @@ try {
                                 }
                             }
                             if (!in_array($groupid, $sgroups)) {
-                                if ($slowmode == 1)
-                                    sleep(1);
+                                if ($slowmode == 1) sleep(1);
                                 try {
                                     $ts3->serverGroupClientAdd($groupid, $cldbid);
                                     echo '<span class="ifcolor">', sprintf($lang['sgrpadd'], $groupid, $name, $uid, $cldbid), '</span><br>';
@@ -224,8 +222,7 @@ try {
                             }
                             $grpid = $groupid;
                             if ($msgtouser == 1) {
-                                if ($slowmode == 1)
-                                    sleep(1);
+                                if ($slowmode == 1) sleep(1);
                                 $days  = $dtF->diff($dtT)->format('%a');
                                 $hours = $dtF->diff($dtT)->format('%h');
                                 $mins  = $dtF->diff($dtT)->format('%i');

@@ -18,5 +18,5 @@ execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_rank.php');
 sleep(1);
 execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats.php');
 sleep(1);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats_user.php');
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats_user.php');
 ?>

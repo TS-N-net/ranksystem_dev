@@ -1,7 +1,6 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - correct session handling.. handle outdated session for user which idle on homepage
-- every action (stats and jobs) for ts3 has a check for slow mode?
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - top_all.php: Take care about client and servergroup exceptions!
 - stats about client version on index.php instead of current server usage (dublicate)
@@ -15,7 +14,10 @@
 - my_stats.php info button legendary icons
 - rework job_calc_stats_user cause timeout for bigger databases
 - add new column rank to list_rankup.php as true rank
+- job for avatar download (cause dynamic user page)
 
+- documentate update / installation
+- new teamspeak permissions needed?
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
 - search for errors (stats and jobs) about error-log
 - check all stats site with https://validator.w3.org/ and correct errors

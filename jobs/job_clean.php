@@ -54,6 +54,7 @@ try {
 				if ($start == 100000 || $count_tsuser['count'] <= $start) {
 					break;
 				}
+				if ($slowmode == 1) sleep(1);
 			}
 			foreach($clientdblist as $uuidts) {
 				$single_uuid = $uuidts['client_unique_identifier']->toString();

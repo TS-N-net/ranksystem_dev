@@ -24,6 +24,7 @@ try {
     }
 
     if(!isset($_SESSION['tsuid'])) {
+		if ($slowmode == 1) sleep(1);
 		$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
  		set_session_ts3($hpclientip, $ts3);
     }
