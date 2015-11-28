@@ -245,6 +245,9 @@ function get_percentage($max_value, $value) {
                         </ul>
                     </li>
                     <li>
+                        <a href="test.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+                    </li>
+                    <li>
                         <a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
                     </li>
                     <li>

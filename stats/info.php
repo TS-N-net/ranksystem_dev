@@ -203,6 +203,9 @@ catch (Exception $e) {
                         </ul>
                     </li>
                     <li>
+                        <a href="test.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+                    </li>
+                    <li>
                         <a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
                     </li>
                     <li class="active">
@@ -228,7 +231,7 @@ catch (Exception $e) {
                 <div class="row">
                     <div class="col-lg-12">
                         <h4><strong><font color="#337ab7">What Is The Ranksystem?</font></strong></h4>
-                        <p>A TS3 Bot, which gathers information and statistics about every user and displays the result on <strong>this</strong> site and the <a href="list_rankup.php" target="_blank"><u><font color="#000000">Rankup List</font></u></a>.
+                        <p>A TS3 Bot, which gathers information and statistics about every user and displays the result on <strong>this</strong> site and the <a href="test.php"><u><font color="#000000">List Rankup</font></u></a>.
                         </p>
                         <br>
                     </div>
