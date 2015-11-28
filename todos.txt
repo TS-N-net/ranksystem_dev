@@ -1,6 +1,5 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
-- correct session handling.. handle outdated session for user which idle on homepage
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - top_all.php: Take care about client and servergroup exceptions!
 - stats about client version on index.php instead of current server usage (dublicate)
@@ -14,7 +13,7 @@
 - my_stats.php info button legendary icons
 - add new column rank to list_rankup.php as true rank
 - job for avatar download (cause dynamic user page)
-- job update groups doesnt delete deleted servergroups and neither adds new groups
+- client_flag_avatar = md5sum of avatar file; once this changes -> download the new avatar
 
 - documentate update / installation
 - new teamspeak permissions needed?

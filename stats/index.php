@@ -5,32 +5,32 @@ require_once('../ts3_lib/TeamSpeak3.php');
 require_once('../lang.php');
 require_once('../other/session.php');
 
-try {
-    $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
-	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
-    if ($slowmode == 1) sleep(1);
-    try {
-        $ts3->selfUpdate(array('client_nickname' => $queryname));
-    }
-    catch (Exception $e) {
-        if ($slowmode == 1) sleep(1);
-        try {
-            $ts3->selfUpdate(array('client_nickname' => $queryname2));
-        }
-        catch (Exception $e) {
-            echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-        }
-    }
+if(!isset($_SESSION['tsuid'])) {
+	try {
+		$ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
+		if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
+		if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
+		if ($slowmode == 1) sleep(1);
+		try {
+			$ts3->selfUpdate(array('client_nickname' => $queryname));
+		}
+		catch (Exception $e) {
+			if ($slowmode == 1) sleep(1);
+			try {
+				$ts3->selfUpdate(array('client_nickname' => $queryname2));
+			}
+			catch (Exception $e) {
+				echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			}
+		}
 
-    if(!isset($_SESSION['tsuid'])) {
 		if ($slowmode == 1) sleep(1);
 		$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
- 		set_session_ts3($hpclientip, $ts3);
-    }
-}
-catch (Exception $e) {
-    echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+		set_session_ts3($hpclientip, $ts3);
+	}
+	catch (Exception $e) {
+		echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+	}
 }
 
 $sql = $mysqlcon->query("SELECT * FROM $dbname.stats_server");
@@ -495,7 +495,7 @@ if(isset($_GET['usage'])) {
                                     </tr>
                                     <tr>
                                         <td>Server IP + Port</td>
-                                        <td><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']) .':' .$ts3['virtualserver_port'] ?></td>
+                                        <td><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']) .':' .$_SESSION['serverport'] ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Password</td>
