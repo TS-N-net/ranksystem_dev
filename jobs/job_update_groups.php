@@ -32,11 +32,13 @@ try {
         }
     }
 
-    //NOOBCODE STARTED HERE FOR TESTS
-    /*$sIconId = $ts3['virtualserver_icon_id'];
-    if($sIconId > 600) {
-        $sIconFile = $ts3->iconDownload();
-    }*/
+    $sIconId = $ts3['virtualserver_icon_id'];
+	$sIconId   = ($sIconId < 0) ? (pow(2, 32)) - ($sIconId * -1) : $sIconId;
+	$sIconFile = 0;
+	if($sIconId > 600) {
+		$sIconFile = $ts3->iconDownload();
+		file_put_contents(substr(dirname(__FILE__),0,-4) . "icons/servericon.png", $sIconFile);
+	}
 	
 	// update groupinformations and download icons
     if(($dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups")) === false) {
