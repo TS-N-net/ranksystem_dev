@@ -1,4 +1,5 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
+- optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - correct session handling.. handle outdated session for user which idle on homepage
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
@@ -15,6 +16,7 @@
 - add new column rank to list_rankup.php as true rank
 - job for avatar download (cause dynamic user page)
 - job update groups doesnt delete deleted servergroups and neither adds new groups
+- list rankup when scrolling the "info header" doesnt attach to top navbar
 
 - documentate update / installation
 - new teamspeak permissions needed?
