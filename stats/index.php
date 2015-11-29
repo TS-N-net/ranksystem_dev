@@ -404,10 +404,10 @@ if(isset($_GET['usage'])) {
                     <div class="col-lg-3">
                         <div class="panel panel-green">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Current Server Usage</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Versions</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="server-usage-donut"></div>
+                                <div id="client-version-donut"></div>
                             </div>
                         </div>
                     </div>
@@ -548,10 +548,19 @@ if(isset($_GET['usage'])) {
           ]
         });
         Morris.Donut({
-            element: 'server-usage-donut',
+            element: 'client-version-donut',
             data: [
-                {label: "Used Slots", value: <?PHP echo $sql_res[0]['server_used_slots'] ?>},
-                {label: "Free Slots", value: <?PHP echo $sql_res[0]['server_free_slots'] ?>},
+				<?PHP
+				$client_versions = $mysqlcon->query("SELECT version, count(version) AS count FROM user GROUP BY version ORDER BY count DESC LIMIT 5");
+				$client_versions = $client_versions->fetchAll(PDO::FETCH_ASSOC);
+				$count_version = 0;
+				foreach($client_versions as $version) {
+					echo '{label: \'',$version['version'],'\', value: ',$version['count'],'}, ';
+					$count_version = $count_version + $version['count'];
+				}
+				$other_version = $sql_res[0]['total_user'] - $count_version;
+				echo '{label: \'Others\', value: ',$other_version,'}';
+				?>
             ],
             colors: [
                 '#5cb85c',
