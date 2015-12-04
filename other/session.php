@@ -1,7 +1,7 @@
 <?PHP
 if(isset($_POST['refresh'])) {
-    $_SESSION = array();
-    session_destroy();
+	$_SESSION = array();
+	session_destroy();
 }
 
 function set_session_ts3($hpclientip, $ts3) {
@@ -10,19 +10,22 @@ function set_session_ts3($hpclientip, $ts3) {
 	foreach ($allclients as $client) {
 		$tsip									= ip2long($client['connection_client_ip']);
 		if ($hpclientip == $tsip) {
-			$_SESSION['tsuid']					= htmlspecialchars($client['client_unique_identifier'], ENT_QUOTES);
+			$_SESSION['tsuid']					= $client['client_unique_identifier']->toString();
 			$_SESSION['tscldbid']				= $client['client_database_id'];
-			$_SESSION['tsname']					= str_replace('\\', '\\\\', htmlspecialchars($client['client_nickname'], ENT_QUOTES));
+			$_SESSION['tsname']					= $client['client_nickname']->toString();
 			$_SESSION['tscreated']				= date('d-m-Y',$client['client_created']);
 			//$_SESSION['tsgroups']				= $client['client_servergroups'];
 			$_SESSION['tsconnections']			= $client['client_totalconnections'];
 			$_SESSION['serverport']				= $ts3['virtualserver_port'];
-			if ($client['client_flag_avatar'] != NULL) {
-				$client_avatar_flag				= $client['client_flag_avatar']->toString();
-				$_SESSION['tsavatarfile']		= $client->avatarDownload();
-				$_SESSION['tsavatar']			= $client_avatar_flag;
-				$avatarfilepath					= '../other/avatars/'.$client_avatar_flag;
-				file_put_contents($avatarfilepath, $_SESSION['tsavatarfile']);
+			$convert = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p');
+			$uuidasbase16 = '';
+			for ($i = 0; $i < 20; $i++) {
+				$char = ord(substr(base64_decode($_SESSION['tsuid']), $i, 1));
+				$uuidasbase16 .= $convert[($char & 0xF0) >> 4];
+				$uuidasbase16 .= $convert[$char & 0x0F];
+			}
+			if(is_file('../other/avatars/'.$uuidasbase16)) {
+				$_SESSION['tsavatar']			= $uuidasbase16;
 			} else {
 				$_SESSION['tsavatar']			= "none";
 			}
