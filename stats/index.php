@@ -50,6 +50,15 @@ if(isset($_GET['usage'])) {
 } else {
 	$usage = 'day';
 }
+
+$client_versions = $mysqlcon->query("SELECT version, count(version) AS count FROM user GROUP BY version ORDER BY count DESC LIMIT 5");
+$client_versions = $client_versions->fetchAll(PDO::FETCH_ASSOC);
+$count_version = 0;
+
+foreach($client_versions as $version) {
+    $count_version = $count_version + $version['count'];
+}
+$unknown_users = $sql_res[0]['total_user'] - $count_version;
 ?>
 <!DOCTYPE html>
 <html>
@@ -88,6 +97,22 @@ if(isset($_GET['usage'])) {
 </head>
 
 <body>
+    <div id="cModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Unknown Clients</h4>
+                </div>
+                <div class="modal-body">
+                    <p>We dont have Version, Nationality and Platform information for <?PHP echo $unknown_users .' / ' .$sql_res[0]['total_user'] ?></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="myModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -406,6 +431,11 @@ if(isset($_GET['usage'])) {
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Versions</h3>
                             </div>
+                            <div class="btn-group">
+                                <a href="#cModal" data-toggle="modal" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                </a>
+                            </div>
                             <div class="panel-body">
                                 <div id="client-version-donut"></div>
                             </div>
@@ -414,7 +444,12 @@ if(isset($_GET['usage'])) {
                     <div class="col-lg-3">
                         <div class="panel panel-yellow">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> User Nationality</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationality</h3>
+                            </div>
+                            <div class="btn-group">
+                                <a href="#cModal" data-toggle="modal" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                </a>
                             </div>
                             <div class="panel-body">
                                 <div id="user-descent-donut"></div>
@@ -424,7 +459,12 @@ if(isset($_GET['usage'])) {
                     <div class="col-lg-3">
                         <div class="panel panel-red">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> User Platforms</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Platforms</h3>
+                            </div>
+                            <div class="btn-group">
+                                <a href="#cModal" data-toggle="modal" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                </a>
                             </div>
                             <div class="panel-body">
                                 <div id="user-platform-donut"></div>
@@ -551,15 +591,10 @@ if(isset($_GET['usage'])) {
             element: 'client-version-donut',
             data: [
 				<?PHP
-				$client_versions = $mysqlcon->query("SELECT version, count(version) AS count FROM user GROUP BY version ORDER BY count DESC LIMIT 5");
-				$client_versions = $client_versions->fetchAll(PDO::FETCH_ASSOC);
-				$count_version = 0;
 				foreach($client_versions as $version) {
 					echo '{label: \'',$version['version'],'\', value: ',$version['count'],'}, ';
 					$count_version = $count_version + $version['count'];
 				}
-				$other_version = $sql_res[0]['total_user'] - $count_version;
-				echo '{label: \'Others\', value: ',$other_version,'}';
 				?>
             ],
             colors: [
