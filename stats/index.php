@@ -612,11 +612,11 @@ if(isset($_GET['usage'])) {
 				$chart_data = '';
 				$trash_string = $mysqlcon->query("SET @a:=0");
 				if($usage == 'week') { 
-					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,12) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' order by u2.timestamp DESC LIMIT 28");
+					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,4) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' ORDER BY u2.timestamp DESC LIMIT 672");
 				} elseif ($usage == 'month') {
-					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,48) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' order by u2.timestamp DESC LIMIT 30");
+					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,16) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' ORDER BY u2.timestamp DESC LIMIT 2880");
 				} else {
-					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,2) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' order by u2.timestamp DESC LIMIT 24");
+					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp ORDER BY u2.timestamp DESC LIMIT 96");
 				}
 				$server_usage = $server_usage->fetchAll(PDO::FETCH_ASSOC);
 				foreach($server_usage as $chart_value) {
