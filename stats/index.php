@@ -5,32 +5,32 @@ require_once('../ts3_lib/TeamSpeak3.php');
 require_once('../lang.php');
 require_once('../other/session.php');
 
-try {
-    $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
-	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
-    if ($slowmode == 1) sleep(1);
-    try {
-        $ts3->selfUpdate(array('client_nickname' => $queryname));
-    }
-    catch (Exception $e) {
-        if ($slowmode == 1) sleep(1);
-        try {
-            $ts3->selfUpdate(array('client_nickname' => $queryname2));
-        }
-        catch (Exception $e) {
-            echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-        }
-    }
+if(!isset($_SESSION['tsuid'])) {
+	try {
+		$ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
+		if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
+		if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
+		if ($slowmode == 1) sleep(1);
+		try {
+			$ts3->selfUpdate(array('client_nickname' => $queryname));
+		}
+		catch (Exception $e) {
+			if ($slowmode == 1) sleep(1);
+			try {
+				$ts3->selfUpdate(array('client_nickname' => $queryname2));
+			}
+			catch (Exception $e) {
+				echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			}
+		}
 
-    if(!isset($_SESSION['tsuid'])) {
 		if ($slowmode == 1) sleep(1);
 		$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
- 		set_session_ts3($hpclientip, $ts3);
-    }
-}
-catch (Exception $e) {
-    echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+		set_session_ts3($hpclientip, $ts3);
+	}
+	catch (Exception $e) {
+		echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+	}
 }
 
 $sql = $mysqlcon->query("SELECT * FROM $dbname.stats_server");
@@ -117,7 +117,7 @@ if(isset($_GET['usage'])) {
                 </div>
                 <div class="modal-footer">
                     <form method="post">
-                            <button class="btn btn-primary" type="submit" name="refresh">Refresh</span></button>
+                            <button class="btn btn-primary" type="submit" name="refresh">Refresh</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </form>
                 </div>
@@ -179,7 +179,7 @@ if(isset($_GET['usage'])) {
     <div id="wrapper">
         
         <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
@@ -404,10 +404,10 @@ if(isset($_GET['usage'])) {
                     <div class="col-lg-3">
                         <div class="panel panel-green">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Current Server Usage</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Versions</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="server-usage-donut"></div>
+                                <div id="client-version-donut"></div>
                             </div>
                         </div>
                     </div>
@@ -447,7 +447,7 @@ if(isset($_GET['usage'])) {
                                 <tbody>
                                     <tr>
                                         <td>Server Status</td>
-                                        <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<font color="#00FF00">Online</font>' : '<font color="#FF0000">Offline</font>' ?></td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">Online</span>' : '<span class="text-danger">Offline</span>' ?></td>
                                     </tr>
                                     <tr>
                                         <td>Clients Online</td>
@@ -498,7 +498,7 @@ if(isset($_GET['usage'])) {
                                     </tr>
                                     <tr>
                                         <td>Server IP + Port</td>
-                                        <td><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']) .':' .$ts3['virtualserver_port'] ?></td>
+                                        <td><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']) .':' .$_SESSION['serverport'] ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Password</td>
@@ -530,6 +530,7 @@ if(isset($_GET['usage'])) {
                         </div>
                     </div>
                 </div>
+			</div>	
             <!-- /.container-fluid -->
 
         </div>
@@ -547,10 +548,19 @@ if(isset($_GET['usage'])) {
           ]
         });
         Morris.Donut({
-            element: 'server-usage-donut',
+            element: 'client-version-donut',
             data: [
-                {label: "Used Slots", value: <?PHP echo $sql_res[0]['server_used_slots'] ?>},
-                {label: "Free Slots", value: <?PHP echo $sql_res[0]['server_free_slots'] ?>},
+				<?PHP
+				$client_versions = $mysqlcon->query("SELECT version, count(version) AS count FROM user GROUP BY version ORDER BY count DESC LIMIT 5");
+				$client_versions = $client_versions->fetchAll(PDO::FETCH_ASSOC);
+				$count_version = 0;
+				foreach($client_versions as $version) {
+					echo '{label: \'',$version['version'],'\', value: ',$version['count'],'}, ';
+					$count_version = $count_version + $version['count'];
+				}
+				$other_version = $sql_res[0]['total_user'] - $count_version;
+				echo '{label: \'Others\', value: ',$other_version,'}';
+				?>
             ],
             colors: [
                 '#5cb85c',

@@ -16,6 +16,7 @@ function set_session_ts3($hpclientip, $ts3) {
 			$_SESSION['tscreated']				= date('d-m-Y',$client['client_created']);
 			//$_SESSION['tsgroups']				= $client['client_servergroups'];
 			$_SESSION['tsconnections']			= $client['client_totalconnections'];
+			$_SESSION['serverport']				= $ts3['virtualserver_port'];
 			if ($client['client_flag_avatar'] != NULL) {
 				$client_avatar_flag				= $client['client_flag_avatar']->toString();
 				$_SESSION['tsavatarfile']		= $client->avatarDownload();

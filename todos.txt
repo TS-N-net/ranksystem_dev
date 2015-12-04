@@ -1,25 +1,32 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
-- correct session handling.. handle outdated session for user which idle on homepage
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - top_all.php: Take care about client and servergroup exceptions!
-- stats about client version on index.php instead of current server usage (dublicate)
+- how to handle the obviously differenz between "Total Users" and the donut charts?
 - thousands delimiter for total bytes on current statsitics (index.php)
 - all textes to lang.php
 - nations to longtext
 - servericon on servername (index.php), if set
 - what is with sites top user of week and top users of month?
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php
-- add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
 - my_stats.php info button legendary icons
 - add new column rank to list_rankup.php as true rank
+
+- stats about client versions to job_calc_stats and colors of chart
+- add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
 - job for avatar download (cause dynamic user page)
+<<<<<<< HEAD
 - job update groups doesnt delete deleted servergroups and neither adds new groups
 - list rankup when scrolling the "info header" doesnt attach to top navbar
+=======
+- client_flag_avatar = md5sum of avatar file; once this changes -> download the new avatar
+- job_calc_stats; set server to offline, if connection to ts3 server failed
+- session.php set "not connected" information in session and do not try to connect with every site change to ts3 server again (prevent spam and better load, when server is down)
+>>>>>>> e81a330a90222c8e23b0b184ca344a5838fae2ec
 
 - documentate update / installation
 - new teamspeak permissions needed?
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
-- search for errors (stats and jobs) about error-log
+- search for errors (stats and jobs) about error-log (no one at 28.11.2015)
 - check all stats site with https://validator.w3.org/ and correct errors
