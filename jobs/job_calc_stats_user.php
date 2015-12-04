@@ -60,7 +60,7 @@ foreach($statsuserhis as $userhis) {
 unset($statsuserhis);
 
 if(isset($sqlhis)) {
-	echo '<b>Update User Stats...</b><br>';
+	echo '<b>Update User Stats between ',$job_begin,' and ',$job_end,':</b><br>';
 	if(($userdataweekbegin = $mysqlcon->query("SELECT uuid,count,idle FROM $dbname.user_snapshot WHERE timestamp=(SELECT MIN(s2.timestamp) AS value2 FROM (SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 28) AS s2, $dbname.user_snapshot AS s1 WHERE s1.timestamp=s2.timestamp)")) === false) {
 		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$sqlerr++;
@@ -140,7 +140,10 @@ if(isset($sqlhis)) {
 		}
 	}
 }
-
+if ($mysqlcon->exec("UPDATE $dbname.stats_user AS t LEFT JOIN $dbname.user AS u ON t.uuid=u.uuid SET t.removed='1' WHERE u.uuid IS NULL") === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
 if ($sqlerr == 0) {
 	//update job_check, set job as success
 }

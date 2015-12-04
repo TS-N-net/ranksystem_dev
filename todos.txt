@@ -8,12 +8,11 @@
 - nations to longtext
 - servericon on servername (index.php), if set
 - what is with sites top user of week and top users of month?
-- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php
+- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - my_stats.php info button legendary icons
 - add new column rank to list_rankup.php as true rank
 
 - stats about client versions to job_calc_stats and colors of chart
-- add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
 - job_calc_stats; set server to offline, if connection to ts3 server failed
 - session.php set "not connected" information in session and do not try to connect with every site change to ts3 server again (prevent spam and better load, when server is down)
 
