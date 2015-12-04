@@ -216,6 +216,13 @@ try {
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$offline_status = array(110,257,258,1024,1026,1031,1032,1033,1034,1280,1793);
+	if(in_array($e->getCode(), $offline_status)) {
+		if($mysqlcon->exec("UPDATE $dbname.stats_server SET server_status='0'") === false) {
+			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			$sqlerr++;
+		}
+	}
 	$sqlerr++;
 }
 

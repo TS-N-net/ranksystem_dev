@@ -11,9 +11,9 @@
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - my_stats.php info button legendary icons
 - add new column rank to list_rankup.php as true rank
+- if server is offline (stats_server:server_status='0'), then conside this for current statistics on index.php
 
 - stats about client versions to job_calc_stats and colors of chart
-- job_calc_stats; set server to offline, if connection to ts3 server failed
 - session.php set "not connected" information in session and do not try to connect with every site change to ts3 server again (prevent spam and better load, when server is down)
 
 - documentate update / installation
