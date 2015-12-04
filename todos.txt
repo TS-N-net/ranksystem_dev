@@ -3,7 +3,6 @@
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - top_all.php: Take care about client and servergroup exceptions!
-- how to handle the obviously differenz between "Total Users" and the donut charts?
 - thousands delimiter for total bytes on current statsitics (index.php)
 - all textes to lang.php
 - nations to longtext
