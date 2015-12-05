@@ -17,7 +17,6 @@
 - list rankup when scrolling the "info header" doesnt attach to top navbar
 
 - stats about client versions to job_calc_stats and colors of chart
-- job update groups doesnt delete deleted servergroups and neither adds new groups
 
 - documentate update / installation
 - new teamspeak permissions needed?

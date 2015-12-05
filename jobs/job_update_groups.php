@@ -58,6 +58,7 @@ try {
     $ts3groups   = $ts3->serverGroupList();
 	
     foreach ($ts3groups as $servergroup) {
+		$tsgroupids[] = $servergroup['sgid'];
         $gefunden = 2;
         $iconid   = $servergroup['iconid'];
         $iconid   = ($iconid < 0) ? (pow(2, 32)) - ($iconid * -1) : $iconid;
@@ -132,6 +133,20 @@ try {
 			$sqlerr++;
 		}
     }
+	
+	foreach ($sqlhisgroup as $sgroupid => $sgroupname) {
+		if(!in_array($sgroupid, $tsgroupids)) {
+			$delsgroupids = $delsgroupids . "'" . $sgroupid . "',";
+		}
+	}
+	
+	if(isset($delsgroupids)) {
+		$delsgroupids = substr($delsgroupids, 0, -1);
+		if($mysqlcon->exec("DELETE FROM groups WHERE sgid IN ($delsgroupids)") === false) {
+			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			$sqlerr++;
+		}
+	}
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
