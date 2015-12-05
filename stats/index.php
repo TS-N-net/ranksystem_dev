@@ -420,7 +420,7 @@ if(isset($_GET['usage'])) {
                     <div class="col-lg-3">
                         <div class="panel panel-yellow">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationality</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationalitys</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="user-descent-donut"></div>
@@ -469,11 +469,11 @@ if(isset($_GET['usage'])) {
                                     </tr>
                                     <tr>
                                         <td>Total Bytes Downloaded (in MiB)</td>
-                                        <td><?PHP echo round($sql_res[0]['server_bytes_down']/1048576) ?></td>
+                                        <td><?PHP echo number_format(round($sql_res[0]['server_bytes_down']/1048576), 0, '.', ',') ?></td>
                                     </tr>
                                     <tr>
                                         <td>Total Bytes Uploaded (in MiB)</td>
-                                        <td><?PHP echo round($sql_res[0]['server_bytes_up']/1048576) ?></td>
+                                        <td><?PHP echo number_format(round($sql_res[0]['server_bytes_up']/1048576), 0, '.', ',') ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Uptime</td>
