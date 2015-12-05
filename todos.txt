@@ -4,7 +4,6 @@
 - add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - list_rankup.php Undefined index: user in /stats/test.php on line 615
 - top_all.php: Take care about client and servergroup exceptions!
-- thousands delimiter for total bytes on current statsitics (index.php)
 - all textes to lang.php
 - nations to longtext
 - servericon on servername (index.php), if set
