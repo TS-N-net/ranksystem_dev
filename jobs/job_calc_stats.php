@@ -168,6 +168,43 @@ try {
 			$platform_other = $platform_other + $v;
 		}
 	}
+	
+	$version_1 = 0;
+	$version_2 = 0;
+	$version_3 = 0;
+	$version_4 = 0;
+	$version_5 = 0;
+	$version_name_1 = 0;
+	$version_name_2 = 0;
+	$version_name_3 = 0;
+	$version_name_4 = 0;
+	$version_name_5 = 0;
+	$client_versions = $mysqlcon->query("SELECT version, COUNT(version) AS count FROM user GROUP BY version ORDER BY count DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+	$count_version = 0;
+	$version_other = $mysqlcon->query("SELECT COUNT(version) AS count FROM user ORDER BY count DESC")->fetchAll(PDO::FETCH_ASSOC);
+
+	foreach($client_versions as $version) {
+		$count_version++;
+		if ($count_version == 1) {
+			$version_1 = $version['count'];
+			$version_name_1 = $version['version'];
+		} elseif ($count_version == 2) {
+			$version_2 = $version['count'];
+			$version_name_2 = $version['version'];
+		} elseif ($count_version == 3) {
+			$version_3 = $version['count'];
+			$version_name_3 = $version['version'];
+		} elseif ($count_version == 4) {
+			$version_4 = $version['count'];
+			$version_name_4 = $version['version'];
+		} elseif ($count_version == 5) {
+			$version_5 = $version['count'];
+			$version_name_5 = $version['version'];
+		}
+	}
+	$version_other = $version_other[0]['count'] - $version_1 + $version_2 + $version_3 + $version_4 + $version_5;
+	
+	
 	if($ts3['virtualserver_status']=="online") {
 		$server_status = 1;
 	} elseif($ts3['virtualserver_status']=="offline") {
@@ -195,7 +232,7 @@ try {
 	$server_weblist = $ts3['virtualserver_weblist_enabled'];
 	$server_version = $ts3['virtualserver_version'];
 
-	if($mysqlcon->exec("UPDATE $dbname.stats_server SET total_user='$total_user', total_online_time='$total_online_time', total_online_month='$total_online_month', total_online_week='$total_online_week', total_active_time='$total_active_time', total_inactive_time='$total_inactive_time', country_nation_name_1='$country_nation_name_1', country_nation_name_2='$country_nation_name_2', country_nation_name_3='$country_nation_name_3', country_nation_name_4='$country_nation_name_4', country_nation_name_5='$country_nation_name_5', country_nation_1='$country_nation_1', country_nation_2='$country_nation_2', country_nation_3='$country_nation_3', country_nation_4='$country_nation_4', country_nation_5='$country_nation_5', country_nation_other='$country_nation_other', platform_1='$platform_1', platform_2='$platform_2', platform_3='$platform_3', platform_4='$platform_4', platform_5='$platform_5', platform_other='$platform_other', server_status='$server_status', server_free_slots='$server_free_slots', server_used_slots='$server_used_slots', server_channel_amount='$server_channel_amount', server_ping='$server_ping', server_packet_loss='$server_packet_loss', server_bytes_down='$server_bytes_down', server_bytes_up='$server_bytes_up', server_uptime='$server_uptime', server_id='$server_id', server_name='$server_name', server_pass='$server_pass', server_creation_date='$server_creation_date', server_platform='$server_platform', server_weblist='$server_weblist', server_version='$server_version'") === false) {
+	if($mysqlcon->exec("UPDATE $dbname.stats_server SET total_user='$total_user', total_online_time='$total_online_time', total_online_month='$total_online_month', total_online_week='$total_online_week', total_active_time='$total_active_time', total_inactive_time='$total_inactive_time', country_nation_name_1='$country_nation_name_1', country_nation_name_2='$country_nation_name_2', country_nation_name_3='$country_nation_name_3', country_nation_name_4='$country_nation_name_4', country_nation_name_5='$country_nation_name_5', country_nation_1='$country_nation_1', country_nation_2='$country_nation_2', country_nation_3='$country_nation_3', country_nation_4='$country_nation_4', country_nation_5='$country_nation_5', country_nation_other='$country_nation_other', platform_1='$platform_1', platform_2='$platform_2', platform_3='$platform_3', platform_4='$platform_4', platform_5='$platform_5', platform_other='$platform_other', version_name_1='$version_name_1', version_name_2='$version_name_2', version_name_3='$version_name_3', version_name_4='$version_name_4', version_name_5='$version_name_5', version_1='$version_1', version_2='$version_2', version_3='$version_3', version_4='$version_4', version_5='$version_5', version_other='$version_other', version_name_1='$version_name_1', server_status='$server_status', server_free_slots='$server_free_slots', server_used_slots='$server_used_slots', server_channel_amount='$server_channel_amount', server_ping='$server_ping', server_packet_loss='$server_packet_loss', server_bytes_down='$server_bytes_down', server_bytes_up='$server_bytes_up', server_uptime='$server_uptime', server_id='$server_id', server_name='$server_name', server_pass='$server_pass', server_creation_date='$server_creation_date', server_platform='$server_platform', server_weblist='$server_weblist', server_version='$server_version'") === false) {
 		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$sqlerr++;
 	}

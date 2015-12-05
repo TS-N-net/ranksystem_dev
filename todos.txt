@@ -16,8 +16,6 @@
 - handle error messages with div container to visible it
 - list rankup when scrolling the "info header" doesnt attach to top navbar
 
-- stats about client versions to job_calc_stats and colors of chart
-
 - documentate update / installation
 - new teamspeak permissions needed?
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)

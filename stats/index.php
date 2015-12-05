@@ -54,15 +54,6 @@ if(isset($_GET['usage'])) {
 } else {
 	$usage = 'day';
 }
-
-$client_versions = $mysqlcon->query("SELECT version, count(version) AS count FROM user GROUP BY version ORDER BY count DESC LIMIT 5");
-$client_versions = $client_versions->fetchAll(PDO::FETCH_ASSOC);
-$count_version = 0;
-
-foreach($client_versions as $version) {
-    $count_version = $count_version + $version['count'];
-}
-$unknown_users = $sql_res[0]['total_user'] - $count_version;
 ?>
 <!DOCTYPE html>
 <html>
@@ -101,22 +92,6 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
 </head>
 
 <body>
-    <div id="cModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Unknown Clients</h4>
-                </div>
-                <div class="modal-body">
-                    <p>We dont have Version, Nationality and Platform information for <?PHP echo $unknown_users .' / ' .$sql_res[0]['total_user'] ?></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div id="myModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -180,6 +155,8 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
                     <p>This page contains a overall summary about the user statistics and data on your server.</p>
                     <p>You can see statistics which contain information of all time usage then monthly, weekly and daily usage.</p>
                     <p>This page receives its values out of a database. So the values might be delayed a bit.</p>
+					<p>&nbsp;</p>
+					<p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -435,11 +412,6 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Versions</h3>
                             </div>
-                            <div class="btn-group">
-                                <a href="#cModal" data-toggle="modal" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                </a>
-                            </div>
                             <div class="panel-body">
                                 <div id="client-version-donut"></div>
                             </div>
@@ -450,11 +422,6 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationality</h3>
                             </div>
-                            <div class="btn-group">
-                                <a href="#cModal" data-toggle="modal" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                </a>
-                            </div>
                             <div class="panel-body">
                                 <div id="user-descent-donut"></div>
                             </div>
@@ -464,11 +431,6 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
                         <div class="panel panel-red">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Platforms</h3>
-                            </div>
-                            <div class="btn-group">
-                                <a href="#cModal" data-toggle="modal" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                </a>
                             </div>
                             <div class="panel-body">
                                 <div id="user-platform-donut"></div>
@@ -594,12 +556,12 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
         Morris.Donut({
             element: 'client-version-donut',
             data: [
-				<?PHP
-				foreach($client_versions as $version) {
-					echo '{label: \'',$version['version'],'\', value: ',$version['count'],'}, ';
-					$count_version = $count_version + $version['count'];
-				}
-				?>
+			   {label: "<?PHP echo $sql_res[0]['version_name_1'] ?>", value: <?PHP echo $sql_res[0]['version_1'] ?>},
+               {label: "<?PHP echo $sql_res[0]['version_name_2'] ?>", value: <?PHP echo $sql_res[0]['version_2'] ?>},
+               {label: "<?PHP echo $sql_res[0]['version_name_3'] ?>", value: <?PHP echo $sql_res[0]['version_3'] ?>},
+               {label: "<?PHP echo $sql_res[0]['version_name_4'] ?>", value: <?PHP echo $sql_res[0]['version_4'] ?>},
+               {label: "<?PHP echo $sql_res[0]['version_name_5'] ?>", value: <?PHP echo $sql_res[0]['version_5'] ?>},
+               {label: "Others", value: <?PHP echo $sql_res[0]['version_other'] ?>},
             ],
             colors: [
                 '#5cb85c',
