@@ -14,21 +14,10 @@
 - add new column rank to list_rankup.php as true rank
 - if server is offline (stats_server:server_status='0'), then conside this for current statistics on index.php
 - handle error messages with div container to visible it
+- list rankup when scrolling the "info header" doesnt attach to top navbar
 
 - stats about client versions to job_calc_stats and colors of chart
-<<<<<<< HEAD
-=======
-- add column deleted in table stats_user and mark user which are not exists any more in table user as deleted and show this attribute also on users stats page
-- job for avatar download (cause dynamic user page)
-<<<<<<< HEAD
 - job update groups doesnt delete deleted servergroups and neither adds new groups
-- list rankup when scrolling the "info header" doesnt attach to top navbar
-=======
-- client_flag_avatar = md5sum of avatar file; once this changes -> download the new avatar
-- job_calc_stats; set server to offline, if connection to ts3 server failed
-- session.php set "not connected" information in session and do not try to connect with every site change to ts3 server again (prevent spam and better load, when server is down)
->>>>>>> e81a330a90222c8e23b0b184ca344a5838fae2ec
->>>>>>> a0c03fdd6c17ca6fe839d872c07e5bcacb1e7290
 
 - documentate update / installation
 - new teamspeak permissions needed?
