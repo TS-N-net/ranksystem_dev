@@ -448,7 +448,7 @@ $unknown_users = $sql_res[0]['total_user'] - $count_version;
                     <div class="col-lg-3">
                         <div class="panel panel-yellow">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationality</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationalitys</h3>
                             </div>
                             <div class="btn-group">
                                 <a href="#cModal" data-toggle="modal" class="btn btn-default">
