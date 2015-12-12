@@ -37,6 +37,12 @@ if(!isset($_SESSION['tsuid']) && !isset($_SESSION['tserror'])) {
 	}
 }
 
+function human_readable_size($bytes) {
+    $size = array(' B',' KiB',' MiB',' GiB',' TiB',' PiB',' EiB',' ZiB',' YiB');
+    $factor = floor((strlen($bytes) - 1) / 3);
+    return sprintf("%.2f", $bytes / pow(1024, $factor)) . @$size[$factor];
+}
+
 $sql = $mysqlcon->query("SELECT * FROM $dbname.stats_server");
 $sql_res = $sql->fetchAll();
 
@@ -152,8 +158,8 @@ if(isset($_GET['usage'])) {
                     <h4 class="modal-title">Server Statistics - Page Content</h4>
                 </div>
                 <div class="modal-body">
-                    <p>This page contains a overall summary about the user statistics and data on your server.</p>
-                    <p>You can see statistics which contain information of all time usage then monthly, weekly and daily usage.</p>
+                    <p>This page contains a overall summary about the user statistics and data on the server.</p>
+                    <p>&nbsp;</p>
                     <p>This page receives its values out of a database. So the values might be delayed a bit.</p>
 					<p>&nbsp;</p>
 					<p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
@@ -271,7 +277,7 @@ if(isset($_GET['usage'])) {
                                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                             </a>
                         </div>
-                        <div class="pull-right"><small><font color="#000000">IP: </font><a href="ts3server://<?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?>"><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?></a></small></div>
+                        <div class="pull-right"><small><font color="#000000">TS3 Address: </font><a href="ts3server://<?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?>"><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?></a></small></div>
                         </h1>
                     </div>
                 </div>
@@ -329,7 +335,7 @@ if(isset($_GET['usage'])) {
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"><?PHP echo round(($sql_res[0]['total_online_month'] / 86400)). ' <small>days</small>';?></div>
-										<div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? 'not enough data yet...' : 'Online Time / Month') ?></div>
+										<div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? 'not enough data yet...' : 'Online Time / Last Month') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -351,7 +357,7 @@ if(isset($_GET['usage'])) {
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"><?PHP echo round(($sql_res[0]['total_online_week'] / 86400)). ' <small>days</small>';?></div>
-										<div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? 'not enough data yet...' : 'Online Time / Week') ?></div>
+										<div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? 'not enough data yet...' : 'Online Time / Last Week') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -380,9 +386,9 @@ if(isset($_GET['usage'])) {
 											select period <span class="caret"></span>
 										  </button>
 										  <ul class="dropdown-menu">
-											<li><a href="<?PHP echo "?usage=day"; ?>">Day</a></li>
-											<li><a href="<?PHP echo "?usage=week"; ?>">Week</a></li>
-											<li><a href="<?PHP echo "?usage=month"; ?>">Month</a></li>
+											<li><a href="<?PHP echo "?usage=day"; ?>">Last Day</a></li>
+											<li><a href="<?PHP echo "?usage=week"; ?>">Last Week</a></li>
+											<li><a href="<?PHP echo "?usage=month"; ?>">Last Month</a></li>
 										  </ul>
 										</div>
 									</div>
@@ -400,7 +406,7 @@ if(isset($_GET['usage'])) {
                     <div class="col-lg-3">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Active / Inactive Time</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Active / Inactive Time</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="time-gap-donut"></div>
@@ -456,7 +462,7 @@ if(isset($_GET['usage'])) {
                                         <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">Online</span>' : '<span class="text-danger">Offline</span>' ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Clients Online</td>
+                                        <td>Clients (Online / Max)</td>
                                         <td><?PHP echo $sql_res[0]['server_used_slots'].' / ' .($sql_res[0]['server_used_slots'] + $sql_res[0]['server_free_slots']) ?></td>
                                     </tr>
                                     <tr>
@@ -464,23 +470,23 @@ if(isset($_GET['usage'])) {
                                         <td><?PHP echo $sql_res[0]['server_channel_amount'] ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Server Ping (in ms)</td>
+                                        <td>Average Server Ping (in ms)</td>
                                         <td><?PHP echo $sql_res[0]['server_ping'] ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Total Bytes Downloaded (in MiB)</td>
-                                        <td><?PHP echo number_format(round($sql_res[0]['server_bytes_down']/1048576), 0, '.', ',') ?></td>
+                                        <td>Total Bytes Downloaded</td>
+                                        <td><?PHP echo human_readable_size($sql_res[0]['server_bytes_down']); ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Total Bytes Uploaded (in MiB)</td>
-                                        <td><?PHP echo number_format(round($sql_res[0]['server_bytes_up']/1048576), 0, '.', ',') ?></td>
+                                        <td>Total Bytes Uploaded</td>
+                                        <td><?PHP echo human_readable_size($sql_res[0]['server_bytes_up']); ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Uptime</td>
                                         <td><text id="days">00</text> Days, <text id="hours">00</text> Hours, <text id="minutes">00</text> Mins, <text id="seconds">00</text> Secs</td>
                                     </tr>
                                     <tr>
-                                        <td>Packet Loss (in percent)</td>
+                                        <td>Average Packet Loss (in percent)</td>
                                         <td><?PHP echo $sql_res[0]['server_packet_loss'] * 100 ?></td>
                                     </tr>
                                 </tbody>
@@ -503,7 +509,7 @@ if(isset($_GET['usage'])) {
                                         <td><?PHP echo $sql_res[0]['server_name'] ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Server IP + Port</td>
+                                        <td>Server Address (Host Address : Port)</td>
                                         <td><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']) .':' .$_SESSION['serverport'] ?></td>
                                     </tr>
                                     <tr>
@@ -520,8 +526,7 @@ if(isset($_GET['usage'])) {
                                     </tr>
                                     <tr>
                                         <td>Server Version</td>
-                                        <td><?PHP $ver_leng = strpos($sql_res[0]['server_version'], ' ');
-                                            echo substr($sql_res[0]['server_version'], 0, $ver_leng) ?></td>
+                                        <td><?PHP echo substr($sql_res[0]['server_version'], 0, strpos($sql_res[0]['server_version'], ' ')); ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Creation Date (dd/mm/yyyy)</td>
@@ -565,7 +570,11 @@ if(isset($_GET['usage'])) {
             ],
             colors: [
                 '#5cb85c',
-                '#80ce80'
+				'#73C773',
+				'#8DD68D',
+				'#AAE6AA',
+				'#C9F5C9',
+				'#E6FFE6'
           ]
         });
         Morris.Donut({
