@@ -250,7 +250,7 @@ if(isset($_GET['usage'])) {
                         </ul>
                     </li>
                     <li>
-                        <a href="test.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+                        <a href="list_rankup.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
                     </li>
                     <li>
                         <a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
@@ -295,7 +295,7 @@ if(isset($_GET['usage'])) {
                                     </div>
                                 </div>
                             </div>
-                            <a href="test.php">
+                            <a href="list_rankup.php">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
