@@ -506,7 +506,7 @@ if(isset($_GET['usage'])) {
                                 <tbody>
                                     <tr>
                                         <td>Server Name</td>
-                                        <td><?PHP echo (file_exists("../icons/servericon.png") ? '<img src="../icons/servericon.png">' .$sql_res[0]['server_name'] : $sql_res[0]['server_name']) ?></td>
+                                        <td><?PHP echo (file_exists("../icons/servericon.png") ? $sql_res[0]['server_name'] .'<div class="pull-right"><img src="../icons/servericon.png" alt="servericon"></div>' : $sql_res[0]['server_name']) ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Address (Host Address : Port)</td>

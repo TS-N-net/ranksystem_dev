@@ -6,7 +6,6 @@
 - top_all.php: Take care about client and servergroup exceptions!
 - all textes to lang.php
 - nations to longtext
-- servericon on servername (index.php), if set
 - what is with sites top user of week and top users of month?
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - my_stats.php info button legendary icons
@@ -15,7 +14,8 @@
 - handle error messages with div container to visible it
 - list rankup when scrolling the "info header" doesnt attach to top navbar
 - information on my_stats.php: all data are showing a result since beginning of the ranksystem; not of all time on this teamspeak server
-- server usage graph: add second graph for amount of channel
+- server usage graph: add second stats for amount of channel
+- source out navbar to seperate file and include it in all needed files (rly handle this in each file.. omg)
 
 
 - documentate update / installation
