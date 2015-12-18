@@ -9,7 +9,7 @@
 	<title>TS-N.NET Ranksystem</title>
 
 	<!-- Bootstrap Core CSS -->
-	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
 
 	<!-- Custom CSS -->
 	<link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">

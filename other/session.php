@@ -4,9 +4,10 @@ if(isset($_POST['refresh'])) {
 	session_destroy();
 }
 
-function set_session_ts3($hpclientip, $ts3) {
+function set_session_ts3($hpclientip, $ts3, $voiceport) {
 	$allclients = $ts3->clientList();
 	$_SESSION['connected']						= 0;
+	$_SESSION['serverport']						= $voiceport;
 	foreach ($allclients as $client) {
 		$tsip									= ip2long($client['connection_client_ip']);
 		if ($hpclientip == $tsip) {

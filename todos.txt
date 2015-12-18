@@ -15,7 +15,7 @@
 - handle error messages with div container to visible it
 - list rankup when scrolling the "info header" doesnt attach to top navbar
 - information on my_stats.php: all data are showing a result since beginning of the ranksystem; not of all time on this teamspeak server
-- server usage graph: add second stats for amount of channel
+- server usage graph: add second graph for amount of channel
 
 
 - documentate update / installation

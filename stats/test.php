@@ -78,119 +78,120 @@ if (isset($_GET['admin'])) {
 	}
 }
 require_once('nav.php');
+
+$countentries = 0;
+$dbdata_full = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql");
+$sumentries = $dbdata_full->rowCount();
+
+if(!isset($_GET["user"])) {
+	$user_pro_seite = 50;
+} elseif($_GET['user'] == "all") {
+	$user_pro_seite = $sumentries;
+} else {
+	$user_pro_seite = $_GET["user"];
+}
+
+$start = $seite * $user_pro_seite - $user_pro_seite;
+
+if ($keysort == 'active' && $keyorder == 'asc') {
+	$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY (count - idle) LIMIT $start, $user_pro_seite");
+} elseif ($keysort == 'active' && $keyorder == 'desc') {
+	$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY (idle - count) LIMIT $start, $user_pro_seite");
+} else {
+	$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY $keysort $keyorder LIMIT $start, $user_pro_seite");
+}
+$seiten_anzahl_gerundet = ceil($sumentries / $user_pro_seite);
+
+function pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring) {
+	?>
+	<nav>
+		<div class="text-center">
+			<ul class="pagination">
+				<li>
+					<a href="<?PHP echo '?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite=1&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring; ?>" aria-label="backward">
+						<span aria-hidden="true"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>&nbsp;</span>
+					</a>
+				</li>
+				<?PHP
+				for($a=0; $a < $seiten_anzahl_gerundet; $a++) {
+					$b = $a + 1;
+					if($seite == $b) {
+						echo '<li class="active"><a href="">'.$b.'<span class="sr-only">(aktuell)</span></a></li>';
+					} elseif ($b > $seite - 5 && $b < $seite + 5) {
+						echo '<li><a href="?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite='.$b.'&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring.'">'.$b.'</a></li>';
+					}
+				}
+				?>
+				<li>
+					<a href="<?PHP echo '?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite='.$seiten_anzahl_gerundet.'&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring; ?>" aria-label="forward">
+						<span aria-hidden="true">&nbsp;<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<?PHP
+}
+$uuids = $dbdata->fetchAll();
+foreach($uuids as $uuid) {
+	$sqlhis[$uuid['uuid']] = array(
+		"cldbid" => $uuid['cldbid'],
+		"count" => $uuid['count'],
+		"name" => $uuid['name'],
+		"idle" => $uuid['idle'],
+		"cldgroup" => $uuid['cldgroup'],
+		"online" => $uuid['online'],
+		"nextup" => $uuid['nextup'],
+		"lastseen" => $uuid['lastseen'],
+		"ip" => $uuid['ip'],
+		"grpid" => $uuid['grpid']
+	);
+	$uidarr[]			  = $uuid['uuid'];
+	$countentries		  = $countentries + 1;
+}
+if(!$dbdata = $mysqlcon->query("SELECT * FROM $dbname.lastscan")) {
+	echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
+	exit;
+}
+
+$lastscan = $dbdata->fetchAll();
+$scantime = $lastscan[0]['timestamp'];
+$livetime = time() - $scantime;
+$dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups");
+$servergroups = $dbgroups->fetchAll(PDO::FETCH_ASSOC);
+foreach($servergroups as $servergroup) {
+	$sqlhisgroup[$servergroup['sgid']] = $servergroup['sgidname'];
+	if(file_exists('images/'.$servergroup['sgid'].'.png')) {
+		$sqlhisgroup_file[$servergroup['sgid']] = true;
+	} else {
+		$sqlhisgroup_file[$servergroup['sgid']] = false;
+	}
+}
+if($adminlogin == 1) {
+	switch ($keyorder) {
+		case "asc":
+			$keyorder2 = "desc&amp;admin=true";
+			break;
+		case "desc":
+			$keyorder2 = "asc&amp;admin=true";
+	}
+} else {
+	switch ($keyorder) {
+		case "asc":
+			$keyorder2 = "desc";
+			break;
+		case "desc":
+			$keyorder2 = "asc";
+	}
+}
 ?>
 		<div id="page-wrapper">
 
 			<div class="container-fluid">
 
 				<?PHP
-				$countentries = 0;
-				$dbdata_full = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql");
-				$sumentries = $dbdata_full->rowCount();
-
-				if(!isset($_GET["user"])) {
-					$user_pro_seite = 50;
-				} elseif($_GET['user'] == "all") {
-					$user_pro_seite = $sumentries;
-				} else {
-					$user_pro_seite = $_GET["user"];
-				}
-
-				$start = $seite * $user_pro_seite - $user_pro_seite;
-
-				if ($keysort == 'active' && $keyorder == 'asc') {
-					$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY (count - idle) LIMIT $start, $user_pro_seite");
-				} elseif ($keysort == 'active' && $keyorder == 'desc') {
-					$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY (idle - count) LIMIT $start, $user_pro_seite");
-				} else {
-					$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY $keysort $keyorder LIMIT $start, $user_pro_seite");
-				}
-				$seiten_anzahl_gerundet = ceil($sumentries / $user_pro_seite);
-
-				function pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring) {
-					?>
-					<nav>
-						<div class="text-center">
-							<ul class="pagination">
-								<li>
-									<a href="<?PHP echo '?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite=1&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring; ?>" aria-label="backward">
-										<span aria-hidden="true"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>&nbsp;</span>
-									</a>
-								</li>
-								<?PHP
-								for($a=0; $a < $seiten_anzahl_gerundet; $a++) {
-									$b = $a + 1;
-									if($seite == $b) {
-										echo '<li class="active"><a href="">'.$b.'<span class="sr-only">(aktuell)</span></a></li>';
-									} elseif ($b > $seite - 5 && $b < $seite + 5) {
-										echo '<li><a href="?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite='.$b.'&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring.'">'.$b.'</a></li>';
-									}
-								}
-								?>
-								<li>
-									<a href="<?PHP echo '?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite='.$seiten_anzahl_gerundet.'&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring; ?>" aria-label="forward">
-										<span aria-hidden="true">&nbsp;<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</nav>
-					<?PHP
-				}
 				if($_GET['user'] != "all") {
 					pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring);
-				}
-				$uuids = $dbdata->fetchAll();
-				foreach($uuids as $uuid) {
-					$sqlhis[$uuid['uuid']] = array(
-						"cldbid" => $uuid['cldbid'],
-						"count" => $uuid['count'],
-						"name" => $uuid['name'],
-						"idle" => $uuid['idle'],
-						"cldgroup" => $uuid['cldgroup'],
-						"online" => $uuid['online'],
-						"nextup" => $uuid['nextup'],
-						"lastseen" => $uuid['lastseen'],
-						"ip" => $uuid['ip'],
-						"grpid" => $uuid['grpid']
-					);
-					$uidarr[]			  = $uuid['uuid'];
-					$countentries		  = $countentries + 1;
-				}
-				if(!$dbdata = $mysqlcon->query("SELECT * FROM $dbname.lastscan")) {
-					echo '<span class="wncolor">',$mysqlcon->errorCode(),'</span><br>';
-					exit;
-				}
-
-				$lastscan = $dbdata->fetchAll();
-				$scantime = $lastscan[0]['timestamp'];
-				$livetime = time() - $scantime;
-				$dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups");
-				$servergroups = $dbgroups->fetchAll(PDO::FETCH_ASSOC);
-				foreach($servergroups as $servergroup) {
-					$sqlhisgroup[$servergroup['sgid']] = $servergroup['sgidname'];
-					if(file_exists('images/'.$servergroup['sgid'].'.png')) {
-						$sqlhisgroup_file[$servergroup['sgid']] = true;
-					} else {
-						$sqlhisgroup_file[$servergroup['sgid']] = false;
-					}
-				}
-				if($adminlogin == 1) {
-					switch ($keyorder) {
-						case "asc":
-							$keyorder2 = "desc&amp;admin=true";
-							break;
-						case "desc":
-							$keyorder2 = "asc&amp;admin=true";
-					}
-				} else {
-					switch ($keyorder) {
-						case "asc":
-							$keyorder2 = "desc";
-							break;
-						case "desc":
-							$keyorder2 = "asc";
-					}
 				}
 				?>
 				<div class="confix">
@@ -401,7 +402,7 @@ require_once('nav.php');
 				resizeFixed();
 			 }
 			 function resizeFixed() {
-				$t_fixed.find("th").each(function(index) {
+				$t_fixed.find("table").each(function(index) {
 				   $(this).css("width",$this.find("th").eq(index).outerWidth()+"px");
 				});
 			 }
