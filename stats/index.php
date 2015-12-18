@@ -6,35 +6,35 @@ require_once('../lang.php');
 require_once('../other/session.php');
 
 if(!isset($_SESSION['tsuid']) && !isset($_SESSION['tserror'])) {
-	try {
-		$ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-		if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
-		if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
-		if ($slowmode == 1) sleep(1);
-		try {
-			$ts3->selfUpdate(array('client_nickname' => $queryname));
-		}
-		catch (Exception $e) {
-			if ($slowmode == 1) sleep(1);
-			try {
-				$ts3->selfUpdate(array('client_nickname' => $queryname2));
-			}
-			catch (Exception $e) {
-				echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-			}
-		}
+    try {
+        $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
+        if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
+        if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
+        if ($slowmode == 1) sleep(1);
+        try {
+            $ts3->selfUpdate(array('client_nickname' => $queryname));
+        }
+        catch (Exception $e) {
+            if ($slowmode == 1) sleep(1);
+            try {
+                $ts3->selfUpdate(array('client_nickname' => $queryname2));
+            }
+            catch (Exception $e) {
+                echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+            }
+        }
 
-		if ($slowmode == 1) sleep(1);
-		$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
-		set_session_ts3($hpclientip, $ts3);
-	}
-	catch (Exception $e) {
-		echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-		$offline_status = array(110,257,258,1024,1026,1031,1032,1033,1034,1280,1793);
-		if(in_array($e->getCode(), $offline_status)) {
-			$_SESSION['tserror'] = "offline";
-		}
-	}
+        if ($slowmode == 1) sleep(1);
+        $hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
+        set_session_ts3($hpclientip, $ts3, $ts['voice']);
+    }
+    catch (Exception $e) {
+        echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+        $offline_status = array(110,257,258,1024,1026,1031,1032,1033,1034,1280,1793);
+        if(in_array($e->getCode(), $offline_status)) {
+            $_SESSION['tserror'] = "offline";
+        }
+    }
 }
 
 function human_readable_size($bytes) {
@@ -50,19 +50,107 @@ $server_usage_sql = $mysqlcon->query("SELECT * FROM $dbname.server_usage ORDER B
 $server_usage_sql_res = $server_usage_sql->fetchAll();
 
 if(isset($_GET['usage'])) {
-	if ($_GET["usage"] == 'week') {
-		$usage = 'week';
-	} elseif ($_GET["usage"] == 'month') {
-		$usage = 'month';
-	} else {
-		$usage = 'day';
-	}
+    if ($_GET["usage"] == 'week') {
+        $usage = 'week';
+    } elseif ($_GET["usage"] == 'month') {
+        $usage = 'month';
+    } else {
+        $usage = 'day';
+    }
 } else {
-	$usage = 'day';
+    $usage = 'day';
 }
-require_once('nav.php');
 ?>
-	<div id="infoModal" class="modal fade">
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="../icons/rs.png">
+
+    <title>TS-N.NET Ranksystem</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../bootstrap/addons/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- jQuery -->
+    <script src="../bootstrap/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="../bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris.min.js"></script>
+    <script src="../bootstrap/addons/js-plugins/morris/morris-data.js"></script>
+</head>
+
+<body>
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Server News</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Example Server News Text</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModal2" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Refresh Client Information</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Only use this Refresh, when your TS3 information got changed, such as your TS3 username</p>
+                    <p>It only works, when you are connected to the TS3 Server at the same time</p>
+                </div>
+                <div class="modal-footer">
+                    <form method="post">
+                            <button class="btn btn-primary" type="submit" name="refresh">Refresh</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="battleModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Battle news</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You are currently not in a battle</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="infoModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,8 +161,8 @@ require_once('nav.php');
                     <p>This page contains a overall summary about the user statistics and data on the server.</p>
                     <p>&nbsp;</p>
                     <p>This page receives its values out of a database. So the values might be delayed a bit.</p>
-					<p>&nbsp;</p>
-					<p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
+                    <p>&nbsp;</p>
+                    <p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -82,6 +170,98 @@ require_once('nav.php');
             </div>
         </div>
     </div>
+    <div id="myStatsModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Not available</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You are not connected to the TS3 Server, so it cant display any data for you</p>
+                    <p>Please connect to the TS3 Server and then Refresh your Session by pressing the blue Refresh Button at the top-right corner</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="wrapper">
+        
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo '&nbsp;&nbsp;' .($_SESSION['connected'] == 0 ? '(Not Connected To TS3!)' : $_SESSION['tsname']); ?>&nbsp;<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <?PHP echo ($_SESSION['tsname'] == 0 ? ' ' : '<li>
+                            <a href="my_stats.php"><i class="fa fa-fw fa-user"></i> My Statistics</a>
+                        </li>'); ?>
+                        <li>
+                            <a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> Server news</a>
+                        </li>
+                        <li>
+                            <a href="#battleModal" data-toggle="modal"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle news</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="navbar-form navbar-center">
+                        <div class="btn-group">
+                            <a href="#myModal2" data-toggle="modal" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li class="active">
+                        <a href="index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
+                    </li>
+                    <li>
+                        <?PHP if($_SESSION['connected'] == 0) {
+                            echo '<a href="#myStatsModal" data-toggle="modal"><i class="fa fa-fw fa-exclamation-triangle"></i> *My Statistics</a>';
+                        } else {
+                            echo '<a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>';
+                        }?>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-trophy"></i> Top Users <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo" class="collapse">
+                            <li>
+                                <a href="top_week.php">Of The Week</a>
+                            </li>
+                            <li>
+                                <a href="top_month.php">Of The Month</a>
+                            </li>
+                            <li>
+                                <a href="top_all.php">Of All Time</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="test.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+                    </li>
+                    <li>
+                        <a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
+                    </li>
+                    <li>
+                        <a href="info.php"><i class="fa fa-fw fa-info-circle"></i> Ranksystem Info</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
 
         <div id="page-wrapper">
 
@@ -155,7 +335,7 @@ require_once('nav.php');
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"><?PHP echo round(($sql_res[0]['total_online_month'] / 86400)). ' <small>days</small>';?></div>
-										<div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? 'not enough data yet...' : 'Online Time / Last Month') ?></div>
+                                        <div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? 'not enough data yet...' : 'Online Time / Last Month') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +357,7 @@ require_once('nav.php');
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"><?PHP echo round(($sql_res[0]['total_online_week'] / 86400)). ' <small>days</small>';?></div>
-										<div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? 'not enough data yet...' : 'Online Time / Last Week') ?></div>
+                                        <div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? 'not enough data yet...' : 'Online Time / Last Week') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -196,23 +376,23 @@ require_once('nav.php');
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-9">
-										<h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Server Usage <i><?PHP if($usage == 'week') { echo 'In The Last 7 Days'; } elseif ($usage == 'month') { echo 'In The Last 30 Days'; } else { echo 'In The Last 24 Hours'; } ?></i></h3>
-									</div>
-									<div class="col-xs-3">
-										<div class="btn-group dropup pull-right">
-										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											select period <span class="caret"></span>
-										  </button>
-										  <ul class="dropdown-menu">
-											<li><a href="<?PHP echo "?usage=day"; ?>">Last Day</a></li>
-											<li><a href="<?PHP echo "?usage=week"; ?>">Last Week</a></li>
-											<li><a href="<?PHP echo "?usage=month"; ?>">Last Month</a></li>
-										  </ul>
-										</div>
-									</div>
-								</div>
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Server Usage <i><?PHP if($usage == 'week') { echo 'In The Last 7 Days'; } elseif ($usage == 'month') { echo 'In The Last 30 Days'; } else { echo 'In The Last 24 Hours'; } ?></i></h3>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="btn-group dropup pull-right">
+                                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            select period <span class="caret"></span>
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                            <li><a href="<?PHP echo "?usage=day"; ?>">Last Day</a></li>
+                                            <li><a href="<?PHP echo "?usage=week"; ?>">Last Week</a></li>
+                                            <li><a href="<?PHP echo "?usage=month"; ?>">Last Month</a></li>
+                                          </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="panel-body">
                                 <div id="server-usage-chart"></div>
@@ -326,7 +506,7 @@ require_once('nav.php');
                                 <tbody>
                                     <tr>
                                         <td>Server Name</td>
-                                        <td><?PHP echo $sql_res[0]['server_name'] ?></td>
+                                        <td><?PHP echo (file_exists("../icons/servericon.png") ? '<img src="../icons/servericon.png">' .$sql_res[0]['server_name'] : $sql_res[0]['server_name'] ?></td>
                                     </tr>
                                     <tr>
                                         <td>Server Address (Host Address : Port)</td>
@@ -361,7 +541,7 @@ require_once('nav.php');
                         </div>
                     </div>
                 </div>
-			</div>	
+            </div>  
             <!-- /.container-fluid -->
 
         </div>
@@ -381,7 +561,7 @@ require_once('nav.php');
         Morris.Donut({
             element: 'client-version-donut',
             data: [
-			   {label: "<?PHP echo $sql_res[0]['version_name_1'] ?>", value: <?PHP echo $sql_res[0]['version_1'] ?>},
+               {label: "<?PHP echo $sql_res[0]['version_name_1'] ?>", value: <?PHP echo $sql_res[0]['version_1'] ?>},
                {label: "<?PHP echo $sql_res[0]['version_name_2'] ?>", value: <?PHP echo $sql_res[0]['version_2'] ?>},
                {label: "<?PHP echo $sql_res[0]['version_name_3'] ?>", value: <?PHP echo $sql_res[0]['version_3'] ?>},
                {label: "<?PHP echo $sql_res[0]['version_name_4'] ?>", value: <?PHP echo $sql_res[0]['version_4'] ?>},
@@ -390,11 +570,11 @@ require_once('nav.php');
             ],
             colors: [
                 '#5cb85c',
-				'#73C773',
-				'#8DD68D',
-				'#AAE6AA',
-				'#C9F5C9',
-				'#E6FFE6'
+                '#73C773',
+                '#8DD68D',
+                '#AAE6AA',
+                '#C9F5C9',
+                '#E6FFE6'
           ]
         });
         Morris.Donut({
@@ -435,32 +615,32 @@ require_once('nav.php');
                 '#FF8080'
           ]
         });
-		Morris.Area({
-		  element: 'server-usage-chart',
-		  data: [
-			<?PHP
-				$chart_data = '';
-				$trash_string = $mysqlcon->query("SET @a:=0");
-				if($usage == 'week') { 
-					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,4) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' ORDER BY u2.timestamp DESC LIMIT 672");
-				} elseif ($usage == 'month') {
-					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,16) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' ORDER BY u2.timestamp DESC LIMIT 2880");
-				} else {
-					$server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp ORDER BY u2.timestamp DESC LIMIT 96");
-				}
-				$server_usage = $server_usage->fetchAll(PDO::FETCH_ASSOC);
-				foreach($server_usage as $chart_value) {
-					$chart_time = date('Y-m-d H:i:s',$chart_value['timestamp']);
-					$chart_data = $chart_data . '{ y: \''.$chart_time.'\', a: '.$chart_value['clients'].' }, ';
-				}
-				$chart_data = substr($chart_data, 0, -2);
-				echo $chart_data;
-			?>
-		  ],
-		  xkey: 'y',
-		  ykeys: ['a'],
-		  labels: ['Clients', 'Date']
-		});
+        Morris.Area({
+          element: 'server-usage-chart',
+          data: [
+            <?PHP
+                $chart_data = '';
+                $trash_string = $mysqlcon->query("SET @a:=0");
+                if($usage == 'week') { 
+                    $server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,4) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' ORDER BY u2.timestamp DESC LIMIT 672");
+                } elseif ($usage == 'month') {
+                    $server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT @a:=@a+1,mod(@a,16) AS test,timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp AND u2.test='1' ORDER BY u2.timestamp DESC LIMIT 2880");
+                } else {
+                    $server_usage = $mysqlcon->query("SELECT u1.timestamp, u1.clients FROM (SELECT timestamp,clients FROM $dbname.server_usage) AS u2, $dbname.server_usage AS u1 WHERE u1.timestamp=u2.timestamp ORDER BY u2.timestamp DESC LIMIT 96");
+                }
+                $server_usage = $server_usage->fetchAll(PDO::FETCH_ASSOC);
+                foreach($server_usage as $chart_value) {
+                    $chart_time = date('Y-m-d H:i:s',$chart_value['timestamp']);
+                    $chart_data = $chart_data . '{ y: \''.$chart_time.'\', a: '.$chart_value['clients'].' }, ';
+                }
+                $chart_data = substr($chart_data, 0, -2);
+                echo $chart_data;
+            ?>
+          ],
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Clients', 'Date']
+        });
     </script>
     <script type="text/javascript">
         var daysLabel = document.getElementById("days");
