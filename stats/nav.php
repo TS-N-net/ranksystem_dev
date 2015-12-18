@@ -13,6 +13,7 @@
 
 	<!-- Custom CSS -->
 	<link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
+	<link href="../bootstrap/addons/legendaryIcons.css" rel="stylesheet">
 
 	<!-- Morris Charts CSS -->
 	<link href="../bootstrap/addons/morris.css" rel="stylesheet">
@@ -152,6 +153,7 @@
 				</div>
 				<div class="modal-body">
 					<p>This page contains a overall summary of your personal statistics and activity on the server.</p>
+					<p>The informations are collected since the beginning of the Ranksystem, they are not since the beginning of the TeamSpeak server.</p>
 					<p>It also contains your progress in unlocking achievements and an overview of your battles.</p>
 					<br>
 					<p><h4>Achievements</h4></p>

@@ -13,9 +13,7 @@
 - if server is offline (stats_server:server_status='0'), then conside this for current statistics on index.php
 - handle error messages with div container to visible it
 - list rankup when scrolling the "info header" doesnt attach to top navbar
-- information on my_stats.php: all data are showing a result since beginning of the ranksystem; not of all time on this teamspeak server
 - server usage graph: add second stats for amount of channel
-- source out navbar to seperate file and include it in all needed files (rly handle this in each file.. omg)
 
 
 - documentate update / installation
