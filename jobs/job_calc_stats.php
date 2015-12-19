@@ -244,8 +244,8 @@ try {
 	}
 	$max_entry_serverusage = $max_entry_serverusage->fetch(PDO::FETCH_ASSOC);
 	$diff_max_serverusage = $nowtime - $max_entry_serverusage['timestamp'];
-	if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 870) {
-		if($mysqlcon->exec("INSERT INTO $dbname.server_usage (timestamp, clients) VALUES ($nowtime,$server_used_slots)") === false) {
+	if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 870) { // every 15 mins
+		if($mysqlcon->exec("INSERT INTO $dbname.server_usage (timestamp, clients, channel) VALUES ($nowtime,$server_used_slots,$server_channel_amount)") === false) {
 			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 			$sqlerr++;
 		}
