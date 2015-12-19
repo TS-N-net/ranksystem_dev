@@ -2,7 +2,6 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
-- add list_rankup.php as menu entry in statistic and embed it (is the only logical way)
 - list_rankup.php Undefined index: user in /stats/test.php on line 615
 - top_all.php: Take care about client and servergroup exceptions!
 - all textes to lang.php

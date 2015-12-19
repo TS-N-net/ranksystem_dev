@@ -218,7 +218,7 @@
 				<a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
 			</div>
 			<!-- Top Menu Items -->
-			<?PHP if(basename($_SERVER['SCRIPT_NAME']) == "test.php") { ?>
+			<?PHP if(basename($_SERVER['SCRIPT_NAME']) == "list_rankup.php") { ?>
 			<ul class="nav navbar-left top-nav">
 				<div class="navbar-form navbar-right dropdown">
 					<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -294,8 +294,8 @@
 							</li>
 						</ul>
 					</li>
-					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "test.php" ? ' class="active">' : '>'); ?>
-						<a href="test.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "list_rankup.php" ? ' class="active">' : '>'); ?>
+						<a href="list_rankup.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "battle_area.php" ? ' class="active">' : '>'); ?>
 						<a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
