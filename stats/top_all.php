@@ -22,7 +22,7 @@ if(!isset($_SESSION['tsuid']) && !isset($_SESSION['tserror'])) {
 				$ts3->selfUpdate(array('client_nickname' => $queryname2));
 			}
 			catch (Exception $e) {
-				echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+				$err_msg = $lang['error']. $e->getCode(). ': '. $e->getMessage();
 			}
 		}
 
@@ -31,7 +31,7 @@ if(!isset($_SESSION['tsuid']) && !isset($_SESSION['tserror'])) {
 		set_session_ts3($hpclientip, $ts3);
     }
 	catch (Exception $e) {
-		echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+		$err_msg = $lang['error']. $e->getCode(). ': '. $e->getMessage();
 		$offline_status = array(110,257,258,1024,1026,1031,1032,1033,1034,1280,1793);
 		if(in_array($e->getCode(), $offline_status)) {
 			$_SESSION['tserror'] = "offline";
@@ -63,7 +63,7 @@ function get_percentage($max_value, $value) {
 require_once('nav.php');
 ?>
         <div id="page-wrapper">
-
+<?PHP if(isset($err_msg)) error_handling($err_msg, 3); ?>
             <div class="container-fluid">
 
                 <!-- Page Heading -->

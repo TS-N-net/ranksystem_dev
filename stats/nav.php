@@ -307,3 +307,13 @@
 			</div>
 			<!-- /.navbar-collapse -->
 		</nav>
+<?PHP
+function error_handling($msg,$type = NULL) {
+	switch ($type) {
+		case NULL: echo '<div class="alert alert-success alert-dismissible">'; break;
+		case 1: echo '<div class="alert alert-info alert-dismissible">'; break;
+		case 2: echo '<div class="alert alert-warning alert-dismissible">'; break;
+		case 3: echo '<div class="alert alert-danger alert-dismissible">'; break;
+	}
+	echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',$msg,'</div>';
+}

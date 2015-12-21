@@ -2,7 +2,7 @@
 - jobmanagement (manage start jobs for predefined time, controll success, log management)
 - optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
 - use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
-- list_rankup.php Undefined index: user in /stats/test.php on line 615
+- list_rankup.php Undefined index: user in /stats/test.php on line 191 + 360
 - top_all.php: Take care about client and servergroup exceptions!
 - all textes to lang.php
 - nations to longtext
@@ -11,8 +11,8 @@
 - my_stats.php info button legendary icons
 - add new column rank to list_rankup.php as true rank
 - if server is offline (stats_server:server_status='0'), then conside this for current statistics on index.php
-- handle error messages with div container to visible it
-- list rankup when scrolling the "info header" doesnt attach to top navbar
+- list rankup when scrolling the "info header" doesnt sizes the width correctly
+- instead of connect to teamspeak to valid user as online -> use database -> makes refresh button obsolete?
 
 
 - documentate update / installation

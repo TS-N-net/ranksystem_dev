@@ -60,211 +60,30 @@ if(isset($_GET['usage'])) {
 } else {
     $usage = 'day';
 }
+require_once('nav.php');
 ?>
-<!DOCTYPE html>
-<html>
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="../icons/rs.png">
-
-    <title>TS-N.NET Ranksystem</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="../bootstrap/addons/morris.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="../bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- jQuery -->
-    <script src="../bootstrap/js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="../bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="../bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
-    <script src="../bootstrap/addons/js-plugins/morris/morris.min.js"></script>
-    <script src="../bootstrap/addons/js-plugins/morris/morris-data.js"></script>
-</head>
-
-<body>
-    <div id="myModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Server News</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Example Server News Text</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="myModal2" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Refresh Client Information</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Only use this Refresh, when your TS3 information got changed, such as your TS3 username</p>
-                    <p>It only works, when you are connected to the TS3 Server at the same time</p>
-                </div>
-                <div class="modal-footer">
-                    <form method="post">
-                            <button class="btn btn-primary" type="submit" name="refresh">Refresh</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="battleModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Battle news</h4>
-                </div>
-                <div class="modal-body">
-                    <p>You are currently not in a battle</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="infoModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Server Statistics - Page Content</h4>
-                </div>
-                <div class="modal-body">
-                    <p>This page contains a overall summary about the user statistics and data on the server.</p>
-                    <p>&nbsp;</p>
-                    <p>This page receives its values out of a database. So the values might be delayed a bit.</p>
-                    <p>&nbsp;</p>
-                    <p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="myStatsModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Not available</h4>
-                </div>
-                <div class="modal-body">
-                    <p>You are not connected to the TS3 Server, so it cant display any data for you</p>
-                    <p>Please connect to the TS3 Server and then Refresh your Session by pressing the blue Refresh Button at the top-right corner</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="wrapper">
-        
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
-            </div>
-            <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo '&nbsp;&nbsp;' .($_SESSION['connected'] == 0 ? '(Not Connected To TS3!)' : $_SESSION['tsname']); ?>&nbsp;<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <?PHP echo ($_SESSION['tsname'] == 0 ? ' ' : '<li>
-                            <a href="my_stats.php"><i class="fa fa-fw fa-user"></i> My Statistics</a>
-                        </li>'); ?>
-                        <li>
-                            <a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> Server news</a>
-                        </li>
-                        <li>
-                            <a href="#battleModal" data-toggle="modal"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle news</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="navbar-form navbar-center">
-                        <div class="btn-group">
-                            <a href="#myModal2" data-toggle="modal" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                            </a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
-                    </li>
-                    <li>
-                        <?PHP if($_SESSION['connected'] == 0) {
-                            echo '<a href="#myStatsModal" data-toggle="modal"><i class="fa fa-fw fa-exclamation-triangle"></i> *My Statistics</a>';
-                        } else {
-                            echo '<a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>';
-                        }?>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-trophy"></i> Top Users <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="top_week.php">Of The Week</a>
-                            </li>
-                            <li>
-                                <a href="top_month.php">Of The Month</a>
-                            </li>
-                            <li>
-                                <a href="top_all.php">Of All Time</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="list_rankup.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
-                    </li>
-                    <li>
-                        <a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
-                    </li>
-                    <li>
-                        <a href="info.php"><i class="fa fa-fw fa-info-circle"></i> Ranksystem Info</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-
+		<div id="infoModal" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Server Statistics - Page Content</h4>
+					</div>
+					<div class="modal-body">
+						<p>This page contains a overall summary about the user statistics and data on the server.</p>
+						<p>&nbsp;</p>
+						<p>This page receives its values out of a database. So the values might be delayed a bit.</p>
+						<p>&nbsp;</p>
+						<p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
         <div id="page-wrapper">
-
+<?PHP if(isset($err_msg)) error_handling($err_msg, 3); ?>
             <div class="container-fluid">
 
                 <!-- Page Heading -->
