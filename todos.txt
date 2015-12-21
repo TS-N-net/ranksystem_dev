@@ -12,7 +12,7 @@
 - add new column rank to list_rankup.php as true rank
 - if server is offline (stats_server:server_status='0'), then conside this for current statistics on index.php
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
-- instead of connect to teamspeak to valid user as online -> use database -> makes refresh button obsolete?
+- add totalconnections and first connect date to table user (worker.php) and fill it to session (session.php)
 
 
 - documentate update / installation

@@ -5,36 +5,9 @@ require_once('../ts3_lib/TeamSpeak3.php');
 require_once('../lang.php');
 require_once('../other/session.php');
 
-if(!isset($_SESSION['tsuid']) && !isset($_SESSION['tserror'])) {
-    try {
-        $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-        if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_st'; else $queryname = $queryname .'_st';
-        if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_st2'; else $queryname2 = $queryname2.'_st2';
-        if ($slowmode == 1) sleep(1);
-        try {
-            $ts3->selfUpdate(array('client_nickname' => $queryname));
-        }
-        catch (Exception $e) {
-            if ($slowmode == 1) sleep(1);
-            try {
-                $ts3->selfUpdate(array('client_nickname' => $queryname2));
-            }
-            catch (Exception $e) {
-                echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-            }
-        }
-
-        if ($slowmode == 1) sleep(1);
-        $hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
-        set_session_ts3($hpclientip, $ts3, $ts['voice']);
-    }
-    catch (Exception $e) {
-        echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-        $offline_status = array(110,257,258,1024,1026,1031,1032,1033,1034,1280,1793);
-        if(in_array($e->getCode(), $offline_status)) {
-            $_SESSION['tserror'] = "offline";
-        }
-    }
+if(!isset($_SESSION['tsuid'])) {
+	$hpclientip = ip2long($_SERVER['REMOTE_ADDR']);
+	set_session_ts3($hpclientip, $ts['voice'], $mysqlcon, $dbname);
 }
 
 function human_readable_size($bytes) {
