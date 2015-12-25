@@ -37,7 +37,7 @@ $keyorder = '';
 if (isset($_GET['sort'])) {
 	$keysort = $_GET['sort'];
 }
-if ($keysort != 'name' && $keysort != 'uuid' && $keysort != 'cldbid' && $keysort != 'lastseen' && $keysort != 'count' && $keysort != 'idle' && $keysort != 'active') {
+if ($keysort != 'name' && $keysort != 'uuid' && $keysort != 'cldbid' && $keysort != 'rank' && $keysort != 'lastseen' && $keysort != 'count' && $keysort != 'idle' && $keysort != 'active') {
 	$keysort = 'nextup';
 }
 if (isset($_GET['order'])) {
@@ -108,6 +108,7 @@ $uuids = $dbdata->fetchAll();
 foreach($uuids as $uuid) {
 	$sqlhis[$uuid['uuid']] = array(
 		"cldbid" => $uuid['cldbid'],
+		"rank" => $uuid['rank'],
 		"count" => $uuid['count'],
 		"name" => $uuid['name'],
 		"idle" => $uuid['idle'],
@@ -171,7 +172,7 @@ if($adminlogin == 1) {
 							<tr>
 				<?PHP
 				if ($showcolrg == 1 || $adminlogin == 1)
-					echo '<th class="text-center">' , $lang['listrank'] , '</th>';
+					echo '<th class="text-center"><a href="?sort=rank&amp;order=' , $keyorder2 , '&amp;seite=' , $seite , '&amp;user=' , $user_pro_seite , '&amp;lang=' , $language , '&amp;search=' , $getstring , '"><span class="hdcolor">' , $lang['listrank'] , '</span></a></th>';
 				if ($showcolcld == 1 || $adminlogin == 1)
 					echo ($keysort == 'name') ? '<th class="text-center"><a href="?sort=name&amp;order=' . $keyorder2 . '&amp;seite=' . $seite . '&amp;user=' . $user_pro_seite . '&amp;lang=' . $language . '&amp;search=' . $getstring . '"><span class="hdcolor">' . $lang['listnick'] . '</span></a></th>' : '<th class="text-center"><a href="?sort=name&amp;order=' . $keyorder2 . '&amp;seite=' . $seite . '&amp;user=' . $user_pro_seite . '&amp;lang=' . $language . '&amp;search=' . $getstring . '"><span class="hdcolor">' . $lang['listnick'] . '</span></a></th>';
 				if ($showcoluuid == 1 || $adminlogin == 1)
@@ -240,7 +241,7 @@ if($adminlogin == 1) {
 								echo '<tr>';
 								if ($showcolrg == 1 || $adminlogin == 1) {
 									$countrank++;
-									echo '<td class="text-center">' , $countrank , '</td>';
+									echo '<td class="text-center">' , $sqlhis[$uid]['rank'] , '</td>';
 								}
 								if ($adminlogin == 1) {
 									echo '<td class="text-center"><a href="http://www.tsviewer.com/index.php?page=search&action=ausgabe_user&nickname=' , $sqlhis[$uid]['name'] , '" target="_blank">' , $sqlhis[$uid]['name'] , '</a></td>';
