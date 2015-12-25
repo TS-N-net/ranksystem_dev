@@ -9,7 +9,6 @@
 - what is with sites top user of week and top users of month?
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - my_stats.php info button legendary icons
-- if server is offline (stats_server:server_status='0'), then conside this for current statistics on index.php
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
 
 

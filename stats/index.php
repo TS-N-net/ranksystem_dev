@@ -251,19 +251,19 @@ require_once('nav.php');
                                 <tbody>
                                     <tr>
                                         <td>Server Status</td>
-                                        <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">Online</span>' : '<span class="text-danger">Offline</span>' ?></td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">Online</span>' : '<span class="text-danger">Offline</span>'; ?></td>
                                     </tr>
                                     <tr>
                                         <td>Clients (Online / Max)</td>
-                                        <td><?PHP echo $sql_res[0]['server_used_slots'].' / ' .($sql_res[0]['server_used_slots'] + $sql_res[0]['server_free_slots']) ?></td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '0' :  $sql_res[0]['server_used_slots'] , ' / ' ,($sql_res[0]['server_used_slots'] + $sql_res[0]['server_free_slots']); ?></td>
                                     </tr>
                                     <tr>
                                         <td>Amount Of Channels</td>
-                                        <td><?PHP echo $sql_res[0]['server_channel_amount'] ?></td>
+                                        <td><?PHP echo $sql_res[0]['server_channel_amount']; ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Average Server Ping (in ms)</td>
-                                        <td><?PHP echo $sql_res[0]['server_ping'] ?></td>
+                                        <td>Average Server Ping</td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-' : $sql_res[0]['server_ping'] . ' ms'; ?></td>
                                     </tr>
                                     <tr>
                                         <td>Total Bytes Downloaded</td>
@@ -275,11 +275,11 @@ require_once('nav.php');
                                     </tr>
                                     <tr>
                                         <td>Server Uptime</td>
-                                        <td><text id="days">00</text> Days, <text id="hours">00</text> Hours, <text id="minutes">00</text> Mins, <text id="seconds">00</text> Secs</td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-&nbsp;&nbsp;&nbsp;(<i>before offline: '.(new DateTime("@0"))->diff(new DateTime("@".$sql_res[0]['server_uptime']))->format($timeformat).')</i>' : '<text id="days">00</text> Days, <text id="hours">00</text> Hours, <text id="minutes">00</text> Mins, <text id="seconds">00</text> Secs'; ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Average Packet Loss (in percent)</td>
-                                        <td><?PHP echo $sql_res[0]['server_packet_loss'] * 100 ?></td>
+                                        <td>Average Packet Loss</td>
+                                        <td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-' : $sql_res[0]['server_packet_loss'] * 100 .' %'; ?></td>
                                     </tr>
                                 </tbody>
                             </table>
