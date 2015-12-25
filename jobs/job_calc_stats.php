@@ -15,6 +15,65 @@ require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
 $sqlerr = 0;
 
+$total_user = 0;
+$total_online_time = 0;
+$total_active_time = 0;
+$total_inactive_time = 0;
+$country_string = '';
+$platform_string = '';
+$server_used_slots = 0;
+$server_channel_amount = 0;
+if(($uuids = $mysqlcon->query("SELECT uuid,count,idle,platform,nation FROM $dbname.user")) === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
+$uuids = $uuids->fetchAll();
+foreach($uuids as $uuid) {
+	$sqlhis[$uuid['uuid']] = array(
+		"uuid" => $uuid['uuid'],
+		"count" => $uuid['count'],
+		"idle" => $uuid['idle']
+	);
+	if ($uuid['nation']!=NULL) $country_string .= $uuid['nation'] . ' ';
+	if ($uuid['platform']!=NULL) {
+		$uuid_platform = str_replace(' ','',$uuid['platform']);
+		$platform_string .= $uuid_platform . ' ';
+	}
+	$total_online_time = $total_online_time + $uuid['count'];
+	$total_active_time = $total_active_time + $uuid['count'] - $uuid['idle'];
+	$total_inactive_time = $total_inactive_time + $uuid['idle'];
+}
+
+// Event Handling each 6 hours
+// Duplicate users Table in snapshot Table
+if(($max_entry_usersnap = $mysqlcon->query("SELECT MAX(DISTINCT(timestamp)) AS timestamp FROM $dbname.user_snapshot")) === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
+$max_entry_usersnap = $max_entry_usersnap->fetch(PDO::FETCH_ASSOC);
+$diff_max_usersnap = $nowtime - $max_entry_usersnap['timestamp'];
+if($diff_max_usersnap > 21600) {
+	if(isset($sqlhis)) {
+		$allinsertsnap = '';
+		foreach ($sqlhis as $insertsnap) {
+			$allinsertsnap = $allinsertsnap . "('$nowtime','" . $insertsnap['uuid'] . "', '" . $insertsnap['count'] . "', '" . $insertsnap['idle'] . "'),";
+		}
+		$allinsertsnap = substr($allinsertsnap, 0, -1);
+		if ($allinsertsnap != '') {
+			if($mysqlcon->exec("INSERT INTO $dbname.user_snapshot (timestamp, uuid, count, idle) VALUES $allinsertsnap") === false) {
+				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				$sqlerr++;
+			}
+		}
+	}
+	//Delete old Entries in user_snapshot
+	$deletiontime = $nowtime - 2678400;
+	if($mysqlcon->exec("DELETE FROM $dbname.user_snapshot WHERE timestamp=$deletiontime") === false) {
+		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$sqlerr++;
+	}
+}
+
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
 	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cs'; else $queryname = $queryname .'_cs';
@@ -33,63 +92,16 @@ try {
         }
     }
 	
-	$total_user = 0;
-	$total_online_time = 0;
-	$total_active_time = 0;
-	$total_inactive_time = 0;
-	$country_string = '';
-	$platform_string = '';
-	if(($uuids = $mysqlcon->query("SELECT uuid,count,idle,platform,nation FROM $dbname.user")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-		$sqlerr++;
-	}
-	$uuids = $uuids->fetchAll();
-	foreach($uuids as $uuid) {
-		$sqlhis[$uuid['uuid']] = array(
-			"uuid" => $uuid['uuid'],
-			"count" => $uuid['count'],
-			"idle" => $uuid['idle']
-		);
-		if ($uuid['nation']!=NULL) $country_string .= $uuid['nation'] . ' ';
-		if ($uuid['platform']!=NULL) {
-			$uuid_platform = str_replace(' ','',$uuid['platform']);
-			$platform_string .= $uuid_platform . ' ';
-		}
-		$total_online_time = $total_online_time + $uuid['count'];
-		$total_active_time = $total_active_time + $uuid['count'] - $uuid['idle'];
-		$total_inactive_time = $total_inactive_time + $uuid['idle'];
+	if($ts3['virtualserver_status']=="online") {
+		$server_status = 1;
+	} elseif($ts3['virtualserver_status']=="offline") {
+		$server_status = 2;
+	} elseif($ts3['virtualserver_status']=="virtual online") {	
+		$server_status = 3;
+	} else {
+		$server_status = 4;
 	}
 	
-	// Event Handling each 6 hours
-	// Duplicate users Table in snapshot Table
-	if(($max_entry_usersnap = $mysqlcon->query("SELECT MAX(DISTINCT(timestamp)) AS timestamp FROM $dbname.user_snapshot")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-		$sqlerr++;
-	}
-	$max_entry_usersnap = $max_entry_usersnap->fetch(PDO::FETCH_ASSOC);
-	$diff_max_usersnap = $nowtime - $max_entry_usersnap['timestamp'];
-	if($diff_max_usersnap > 21600) {
-		if(isset($sqlhis)) {
-			$allinsertsnap = '';
-			foreach ($sqlhis as $insertsnap) {
-				$allinsertsnap = $allinsertsnap . "('$nowtime','" . $insertsnap['uuid'] . "', '" . $insertsnap['count'] . "', '" . $insertsnap['idle'] . "'),";
-			}
-			$allinsertsnap = substr($allinsertsnap, 0, -1);
-			if ($allinsertsnap != '') {
-				if($mysqlcon->exec("INSERT INTO $dbname.user_snapshot (timestamp, uuid, count, idle) VALUES $allinsertsnap") === false) {
-					echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-					$sqlerr++;
-				}
-			}
-		}
-		//Delete old Entries in user_snapshot
-		$deletiontime = $nowtime - 2678400;
-		if($mysqlcon->exec("DELETE FROM $dbname.user_snapshot WHERE timestamp=$deletiontime") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-			$sqlerr++;
-		}
-	}
-
 	// Calc Values for server stats
 	if(($entry_snapshot_count = $mysqlcon->query("SELECT count(DISTINCT(timestamp)) AS timestamp FROM $dbname.user_snapshot")) === false) {
 		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
@@ -168,7 +180,7 @@ try {
 			$platform_other = $platform_other + $v;
 		}
 	}
-	
+
 	$version_1 = 0;
 	$version_2 = 0;
 	$version_3 = 0;
@@ -203,17 +215,6 @@ try {
 		}
 	}
 	$version_other = $version_other[0]['count'] - $version_1 + $version_2 + $version_3 + $version_4 + $version_5;
-	
-	
-	if($ts3['virtualserver_status']=="online") {
-		$server_status = 1;
-	} elseif($ts3['virtualserver_status']=="offline") {
-		$server_status = 2;
-	} elseif($ts3['virtualserver_status']=="virtual online") {	
-		$server_status = 3;
-	} else {
-		$server_status = 4;
-	}
 
 	$total_user = count($sqlhis);
 	$server_used_slots = $ts3['virtualserver_clientsonline'] - $ts3['virtualserver_queryclientsonline'];
@@ -236,20 +237,6 @@ try {
 		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$sqlerr++;
 	}
-
-	// Stats for Server Usage
-	if(($max_entry_serverusage = $mysqlcon->query("SELECT MAX(timestamp) AS timestamp FROM $dbname.server_usage")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-		$sqlerr++;
-	}
-	$max_entry_serverusage = $max_entry_serverusage->fetch(PDO::FETCH_ASSOC);
-	$diff_max_serverusage = $nowtime - $max_entry_serverusage['timestamp'];
-	if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 870) { // every 15 mins
-		if($mysqlcon->exec("INSERT INTO $dbname.server_usage (timestamp, clients, channel) VALUES ($nowtime,$server_used_slots,$server_channel_amount)") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-			$sqlerr++;
-		}
-	}
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
@@ -261,6 +248,20 @@ catch (Exception $e) {
 		}
 	}
 	$sqlerr++;
+}
+
+// Stats for Server Usage
+if(($max_entry_serverusage = $mysqlcon->query("SELECT MAX(timestamp) AS timestamp FROM $dbname.server_usage")) === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
+$max_entry_serverusage = $max_entry_serverusage->fetch(PDO::FETCH_ASSOC);
+$diff_max_serverusage = $nowtime - $max_entry_serverusage['timestamp'];
+if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 870) { // every 15 mins
+	if($mysqlcon->exec("INSERT INTO $dbname.server_usage (timestamp, clients, channel) VALUES ($nowtime,$server_used_slots,$server_channel_amount)") === false) {
+		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$sqlerr++;
+	}
 }
 
 if ($sqlerr == 0) {

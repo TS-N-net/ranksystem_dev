@@ -36,7 +36,7 @@ if ($language == "de") {
     $lang['insttberr']        = "Fehler beim Erstellen der Tabelle: ";
     $lang['insttbsuc']        = "Tabelle %s wurde erfolgreich angelegt.";
     $lang['isntwicfg']        = "Die Datenbankkonfigurationen konnten nicht gespeichert werden! Bitte versehe die 'other/dbconfig.php' mit einem chmod 0777 und versuche es anschließend erneut.";
-    $lang['isntwichm']        = "Bitte versehe die 'other/dbconfig.php' und den Ordner 'icons/' mit einem chmod 0777 und versuche es anschließend erneut.";
+    $lang['isntwichm']        = "Bitte versehe die 'other/dbconfig.php', den Ordner 'icons/' und den Ordner 'other/avatars' mit einem chmod 0777 und versuche es anschließend erneut.";
     $lang['isntwidb']         = "Trage deine Datenbank Einstellungen ein:";
     $lang['isntwidberr']      = "Bitte überprüfe, ob alle Felder korrekt ausgefüllt wurden!";
     $lang['isntwidbhost']     = "DB Hostadresse:";
@@ -243,7 +243,7 @@ if ($language == "de") {
     $lang['insttberr']        = "Ошибка при установке таблиц: ";
     $lang['insttbsuc']        = "Таблица %s успешно создана.";
     $lang['isntwicfg']        = "Не получилось записать настройки базы данных! Пожалуйста установите права на запись 'other/dbconfig.php' chmod 0777 и попробуйте снова.";
-	$lang['isntwichm']        = "Пожалуйста установите права на запись 'other/dbconfig.php' и на папку 'icons/' chmod 0777 и попробуйте снова.";
+	$lang['isntwichm']        = "Пожалуйста установите права на запись 'other/dbconfig.php' и на папку 'icons/' и на папку 'other/avatars' chmod 0777 и попробуйте снова.";
     $lang['isntwidb']         = "Укажите настройки для подключения к базе данных:";
     $lang['isntwidberr']      = "Пожалуйста, проверьте, все ли поля были заполнены а так же корректность заполнения!";
     $lang['isntwidbhost']     = "Адрес Базы Данных:";
@@ -450,7 +450,7 @@ if ($language == "de") {
     $lang['insttberr']        = "Error by creating table: ";
     $lang['insttbsuc']        = "Table %s successfully created.";
     $lang['isntwicfg']        = "Can't save the database configuration! Please edit the 'other/dbconfig.php' with a chmod 0777 and try again after.";
-    $lang['isntwichm']        = "Please edit the 'other/dbconfig.php' and the folder 'icons/' with a chmod 0777 and try again after.";
+    $lang['isntwichm']        = "Please edit the 'other/dbconfig.php', the folder 'icons/' and the folder 'other/avatars' with a chmod 0777 and try again after.";
     $lang['isntwidb']         = "Enter your database settings:";
     $lang['isntwidberr']      = "Please check, if you filled out all fields and the values are correctly!";
     $lang['isntwidbhost']     = "DB Hostaddress:";
