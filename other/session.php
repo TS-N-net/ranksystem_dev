@@ -5,17 +5,20 @@ if(isset($_POST['refresh'])) {
 }
 
 function set_session_ts3($hpclientip, $voiceport, $mysqlcon, $dbname) {
-	$allclients = $mysqlcon->query("SELECT uuid,cldbid,name,ip FROM $dbname.user WHERE online='1'")->fetchAll();
+	$allclients = $mysqlcon->query("SELECT u.uuid,u.cldbid,u.name,u.ip,u.firstcon,s.total_connections FROM $dbname.user as u LEFT JOIN $dbname.stats_user as s ON u.uuid=s.uuid WHERE online='1';")->fetchAll();
 	$_SESSION['connected']						= 0;
 	$_SESSION['serverport']						= $voiceport;
 	foreach ($allclients as $client) {
-		$tsip									= $client['ip'];
-		if ($hpclientip == $tsip) {
+		if ($hpclientip == $client['ip']) {
 			$_SESSION['tsuid']					= $client['uuid'];
 			$_SESSION['tscldbid']				= $client['cldbid'];
 			$_SESSION['tsname']					= $client['name'];
-			//$_SESSION['tscreated']				= date('d-m-Y',$client['client_created']);
-			//$_SESSION['tsconnections']			= $client['client_totalconnections'];
+			$_SESSION['tscreated']				= date('d-m-Y',$client['firstcon']); 
+			if ($client['total_connections'] != NULL) {
+				$_SESSION['tsconnections']			= $client['total_connections'];
+			} else {
+				$_SESSION['tsconnections']			= 0;
+			}
 			$convert = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p');
 			$uuidasbase16 = '';
 			for ($i = 0; $i < 20; $i++) {

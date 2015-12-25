@@ -132,7 +132,7 @@ $dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups");
 $servergroups = $dbgroups->fetchAll(PDO::FETCH_ASSOC);
 foreach($servergroups as $servergroup) {
 	$sqlhisgroup[$servergroup['sgid']] = $servergroup['sgidname'];
-	if(file_exists('images/'.$servergroup['sgid'].'.png')) {
+	if(file_exists('../icons/'.$servergroup['sgid'].'.png')) {
 		$sqlhisgroup_file[$servergroup['sgid']] = true;
 	} else {
 		$sqlhisgroup_file[$servergroup['sgid']] = false;
@@ -282,12 +282,12 @@ if($adminlogin == 1) {
 									echo $timecount;
 								}
 								if ($showcolas == 1 || $adminlogin == 1) {
+									$usergroupid = $sqlhis[$uid]['grpid'];
 									if ($sqlhis[$uid]['grpid'] == 0) {
 										echo '<td class="text-center"></td>';
-									} elseif ($sqlhisgroup_file[$sqlhis[$uid]['grpid']]==true) {
-										echo '<td class="text-center"><img src="images/'.$sqlhis[$uid]['grpid'].'.png">&nbsp;&nbsp;' , $sqlhisgroup[$usergroupid] , '</td>';
+									} elseif ($sqlhisgroup_file[$sqlhis[$uid]['grpid']]===true) {
+										echo '<td class="text-center"><img src="../icons/'.$sqlhis[$uid]['grpid'].'.png">&nbsp;&nbsp;' , $sqlhisgroup[$usergroupid] , '</td>';
 									} else {
-										$usergroupid = $sqlhis[$uid]['grpid'];
 										echo '<td class="text-center">' , $sqlhisgroup[$usergroupid] , '</td>';
 									}
 								}
@@ -313,8 +313,8 @@ if($adminlogin == 1) {
 									if ($grpcount == $countgrp && $nextup == 0 && $showhighest == 1 || $grpcount == $countgrp && $nextup == 0 && $adminlogin == 1) {
 										echo '<td class="text-center">',$lang['highest'],'</td>';
 										$highest++;
-									} elseif ($sqlhisgroup_file[$groupid]==true) {
-										echo '<td class="text-center"><img src="images/'.$groupid.'.png">&nbsp;&nbsp;' , $sqlhisgroup[$groupid] , '</td>';
+									} elseif ($sqlhisgroup_file[$groupid]===true) {
+										echo '<td class="text-center"><img src="../icons/'.$groupid.'.png">&nbsp;&nbsp;' , $sqlhisgroup[$groupid] , '</td>';
 									} else {
 										echo '<td class="text-center">' , $sqlhisgroup[$groupid] , '</td>';
 									}

@@ -147,7 +147,9 @@ try {
 		$platform=$client['client_platform'];
 		$nation=$client['client_country'];
 		$version=$client['client_version'];
+		$firstconnect=$client['client_created'];
 		if (!in_array($uid, $yetonline) && $client['client_version'] != "ServerQuery") {
+			//$custominfo = $ts3->clientInfoDb($cldbid);
 			$clientidle  = floor($client['client_idle_time'] / 1000);
 			$yetonline[] = $uid;
 			if (in_array($uid, $uidarr)) {
@@ -290,7 +292,6 @@ try {
 				$insertdata[] = array(
 					"uuid" => $uid,
 					"cldbid" => $cldbid,
-					"count" => "1",
 					"ip" => $ip,
 					"name" => $name,
 					"lastseen" => $nowtime,
@@ -299,7 +300,8 @@ try {
 					"cldgroup" => $cldgroup,
 					"platform" => $platform,
 					"nation" => $nation,
-					"version" => $version
+					"version" => $version,
+					"firstcon" => $firstconnect
 				);
 				$uidarr[] = $uid;
 				echo '<span class="sccolor">', sprintf($lang['adduser'], $name, $uid, $cldbid), '</span><br>';
@@ -324,11 +326,11 @@ try {
 	if ($insertdata != '') {
 		$allinsertdata = '';
 		foreach ($insertdata as $insertarr) {
-			$allinsertdata = $allinsertdata . "('" . $insertarr['uuid'] . "', '" . $insertarr['cldbid'] . "', '" . $insertarr['count'] . "', '" . $insertarr['ip'] . "', '" . $insertarr['name'] . "', '" . $insertarr['lastseen'] . "', '" . $insertarr['grpid'] . "', '" . $insertarr['nextup'] . "', '" . $insertarr['cldgroup'] . "', '" . $insertarr['platform'] . "', '" . $insertarr['nation'] . "', '" . $insertarr['version'] . "','1'),";
+			$allinsertdata = $allinsertdata . "('" . $insertarr['uuid'] . "', '" . $insertarr['cldbid'] . "', '1', '" . $insertarr['ip'] . "', '" . $insertarr['name'] . "', '" . $insertarr['lastseen'] . "', '" . $insertarr['grpid'] . "', '" . $insertarr['nextup'] . "', '" . $insertarr['cldgroup'] . "', '" . $insertarr['platform'] . "', '" . $insertarr['nation'] . "', '" . $insertarr['version'] . "', '" . $insertarr['firstcon'] . "','1'),";
 		}
 		$allinsertdata = substr($allinsertdata, 0, -1);
 		if ($allinsertdata != '') {
-			if($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, online) VALUES $allinsertdata") === false) {
+			if($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, firstcon, online) VALUES $allinsertdata") === false) {
 				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 				$sqlerr++;
 			}
