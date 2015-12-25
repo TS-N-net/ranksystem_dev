@@ -66,11 +66,11 @@ if(!isset($_GET["user"])) {
 $start = $seite * $user_pro_seite - $user_pro_seite;
 
 if ($keysort == 'active' && $keyorder == 'asc') {
-	$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY (count - idle) LIMIT $start, $user_pro_seite");
+	$dbdata = $mysqlcon->query("SELECT uuid,cldbid,rank,count,name,idle,cldgroup,online,nextup,lastseen,ip,grpid FROM $dbname.user $searchmysql ORDER BY (count - idle) LIMIT $start, $user_pro_seite");
 } elseif ($keysort == 'active' && $keyorder == 'desc') {
-	$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY (idle - count) LIMIT $start, $user_pro_seite");
+	$dbdata = $mysqlcon->query("SELECT uuid,cldbid,rank,count,name,idle,cldgroup,online,nextup,lastseen,ip,grpid FROM $dbname.user $searchmysql ORDER BY (idle - count) LIMIT $start, $user_pro_seite");
 } else {
-	$dbdata = $mysqlcon->query("SELECT * FROM $dbname.user $searchmysql ORDER BY $keysort $keyorder LIMIT $start, $user_pro_seite");
+	$dbdata = $mysqlcon->query("SELECT uuid,cldbid,rank,count,name,idle,cldgroup,online,nextup,lastseen,ip,grpid FROM $dbname.user $searchmysql ORDER BY $keysort $keyorder LIMIT $start, $user_pro_seite");
 }
 $seiten_anzahl_gerundet = ceil($sumentries / $user_pro_seite);
 
@@ -162,7 +162,7 @@ if($adminlogin == 1) {
 			<div class="container-fluid">
 
 				<?PHP
-				if($_GET['user'] != "all") {
+				if(isset($_GET['user']) != "all") {
 					pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring);
 				}
 				?>
@@ -331,7 +331,7 @@ if($adminlogin == 1) {
 					echo '<tr><td colspan="6">' , $lang['noentry'] , '</td></tr>';
 				}
 				echo '</tbody></table></div>';
-				if($_GET['user'] != "all") {
+				if(isset($_GET['user']) != "all") {
 					pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring);
 				}
 				if ($showgen == 1 || $adminlogin == 1) {
