@@ -37,7 +37,7 @@ try {
 	// clean old clients out of the database
 	if ($cleanclients == 1 && $slowmode != 1) {
 		$cleantime = $nowtime - $cleanperiod;
-		if(($lastclean = $mysqlcon->query("SELECT * FROM $dbname.cleanclients")) === false) {
+		if(($lastclean = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_clean'")) === false) {
 			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 			$sqlerr++;
 		}
@@ -96,7 +96,7 @@ try {
 						$sqlerr++;
 					} else {
 						echo '<span class="sccolor">',sprintf($lang['cleandel'], $countdel),'</span><br>';
-						if($mysqlcon->exec("UPDATE $dbname.cleanclients SET timestamp='$nowtime'") === false) {
+						if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='check_clean'") === false) {
 							echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 							$sqlerr++;
 						}
@@ -104,7 +104,7 @@ try {
 				}
 			} else {
 				echo '<span class="ifcolor">',$lang['cleanno'],'</span><br>';
-				if($mysqlcon->exec("UPDATE $dbname.cleanclients SET timestamp='$nowtime'") === false) {
+				if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='check_clean'") === false) {
 					echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 					$sqlerr++;
 				}

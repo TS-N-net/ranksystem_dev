@@ -70,7 +70,46 @@ if(isset($_POST['updateranksystem'])) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
-	if($mysqlcon->exec("INSERT INTO $dbname.job_check SET job_name='calc_user_limit'") === false) {
+	if($mysqlcon->exec("INSERT INTO $dbname.job_check SET (job_name) VALUES ('calc_user_limit','calc_user_lastscan','check_update','check_clean')") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	if($lastscan = $mysqlcon->query("SELECT timestamp FROM $dbname.lastscan") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	$timestampls = $lastscan->fetchAll();
+	$calc_user_lastscan = $timestampls[0]['timestamp'];
+	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$calc_user_lastscan' WHERE job_name='calc_user_lastscan'") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	} elseif($mysqlcon->exec("DROP TABLE $dbname.lastscan") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	if($lastupdate = $mysqlcon->query("SELECT timestamp FROM $dbname.upcheck") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	$timestampuc = $lastupdate->fetchAll();
+	$calc_user_lastscan = $timestampls[0]['timestamp'];
+	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$timestampuc' WHERE job_name='check_update'") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	} elseif($mysqlcon->exec("DROP TABLE $dbname.upcheck") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	if($lastclean = $mysqlcon->query("SELECT timestamp FROM $dbname.cleanclients") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	$timestamplc = $lastclean->fetchAll();
+	$calc_user_lastscan = $timestampls[0]['timestamp'];
+	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$timestamplc' WHERE job_name='check_clean'") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	} elseif($mysqlcon->exec("DROP TABLE $dbname.cleanclients") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}

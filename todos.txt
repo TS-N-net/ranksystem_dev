@@ -1,14 +1,17 @@
 - observance BSD License from Morris http://morrisjs.github.io/morris.js/
-- jobmanagement (manage start jobs for predefined time, controll success, log management)
-- optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
-- use table job_check for all timestamps (after that delete table cleanclients, lastscan, upcheck)
 - top_all.php: Take care about client and servergroup exceptions!
 - all textes to lang.php
 - nations to longtext
 - what is with sites top user of week and top users of month?
-- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - my_stats.php info button legendary icons
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
+
+
+
+- jobmanagement (manage start jobs for predefined time, controll success, log management)
+- optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
+- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
+
 
 
 - documentate update / installation

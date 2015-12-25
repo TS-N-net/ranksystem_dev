@@ -49,7 +49,7 @@ try {
 
 	if ($update == 1) {
 		$updatetime = $nowtime - $updateinfotime;
-		if(($lastupdate = $mysqlcon->query("SELECT * FROM $dbname.upcheck")) === false) {
+		if(($lastupdate = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_update'")) === false) {
 			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 			$sqlerr++;
 		}
@@ -73,7 +73,7 @@ try {
 				}
 				echo '<br><br>';
 			}
-			if($mysqlcon->exec("UPDATE $dbname.upcheck SET timestamp=$nowtime") === false) {
+			if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp=$nowtime WHERE job_name='check_update'") === false) {
 				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 				$sqlerr++;
 			}
@@ -81,22 +81,14 @@ try {
 	}
 
 	echo '<span class="hdcolor"><b>', $lang['crawl'], '</b></span><br>';
-	if(($dbdata = $mysqlcon->query("SELECT * FROM $dbname.lastscan")) === false) {
+	if(($dbdata = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='calc_user_lastscan'")) === false) {
 		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		exit;
 	}
 	$lastscanarr = $dbdata->fetchAll();
 	$lastscan = $lastscanarr[0]['timestamp'];
-	if ($dbdata->rowCount() == 0) {
-		echo $lang['firstuse'], '<br><br>';
-		$uidarr[] = "firstrun";
-		$count	= 1;
-		if($mysqlcon->exec("INSERT INTO $dbname.lastscan SET timestamp='$nowtime'") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
-			$sqlerr++;
-		}
-	} else {
-		if($mysqlcon->exec("UPDATE $dbname.lastscan SET timestamp='$nowtime'") === false) {
+	if ($dbdata->rowCount() != 0) {
+		if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='calc_user_lastscan'") === false) {
 			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 			$sqlerr++;
 		}
