@@ -264,6 +264,64 @@ if ($max_entry_serverusage['timestamp'] == 0 || $diff_max_serverusage > 870) { /
 	}
 }
 
+//Calc time next rankup
+$upnextuptime = $nowtime - 86400;
+if(($uuidsoff = $mysqlcon->query("SELECT uuid,idle,count FROM $dbname.user WHERE online<>1 AND lastseen>$upnextuptime")) === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
+if ($uuidsoff->rowCount() != 0) {
+	$uuidsoff = $uuidsoff->fetchAll(PDO::FETCH_ASSOC);
+	foreach($uuidsoff as $uuid) {
+		$idle     = $uuid['idle'];
+		$count    = $uuid['count'];
+		if ($substridle == 1) {
+			$activetime = $count - $idle;
+			$dtF        = new DateTime("@0");
+			$dtT        = new DateTime("@$activetime");
+		} else {
+			$activetime = $count;
+			$dtF        = new DateTime("@0");
+			$dtT        = new DateTime("@$count");
+		}
+		foreach ($grouptime as $time => $groupid) {
+			if ($activetime > $time) {
+				$nextup = 0;
+			} else {
+				$nextup = $time - $activetime;
+			}
+		}
+		$updatenextup[] = array(
+			"uuid" => $uuid['uuid'],
+			"nextup" => $nextup
+		);
+	}
+}
+
+if (isset($updatenextup)) {
+	$allupdateuuid   = '';
+	$allupdatenextup = '';
+	foreach ($updatenextup as $updatedata) {
+		$allupdateuuid   = $allupdateuuid . "'" . $updatedata['uuid'] . "',";
+		$allupdatenextup = $allupdatenextup . "WHEN '" . $updatedata['uuid'] . "' THEN '" . $updatedata['nextup'] . "' ";
+	}
+	$allupdateuuid = substr($allupdateuuid, 0, -1);
+	if ($mysqlcon->exec("UPDATE $dbname.user set nextup = CASE uuid $allupdatenextup END WHERE uuid IN ($allupdateuuid)") === false) {
+		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$sqlerr++;
+	}
+}
+
+//Calc Rank
+if($mysqlcon->exec("SET @a:=0") === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
+if($mysqlcon->exec("UPDATE $dbname.user u INNER JOIN (SELECT @a:=@a+1 nr,uuid FROM $dbname.user ORDER BY count DESC) s USING (uuid) SET u.rank=s.nr") === false) {
+	echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+	$sqlerr++;
+}
+
 if ($sqlerr == 0) {
 	//update job_check, set job as success
 }

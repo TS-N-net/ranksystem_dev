@@ -16,8 +16,6 @@ execInBackground('php '.dirname(__FILE__).'/jobs/job_get_avatars.php');
 sleep(1);
 execInBackground('php '.dirname(__FILE__).'/jobs/job_clean.php');
 sleep(1);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_rank.php');
-sleep(1);
 execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats.php');
 sleep(1);
 execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats_user.php');
