@@ -1,15 +1,8 @@
+#!/usr/bin/php
 <?PHP
+set_time_limit(60);
 $starttime = microtime(true);
-?>
-<!doctype html>
-<html>
-<head>
-  <title>TS-N.NET Ranksystem - get Avatars</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
-</head>
-<body>
-<?PHP
+
 require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
@@ -32,6 +25,8 @@ try {
         }
         catch (Exception $e) {
             echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
+			$sqlerr++;
         }
     }
 
@@ -53,34 +48,46 @@ try {
 					$transfer = TeamSpeak3::factory("filetransfer://" . $avatar["host"] . ":" . $avatar["port"]);
 					$tsfile = $transfer->download($avatar["ftkey"], $avatar["size"]);
 					$avatarfilepath	= substr(dirname(__FILE__),0,-4).'other/avatars/'.$uuidasbase16;
-					echo 'Download avatar: ',$fullfilename,'<br>';
+					echo "Download avatar: ",$fullfilename,"\n";
 					file_put_contents($avatarfilepath, $tsfile);
 					$count++;
 				}
 				catch (Exception $e) {
 					echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+					$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 					$sqlerr++;
 				}
 			}
 		}
 	}
 	if ($count == 0) {
-		echo 'Nothing to do.. All avatars already downloaded and are up to date<br>';
+		echo "Nothing to do.. All avatars already downloaded and are up to date\n";
 	}
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 	$sqlerr++;
-}
-
-if ($sqlerr == 0) {
-	//update job_check, set job as success
 }
 
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $count), '<br>';
+    echo "\n",sprintf($lang['sitegen'], $buildtime, $count),"\n";
+}
+
+if ($sqlerr == 0) {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
+} else {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
 }
 ?>
-</body>
-</html>

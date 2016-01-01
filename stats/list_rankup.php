@@ -122,7 +122,7 @@ foreach($uuids as $uuid) {
 	$uidarr[]			  = $uuid['uuid'];
 	$countentries		  = $countentries + 1;
 }
-if(!$dbdata = $mysqlcon->query("SELECT * FROM $dbname.lastscan")) {
+if(!$dbdata = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='calc_user_lastscan'")) {
 	$err_msg = '<span class="wncolor">'.$mysqlcon->errorCode().'</span><br>';
 }
 

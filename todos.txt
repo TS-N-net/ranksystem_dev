@@ -8,9 +8,10 @@
 
 
 
-- jobmanagement (manage start jobs for predefined time, controll success, log management)
-- optimize error management in all single jobs (important for jogmanagement), example job_calc_stats_user
+- jobmanagement (manage start jobs for predefined time)
+- handle job errors -> message on ts and/or mail as info
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
+- show on stats an error message, when newest log entry in table job_log is older then 10 minutes and second when uuid in admin list, then warning, when entry older then 1 minute.
 
 
 

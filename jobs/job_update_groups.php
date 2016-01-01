@@ -1,13 +1,8 @@
+#!/usr/bin/php
 <?PHP
+set_time_limit(60);
 $starttime = microtime(true);
-?>
-<!doctype html>
-<html>
-<head>
-  <title>TS-N.NET Ranksystem - Update Groups</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
-<?PHP
+
 require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
@@ -29,6 +24,8 @@ try {
         }
         catch (Exception $e) {
             echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
+			$sqlerr++;
         }
     }
 
@@ -42,7 +39,8 @@ try {
 	
 	// update groupinformations and download icons
     if(($dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
     if ($dbgroups->rowCount() == 0) {
@@ -109,7 +107,8 @@ try {
         $allinsertdata = substr($allinsertdata, 0, -1);
         if ($allinsertdata != '') {
             if($mysqlcon->exec("INSERT INTO $dbname.groups (sgid, sgidname, iconid) VALUES $allinsertdata") === false) {
-				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
         }
@@ -129,7 +128,8 @@ try {
         }
         $allsgids = substr($allsgids, 0, -1);
         if($mysqlcon->exec("UPDATE $dbname.groups set sgidname = CASE sgid $allupdatesgid END, iconid = CASE sgid $allupdateiconid END WHERE sgid IN ($allsgids)") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
     }
@@ -143,24 +143,36 @@ try {
 	if(isset($delsgroupids)) {
 		$delsgroupids = substr($delsgroupids, 0, -1);
 		if($mysqlcon->exec("DELETE FROM groups WHERE sgid IN ($delsgroupids)") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 	}
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 	$sqlerr++;
-}
-
-if ($sqlerr == 0) {
-	//update job_check, set job as success
 }
 
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $dbgroups->rowCount()), '<br>';
+    echo "\n",sprintf($lang['sitegen'], $buildtime, $dbgroups->rowCount()),"\n";
+}
+
+if ($sqlerr == 0) {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
+} else {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
 }
 ?>
-</body>
-</html>

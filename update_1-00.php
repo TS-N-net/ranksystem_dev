@@ -70,7 +70,11 @@ if(isset($_POST['updateranksystem'])) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
-	if($mysqlcon->exec("INSERT INTO $dbname.job_check SET (job_name) VALUES ('calc_user_limit','calc_user_lastscan','check_update','check_clean')") === false) {
+	if($mysqlcon->exec("INSERT INTO $dbname.job_check (job_name) VALUES ('calc_user_limit'),('calc_user_lastscan'),('check_update'),('check_clean')") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+	}
+	if($mysqlcon->exec("CREATE TABLE $dbname.job_log (id  bigint(11) AUTO_INCREMENT PRIMARY KEY, timestamp bigint(11) NOT NULL default '0', job_name varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci, status int(1) NOT NULL default '0', text CHARACTER SET utf8 COLLATE utf8_unicode_ci, runtime float (4,4))") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}

@@ -37,7 +37,6 @@ require_once('nav.php');
                     <div class="col-lg-12">
                         <h4><strong><font color="#5cb85c">Who Created The Ranksystem?</font></strong></h4>
                         <p>The Ranksystem was coded by <strong>Newcomer1989</strong> from <a href="http://ts-n.net/" target="_blank"><u><font color="#000000">TS-N.NET</font></u></a> in cooperation with <strong>Benjamin Frost.</strong></p>
-                        <p>This Site was coded by <strong>Benjamin Frost</strong> in a cooperation with <strong>Newcomer1989.</strong></p>
                         <br>
                     </div>
                 </div>

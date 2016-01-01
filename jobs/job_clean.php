@@ -1,15 +1,10 @@
+#!/usr/bin/php
 <?PHP
+set_time_limit(60);
 $starttime = microtime(true);
 $count_tsuser['count'] = 0;
 $nowtime = time();
-?>
-<!doctype html>
-<html>
-<head>
-  <title>TS-N.NET Ranksystem - Clean</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
-<?PHP
+
 require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
@@ -31,6 +26,8 @@ try {
         }
         catch (Exception $e) {
             echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
+			$sqlerr++;
         }
     }
 	
@@ -38,18 +35,20 @@ try {
 	if ($cleanclients == 1 && $slowmode != 1) {
 		$cleantime = $nowtime - $cleanperiod;
 		if(($lastclean = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_clean'")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$lastclean = $lastclean->fetchAll();
 		if(($dbuserdata = $mysqlcon->query("SELECT uuid FROM $dbname.user")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$countrs = $dbuserdata->rowCount();
 		$uuids = $dbuserdata->fetchAll();
 		if ($lastclean[0]['timestamp'] < $cleantime) {
-			echo '<span class="hdcolor"><b>', $lang['clean'], '</b></span><br>';
+			echo $lang['clean'],"\n";
 			$start=0;
 			$break=200;
 			$clientdblist=array();
@@ -80,8 +79,8 @@ try {
 			}
 
 			unset($uidarrts);
-			echo sprintf($lang['cleants'], $countts, $count_tsuser['count']),'<br>';
-			echo sprintf($lang['cleanrs'], $countrs),'<br>';
+			echo sprintf($lang['cleants'], $countts, $count_tsuser['count']),"\n";
+			echo sprintf($lang['cleanrs'], $countrs),"\n";
 
 			if(isset($deleteuuids)) {
 				$alldeldata = '';
@@ -92,20 +91,23 @@ try {
 				$alldeldata = "(".$alldeldata.")";
 				if ($alldeldata != '') {
 					if($mysqlcon->exec("DELETE FROM $dbname.user WHERE uuid IN $alldeldata") === false) {
-						echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+						echo $lang['error'],print_r($mysqlcon->errorInfo());
+						$sqlmsg .= print_r($mysqlcon->errorInfo());
 						$sqlerr++;
 					} else {
-						echo '<span class="sccolor">',sprintf($lang['cleandel'], $countdel),'</span><br>';
+						echo sprintf($lang['cleandel'], $countdel),"\n";
 						if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='check_clean'") === false) {
-							echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+							echo $lang['error'],print_r($mysqlcon->errorInfo());
+							$sqlmsg .= print_r($mysqlcon->errorInfo());
 							$sqlerr++;
 						}
 					}
 				}
 			} else {
-				echo '<span class="ifcolor">',$lang['cleanno'],'</span><br>';
+				echo $lang['cleanno'],"\n";
 				if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='check_clean'") === false) {
-					echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+					echo $lang['error'],print_r($mysqlcon->errorInfo());
+					$sqlmsg .= print_r($mysqlcon->errorInfo());
 					$sqlerr++;
 				}
 			}
@@ -114,17 +116,28 @@ try {
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 	$sqlerr++;
-}
-
-if ($sqlerr == 0) {
-	//update job_check, set job as success
 }
 
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $count_tsuser['count']), '<br>';
+    echo "\n",sprintf($lang['sitegen'], $buildtime, $count_tsuser['count']),"\n";
+}
+
+if ($sqlerr == 0) {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
+} else {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
 }
 ?>
-</body>
-</html>

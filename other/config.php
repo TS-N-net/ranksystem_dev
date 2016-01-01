@@ -1,6 +1,5 @@
 <?PHP
 require_once('dbconfig.php');
-$mysqlprob = true;
 if(isset($db['type']) === false) {
 	$db['type']="mysql";
 }
@@ -15,10 +14,11 @@ if ($db['type'] == 'mysql') {
 try {
 	$mysqlcon = new PDO($dbserver, $db['user'], $db['pass'], $dboptions);
 } catch (PDOException $e) {
-	$sqlconerr = 'SQL Connection failed: '.$e->getMessage();
-    $mysqlprob = false;
+	$sqlconerr = "SQL Connection failed: ".$e->getMessage()."\n";
+	echo $sqlconerr;
+	exit;
 }
-if ($mysqlprob === false || !$config = $mysqlcon->query("SELECT * FROM config")) {
+if (($config = $mysqlcon->query("SELECT * FROM config"))  === false) {
     $bgcolor         = '#101010';
     $hdcolor         = '#909090';
     $txcolor         = '#707070';

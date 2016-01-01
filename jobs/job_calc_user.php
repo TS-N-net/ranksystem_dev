@@ -1,20 +1,10 @@
+#!/usr/bin/php
 <?PHP
+set_time_limit(60);
 $starttime = microtime(true);
 $nowtime = time();
-?>
-<!doctype html>
-<html>
-<head>
-  <title>TS-N.NET Ranksystem - Calc User</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
-<?PHP
-echo '</head><body>';
+
 require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
-if ($mysqlprob === false) {
-	echo '<span class="wncolor">',$sqlconerr,'</span><br>';
-	exit;
-}
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
 
@@ -43,6 +33,7 @@ try {
 		}
 		catch (Exception $e) {
 			echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 			$sqlerr++;
 		}
 	}
@@ -50,7 +41,8 @@ try {
 	if ($update == 1) {
 		$updatetime = $nowtime - $updateinfotime;
 		if(($lastupdate = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_update'")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$lastupdate = $lastupdate->fetchAll();
@@ -59,41 +51,45 @@ try {
 			$newversion = file_get_contents('http://ts-n.net/ranksystem/version');
 			restore_error_handler();
 			if (substr($newversion, 0, 4) != substr($currvers, 0, 4) && $newversion != '') {
-				echo '<b>', $lang['upinf'], '</b><br>';
+				echo $lang['upinf'],"\n";
 				foreach ($uniqueid as $clientid) {
 					if ($slowmode == 1) sleep(1);
 					try {
 						$ts3->clientGetByUid($clientid)->message(sprintf($lang['upmsg'], $currvers, $newversion));
-						echo '<span class="sccolor">', sprintf($lang['upusrinf'], $clientid), '</span><br>';
+						echo sprintf($lang['upusrinf'], $clientid),"\n";
 					}
 					catch (Exception $e) {
-						echo '<span class="wncolor">', sprintf($lang['upusrerr'], $clientid), '</span><br>';
+						echo sprintf($lang['upusrerr'], $clientid),"\n";
+						$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 						$sqlerr++;
 					}
 				}
-				echo '<br><br>';
+				echo '\n\n';
 			}
 			if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp=$nowtime WHERE job_name='check_update'") === false) {
-				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
 		}
 	}
 
-	echo '<span class="hdcolor"><b>', $lang['crawl'], '</b></span><br>';
+	echo $lang['crawl'],"\n";
 	if(($dbdata = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='calc_user_lastscan'")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
 		exit;
 	}
 	$lastscanarr = $dbdata->fetchAll();
 	$lastscan = $lastscanarr[0]['timestamp'];
 	if ($dbdata->rowCount() != 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='calc_user_lastscan'") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		if(($dbuserdata = $mysqlcon->query("SELECT uuid,cldbid,count,grpid,nextup,idle,boosttime FROM $dbname.user")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$uuids = $dbuserdata->fetchAll();
@@ -112,14 +108,14 @@ try {
 	}
 	unset($uuids);
 	if ($debug == 'on') {
-		echo '<br>sqlhis:<br><pre>', print_r($sqlhis), '</pre><br>';
+		echo "\nsqlhis:\n<pre>", print_r($sqlhis), "</pre>\n";
 	}
 	if ($slowmode == 1) sleep(1);
 	$allclients = $ts3->clientList();
 	$yetonline[] = '';
 	$insertdata  = '';
 	if(empty($grouptime)) {
-		echo '<span class="wncolor">',$lang['wiconferr'],'</span><br>';
+		echo $lang['wiconferr'],"\n";
 		exit;
 	}
 	krsort($grouptime);
@@ -149,7 +145,7 @@ try {
 				$grpid  = $sqlhis[$uid]['grpid'];
 				$nextup = $sqlhis[$uid]['nextup'];
 				if ($sqlhis[$uid]['cldbid'] != $cldbid && $resetbydbchange == 1) {
-					echo '<span class="wncolor">', sprintf($lang['changedbid'], $name, $uid, $cldbid, $sqlhis[$uid]['cldbid']), '</span><br>';
+				echo sprintf($lang['changedbid'], $name, $uid, $cldbid, $sqlhis[$uid]['cldbid']),"\n";
 					$count = 1;
 					$idle  = 0;
 				} else {
@@ -168,10 +164,11 @@ try {
 										try {
 											$ts3->serverGroupClientDel($boost['group'], $cldbid);
 											$boosttime = 0;
-											echo '<span class="ifcolor">', sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid), '</span><br>';
+											echo sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid),"\n";
 										}
 										catch (Exception $e) {
-											echo '<span class="wncolor">', sprintf($lang['sgrprerr'], $name, $uid, $cldbid), '</span><br>';
+											echo sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
+											$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 											$sqlerr++;
 										}
 									}
@@ -212,10 +209,11 @@ try {
 								if ($slowmode == 1) sleep(1);
 								try {
 									$ts3->serverGroupClientDel($sqlhis[$uid]['grpid'], $cldbid);
-									echo '<span class="ifcolor">', sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid), '</span><br>';
+									echo sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid),"\n";
 								}
 								catch (Exception $e) {
-									echo '<span class="wncolor">', sprintf($lang['sgrprerr'], $name, $uid, $cldbid), '</span><br>';
+									echo sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
+									$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 									$sqlerr++;
 								}
 							}
@@ -223,10 +221,11 @@ try {
 								if ($slowmode == 1) sleep(1);
 								try {
 									$ts3->serverGroupClientAdd($groupid, $cldbid);
-									echo '<span class="ifcolor">', sprintf($lang['sgrpadd'], $groupid, $name, $uid, $cldbid), '</span><br>';
+									echo sprintf($lang['sgrpadd'], $groupid, $name, $uid, $cldbid),"\n";
 								}
 								catch (Exception $e) {
-									echo '<span class="wncolor">', sprintf($lang['sgrprerr'], $name, $uid, $cldbid), '</span><br>';
+									echo sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
+									$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 									$sqlerr++;
 								}
 							}
@@ -269,9 +268,9 @@ try {
 					"version" => $version
 				);
 				if ($hitboost != 0) {
-					echo sprintf($lang['upuserboost'], $name, $uid, $cldbid, $count, $activetime, $boostfactor), '<br>';
+					echo sprintf($lang['upuserboost'], $name, $uid, $cldbid, $count, $activetime, $boostfactor),"\n";
 				} else {
-					echo sprintf($lang['upuser'], $name, $uid, $cldbid, $count, $activetime), '<br>';
+					echo sprintf($lang['upuser'], $name, $uid, $cldbid, $count, $activetime),"\n";
 				}
 			} else {
 				$grpid = '0';
@@ -296,10 +295,10 @@ try {
 					"firstcon" => $firstconnect
 				);
 				$uidarr[] = $uid;
-				echo '<span class="sccolor">', sprintf($lang['adduser'], $name, $uid, $cldbid), '</span><br>';
+				echo sprintf($lang['adduser'], $name, $uid, $cldbid),"\n";
 			}
 		} else {
-			echo '<span class="wncolor">', sprintf($lang['nocount'], $name, $uid, $cldbid), '</span><br>';
+			echo sprintf($lang['nocount'], $name, $uid, $cldbid),"\n";
 			if($client['client_version'] == "ServerQuery") {
 				$serverquerycount++;
 			}
@@ -307,12 +306,13 @@ try {
 	}
 
 	if($mysqlcon->exec("UPDATE $dbname.user SET online=''") === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
 
 	if ($debug == 'on') {
-		echo '<br>insertdata:<br><pre>', print_r($insertdata), '</pre><br>';
+		echo "\ninsertdata:\n<pre>",print_r($insertdata),"</pre>\n";
 	}	
 
 	if ($insertdata != '') {
@@ -323,13 +323,14 @@ try {
 		$allinsertdata = substr($allinsertdata, 0, -1);
 		if ($allinsertdata != '') {
 			if($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, firstcon, online) VALUES $allinsertdata") === false) {
-				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
 		}
 	}
 	if ($debug == 'on') {
-		echo '<br>allinsertdata:<br>', $allinsertdata, '<br><br>updatedata:<br><pre>', print_r($updatedata), '</pre><br>';
+		echo "\nallinsertdata:\n", $allinsertdata, "\n\nupdatedata:\n<pre>", print_r($updatedata), "</pre>\n";
 	}
 	unset($insertdata);
 	unset($allinsertdata);
@@ -366,29 +367,41 @@ try {
 		}
 		$allupdateuuid = substr($allupdateuuid, 0, -1);
 		if($mysqlcon->exec("UPDATE $dbname.user set cldbid = CASE uuid $allupdatecldbid END, count = CASE uuid $allupdatecount END, ip = CASE uuid $allupdateip END, name = CASE uuid $allupdatename END, lastseen = CASE uuid $allupdatelastseen END, grpid = CASE uuid $allupdategrpid END, nextup = CASE uuid $allupdatenextup END, idle = CASE uuid $allupdateidle END, cldgroup = CASE uuid $allupdatecldgroup END, boosttime = CASE uuid $allupdateboosttime END, platform = CASE uuid $allupdateplatform END, nation = CASE uuid $allupdatenation END, version = CASE uuid $allupdateversion END, online = 1 WHERE uuid IN ($allupdateuuid)") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 	}
 	if ($debug == 'on') {
-		echo '<br>allupdateuuid:<br>', $allupdateuuid, '<br>';
+		echo "\nallupdateuuid:\n", $allupdateuuid, "\n";
 	}
 	unset($updatedata);
 	unset($allupdateuuid);
 }
 catch (Exception $e) {
 	echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 	$sqlerr++;
-}
-
-if ($sqlerr == 0) {
-	//update job_check, set job as success
 }
 
 if ($showgen == 1) {
 	$buildtime = microtime(true) - $starttime;
-	echo '<br>', sprintf($lang['sitegen'], $buildtime, $sumentries), '<br>';
+	echo "\n", sprintf($lang['sitegen'], $buildtime, $sumentries), "\n";
+}
+
+if ($sqlerr == 0) {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
+} else {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
 }
 ?>
-</body>
-</html>

@@ -1,15 +1,8 @@
+#!/usr/bin/php
 <?PHP
+set_time_limit(60);
 $starttime = microtime(true);
-?>
-<!doctype html>
-<html>
-<head>
-  <title>TS-N.NET Ranksystem - Calc Stats (User)</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="../other/style.css.php" />
-</head>
-<body>
-<?PHP
+
 require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
 require_once(substr(dirname(__FILE__),0,-4).'lang.php');
 require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
@@ -31,18 +24,22 @@ try {
         }
         catch (Exception $e) {
             echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+			$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
+			$sqlerr++;
         }
     }
 
 	if(($count_user = $mysqlcon->query("SELECT count(*) as count FROM ((SELECT u.uuid FROM $dbname.user AS u INNER JOIN $dbname.stats_user As s On u.uuid=s.uuid WHERE lastseen>1448319007) UNION (SELECT u.uuid FROM $dbname.user AS u LEFT JOIN $dbname.stats_user As s On u.uuid=s.uuid WHERE s.uuid IS NULL)) x")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
 	$count_user = $count_user->fetchAll(PDO::FETCH_ASSOC);
 	$total_user = $count_user[0]['count'];
 
 	if(($job_begin = $mysqlcon->query("SELECT timestamp FROM $dbname.job_check WHERE job_name='calc_user_limit'")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
 	$job_begin = $job_begin->fetchAll();
@@ -56,7 +53,8 @@ try {
 	}
 
 	if(($uuids = $mysqlcon->query("(SELECT u.uuid,u.rank,u.cldbid FROM $dbname.user AS u INNER JOIN $dbname.stats_user As s On u.uuid=s.uuid WHERE lastseen>1448319007) UNION (SELECT u.uuid,u.rank,u.cldbid FROM $dbname.user AS u LEFT JOIN $dbname.stats_user As s On u.uuid=s.uuid WHERE s.uuid IS NULL) ORDER BY cldbid ASC LIMIT $job_begin, 500")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
 	$uuids = $uuids->fetchAll();
@@ -71,12 +69,14 @@ try {
 	// Calc Client Stats
 	
 	if ($mysqlcon->exec("UPDATE $dbname.stats_user AS t LEFT JOIN $dbname.user AS u ON t.uuid=u.uuid SET t.removed='1' WHERE u.uuid IS NULL") === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
 	
 	if(($statsuserhis = $mysqlcon->query("SELECT uuid, removed FROM $dbname.stats_user")) === false) {
-		echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
 	$statsuserhis = $statsuserhis->fetchAll();
@@ -86,24 +86,28 @@ try {
 	unset($statsuserhis);
 
 	if(isset($sqlhis)) {
-		echo '<b>Update User Stats between ',$job_begin,' and ',$job_end,':</b><br>';
+		echo "Update User Stats between ",$job_begin," and ",$job_end,":\n";
 		if(($userdataweekbegin = $mysqlcon->query("SELECT uuid,count,idle FROM $dbname.user_snapshot WHERE timestamp=(SELECT MIN(s2.timestamp) AS value2 FROM (SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 28) AS s2, $dbname.user_snapshot AS s1 WHERE s1.timestamp=s2.timestamp)")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$userdataweekbegin = $userdataweekbegin->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
 		if(($userdataweekend = $mysqlcon->query("SELECT uuid,count,idle FROM $dbname.user_snapshot WHERE timestamp=(SELECT MAX(s2.timestamp) AS value1 FROM (SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 28) AS s2, $dbname.user_snapshot AS s1 WHERE s1.timestamp=s2.timestamp)")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$userdataweekend = $userdataweekend->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
 		if(($userdatamonthbegin = $mysqlcon->query("SELECT uuid,count,idle FROM $dbname.user_snapshot WHERE timestamp=(SELECT MIN(s2.timestamp) AS value2 FROM (SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 120) AS s2, $dbname.user_snapshot AS s1 WHERE s1.timestamp=s2.timestamp)")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$userdatamonthbegin = $userdatamonthbegin->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
 		if(($userdatamonthend = $mysqlcon->query("SELECT uuid,count,idle FROM $dbname.user_snapshot WHERE timestamp=(SELECT MAX(s2.timestamp) AS value1 FROM (SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 120) AS s2, $dbname.user_snapshot AS s1 WHERE s1.timestamp=s2.timestamp)")) === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$userdatamonthend = $userdatamonthend->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
@@ -147,30 +151,33 @@ try {
 					$allupdatecountm = $allupdatecountm . "WHEN '" . $userstats['uuid'] . "' THEN '" . $count_month . "' ";
 					$allupdateidlew = $allupdateidlew . "WHEN '" . $userstats['uuid'] . "' THEN '" . $idle_week . "' ";
 					$allupdateidlem = $allupdateidlem . "WHEN '" . $userstats['uuid'] . "' THEN '" . $idle_month . "' ";
-					$allupdatetotac = $allupdatetotac . "WHEN '" . $clientinfo['client_totalconnections'] . "' THEN '" . $total_connections . "' ";
-					$allupdatebase64 = $allupdatebase64 . "WHEN '" . $clientinfo['client_base64HashClientUID'] . "' THEN '" . $base64hash . "' ";
-					$allupdatecldtup = $allupdatecldtup . "WHEN '" . $clientinfo['client_total_bytes_uploaded'] . "' THEN '" . $client_total_up . "' ";
-					$allupdatecldtdo = $allupdatecldtdo . "WHEN '" . $clientinfo['client_total_bytes_downloaded'] . "' THEN '" . $client_total_down . "' ";
-					$allupdateclddes = $allupdateclddes . "WHEN '" . $clientinfo['client_description'] . "' THEN '" . $client_description . "' ";
+					$allupdatetotac = $allupdatetotac . "WHEN '" . $userstats['uuid'] . "' THEN '" . $clientinfo['client_totalconnections'] . "' ";
+					$allupdatebase64 = $allupdatebase64 . "WHEN '" . $userstats['uuid'] . "' THEN '" . $clientinfo['client_base64HashClientUID'] . "' ";
+					$allupdatecldtup = $allupdatecldtup . "WHEN '" . $userstats['uuid'] . "' THEN '" . $clientinfo['client_total_bytes_uploaded'] . "' ";
+					$allupdatecldtdo = $allupdatecldtdo . "WHEN '" . $userstats['uuid'] . "' THEN '" . $clientinfo['client_total_bytes_downloaded'] . "' ";
+					$allupdateclddes = $allupdateclddes . "WHEN '" . $userstats['uuid'] . "' THEN '" . $clientinfo['client_description'] . "' ";
 				} else {
 					$allinsertuserstats = $allinsertuserstats . "('" . $userstats['uuid'] . "', '" .$userstats['rank'] . "', '" . $count_week . "', '" . $count_month . "', '" . $idle_week . "', '" . $idle_month . "', '" . $clientinfo['client_totalconnections'] . "', '" . $clientinfo['client_base64HashClientUID'] . "', '" . $clientinfo['client_total_bytes_uploaded'] . "', '" . $clientinfo['client_total_bytes_downloaded'] . "', '" . $clientinfo['client_description'] . "'),";
 				}
-				echo 'User ',$userstats['uuid'],' gets a new week count of ',$count_week,' month count of ',$count_month,' week idle of ',$idle_week,' month idle of ',$idle_month,'.<br>';
+				echo "User ",$userstats['uuid']," gets a new week count of ",$count_week," month count of ",$count_month," week idle of ",$idle_week," month idle of ",$idle_month,".\n";
 			} catch (Exception $e) {
 				echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
+				$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 				$sqlerr++;
 			}
 		}
 		
 		if ($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp=$job_end WHERE job_name='calc_user_limit'") === false) {
-			echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		
 		if ($allupdateuuid != '') {
 			$allupdateuuid = substr($allupdateuuid, 0, -1);
 			if ($mysqlcon->exec("UPDATE $dbname.stats_user set rank = CASE uuid $allupdaterank END, count_week = CASE uuid $allupdatecountw END, count_month = CASE uuid $allupdatecountm END, idle_week = CASE uuid $allupdateidlew END, idle_month = CASE uuid $allupdateidlem END, total_connections = CASE uuid $allupdateidlem END, base64hash = CASE uuid $allupdateidlem END, client_total_up = CASE uuid $allupdateidlem END, client_total_down = CASE uuid $allupdateidlem END, client_description = CASE uuid $allupdateidlem END WHERE uuid IN ($allupdateuuid)") === false) {
-				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
 		}
@@ -178,7 +185,8 @@ try {
 		if($allinsertuserstats != '') {
 			$allinsertuserstats = substr($allinsertuserstats, 0, -1);
 			if ($mysqlcon->exec("INSERT INTO $dbname.stats_user (uuid,rank,count_week,count_month,idle_week,idle_month,total_connections,base64hash,client_total_up,client_total_down,client_description) VALUES $allinsertuserstats") === false) {
-				echo $lang['error'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
 		}
@@ -186,17 +194,28 @@ try {
 }
 catch (Exception $e) {
     echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
+	$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 	$sqlerr++;
-}
-
-if ($sqlerr == 0) {
-	//update job_check, set job as success
 }
 
 if ($showgen == 1) {
     $buildtime = microtime(true) - $starttime;
-    echo '<br>', sprintf($lang['sitegen'], $buildtime, $total_user), '<br>';
+    echo sprintf($lang['sitegen'], $buildtime, $total_user), "\n";
+}
+
+if ($sqlerr == 0) {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
+} else {
+	if(isset($_SERVER['argv'][1])) {
+		$jobid = $_SERVER['argv'][1];
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo $lang['error'],print_r($mysqlcon->errorInfo());
+		}
+	}
 }
 ?>
-</body>
-</html>
