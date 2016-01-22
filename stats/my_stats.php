@@ -94,7 +94,7 @@ require_once('nav.php');
                                     <span class="pull-left">
                                         <p><strong><font color="#337ab7">Database ID:</font></strong></p>
                                         <p><strong><font color="#5cb85c">Total Online Time:</font></strong></p>
-                                        <p><strong><font color="#f0ad4e">Total Connects To The Server:</font></strong></p>
+                                        <p><strong><font color="#f0ad4e">Total Connections To The Server:</font></strong></p>
                                         <p><strong><font color="#d9534f">Online Time This Week:</font></strong></p>
                                         <p><strong><font color="#337ab7">Online Time This Month:</font></strong></p>
                                         <p><strong><font color="#5cb85c">Total Battles:</font></strong></p>

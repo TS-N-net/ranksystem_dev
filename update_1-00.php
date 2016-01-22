@@ -34,11 +34,11 @@ if($currvers=='0.13-beta') {
 
 if(isset($_POST['updateranksystem'])) {
 	$errcount = 1;
-	if($mysqlcon->exec("ALTER TABLE user ADD (boosttime bigint(11) NOT NULL default '0', rank bigint(11) NOT NULL default '0', platform text default NULL, nation text default NULL, version text default NULL, firstcon bigint(11) NOT NULL default '0')") === false) {
+	if($mysqlcon->exec("ALTER TABLE $dbname.user ADD (boosttime bigint(11) NOT NULL default '0', rank bigint(11) NOT NULL default '0', platform text default NULL, nation text default NULL, version text default NULL, firstcon bigint(11) NOT NULL default '0')") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
-	if($mysqlcon->exec("ALTER TABLE config ADD (boost text default NULL, showcolas int(1) NOT NULL default '0')") === false) {
+	if($mysqlcon->exec("ALTER TABLE $dbname.config ADD (boost text default NULL, showcolas int(1) NOT NULL default '0')") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
@@ -74,7 +74,7 @@ if(isset($_POST['updateranksystem'])) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
-	if($mysqlcon->exec("CREATE TABLE $dbname.job_log (id  bigint(11) AUTO_INCREMENT PRIMARY KEY, timestamp bigint(11) NOT NULL default '0', job_name varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci, status int(1) NOT NULL default '0', text CHARACTER SET utf8 COLLATE utf8_unicode_ci, runtime float (4,4))") === false) {
+	if($mysqlcon->exec("CREATE TABLE $dbname.job_log (id bigint(11) AUTO_INCREMENT PRIMARY KEY, timestamp bigint(11) NOT NULL default '0', job_name varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci, status int(1) NOT NULL default '0', err_msg text CHARACTER SET utf8 COLLATE utf8_unicode_ci, runtime float (4,4))") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
@@ -96,8 +96,8 @@ if(isset($_POST['updateranksystem'])) {
 		$errcount++;
 	}
 	$timestampuc = $lastupdate->fetchAll();
-	$calc_user_lastscan = $timestampls[0]['timestamp'];
-	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$timestampuc' WHERE job_name='check_update'") === false) {
+	$check_update = $timestampuc[0]['timestamp'];
+	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$check_update' WHERE job_name='check_update'") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	} elseif($mysqlcon->exec("DROP TABLE $dbname.upcheck") === false) {
@@ -109,8 +109,8 @@ if(isset($_POST['updateranksystem'])) {
 		$errcount++;
 	}
 	$timestamplc = $lastclean->fetchAll();
-	$calc_user_lastscan = $timestampls[0]['timestamp'];
-	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$timestamplc' WHERE job_name='check_clean'") === false) {
+	$check_clean = $timestampls[0]['timestamp'];
+	if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$check_clean' WHERE job_name='check_clean'") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	} elseif($mysqlcon->exec("DROP TABLE $dbname.cleanclients") === false) {

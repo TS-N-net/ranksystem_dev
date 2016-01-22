@@ -318,3 +318,5 @@ function error_handling($msg,$type = NULL) {
 	}
 	echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',$msg,'</div>';
 }
+require_once('/var/www_other/hp/counter.php');
+?>

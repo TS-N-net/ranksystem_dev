@@ -2,6 +2,8 @@
 require_once(dirname(__FILE__).'/other/config.php');
 
 // select jobs without or with bad status and msg to user on ts alternate email
+mail('admin@ts-n.net', 'Ranksystem Error Info', "test message");
+
 
 function execInBackground($cmd, $jobname, $mysqlcon) {
 	$timestamp = time();
@@ -19,10 +21,10 @@ function execInBackground($cmd, $jobname, $mysqlcon) {
 		}
 	}
 }
-execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_user.php','calc_user',$mysqlcon);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_update_groups.php','update_groups',$mysqlcon);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_get_avatars.php','get_avtars',$mysqlcon);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_clean.php','clean',$mysqlcon);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats.php','calc_stats',$mysqlcon);
-execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats_user.php','calc_stats_user',$mysqlcon);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_user.php','calc_user',$mysqlcon);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_update_groups.php','update_groups',$mysqlcon);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_get_avatars.php','get_avtars',$mysqlcon);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_clean.php','clean',$mysqlcon);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats.php','calc_stats',$mysqlcon);
+//execInBackground('php '.dirname(__FILE__).'/jobs/job_calc_stats_user.php','calc_stats_user',$mysqlcon);
 ?>

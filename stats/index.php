@@ -218,7 +218,7 @@ require_once('nav.php');
                     <div class="col-lg-3">
                         <div class="panel panel-yellow">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationalitys</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationalities</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="user-descent-donut"></div>

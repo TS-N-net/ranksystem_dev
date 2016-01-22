@@ -16,6 +16,7 @@ try {
 } catch (PDOException $e) {
 	$sqlconerr = "SQL Connection failed: ".$e->getMessage()."\n";
 	echo $sqlconerr;
+	// open function mail here and try to ts3 msg (perhaps uuid out of text file; mysqlconf?)
 	exit;
 }
 if (($config = $mysqlcon->query("SELECT * FROM config"))  === false) {

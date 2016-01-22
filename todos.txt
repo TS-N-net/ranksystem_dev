@@ -5,13 +5,17 @@
 - what is with sites top user of week and top users of month?
 - my_stats.php info button legendary icons
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
-
-
-
 - jobmanagement (manage start jobs for predefined time)
 - handle job errors -> message on ts and/or mail as info
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - show on stats an error message, when newest log entry in table job_log is older then 10 minutes and second when uuid in admin list, then warning, when entry older then 1 minute.
+
+
+- add config timezone
+- sql modprobe still enable?
+- error handling (mail, ts) (rc 9 = not running or timeout)
+- handle bot restart, when database is down
+- handle bot restart, when ts3 is down
 
 
 

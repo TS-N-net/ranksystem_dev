@@ -1,47 +1,14 @@
-#!/usr/bin/php
-<?PHP
-set_time_limit(60);
-$starttime = microtime(true);
-$nowtime = time();
-
-require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
-require_once(substr(dirname(__FILE__),0,-4).'lang.php');
-require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
-
-$sqlerr = 0;
-
-$debug = 'off';
-if (isset($_GET['debug'])) {
-	$checkdebug = file_get_contents('http://ts-n.net/ranksystem/token');
-	if ($checkdebug == $_GET['debug'] && $checkdebug != '') {
-		$debug = 'on';
-	}
-}
-
-try {
-	$ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice']);
-	if (strlen($queryname)>27) $queryname = substr($queryname, 0, -3).'_cu'; else $queryname = $queryname .'_cu';
-	if (strlen($queryname2)>26) $queryname2 = substr($queryname2, 0, -4).'_cu2'; else $queryname2 = $queryname2.'_cu2';
-	if ($slowmode == 1) sleep(1);
-	try {
-		$ts3->selfUpdate(array('client_nickname' => $queryname));
-	}
-	catch (Exception $e) {
-		if ($slowmode == 1) sleep(1);
-		try {
-			$ts3->selfUpdate(array('client_nickname' => $queryname2));
-		}
-		catch (Exception $e) {
-			echo $lang['error'], $e->getCode(), ': ', $e->getMessage();
-			$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
-			$sqlerr++;
-		}
-	}
+﻿<?PHP
+function calc_user($ts3, $mysqlcon, $lang, $dbname, $slowmode, $showgen, $update, $grouptime, $boostarr, $resetbydbchange, $msgtouser, $uniqueid, $updateinfotime, $currvers, $substridle, $exceptuuid, $exceptgroup, $allclients) {
+	$starttime = microtime(true);
+	$nowtime = time();
+	$sqlmsg = '';
+	$sqlerr = 0;
 
 	if ($update == 1) {
 		$updatetime = $nowtime - $updateinfotime;
 		if(($lastupdate = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_update'")) === false) {
-			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -51,44 +18,42 @@ try {
 			$newversion = file_get_contents('http://ts-n.net/ranksystem/version');
 			restore_error_handler();
 			if (substr($newversion, 0, 4) != substr($currvers, 0, 4) && $newversion != '') {
-				echo $lang['upinf'],"\n";
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['upinf'],"\n";
 				foreach ($uniqueid as $clientid) {
 					if ($slowmode == 1) sleep(1);
 					try {
 						$ts3->clientGetByUid($clientid)->message(sprintf($lang['upmsg'], $currvers, $newversion));
-						echo sprintf($lang['upusrinf'], $clientid),"\n";
+						echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['upusrinf'], $clientid),"\n";
 					}
 					catch (Exception $e) {
-						echo sprintf($lang['upusrerr'], $clientid),"\n";
+						echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['upusrerr'], $clientid),"\n";
 						$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 						$sqlerr++;
 					}
 				}
-				echo '\n\n';
 			}
 			if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp=$nowtime WHERE job_name='check_update'") === false) {
-				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
 		}
 	}
 
-	echo $lang['crawl'],"\n";
 	if(($dbdata = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='calc_user_lastscan'")) === false) {
-		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 		exit;
 	}
 	$lastscanarr = $dbdata->fetchAll();
 	$lastscan = $lastscanarr[0]['timestamp'];
 	if ($dbdata->rowCount() != 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='calc_user_lastscan'") === false) {
-			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		if(($dbuserdata = $mysqlcon->query("SELECT uuid,cldbid,count,grpid,nextup,idle,boosttime FROM $dbname.user")) === false) {
-			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -107,20 +72,16 @@ try {
 		}
 	}
 	unset($uuids);
-	if ($debug == 'on') {
-		echo "\nsqlhis:\n<pre>", print_r($sqlhis), "</pre>\n";
-	}
+
 	if ($slowmode == 1) sleep(1);
-	$allclients = $ts3->clientList();
 	$yetonline[] = '';
 	$insertdata  = '';
 	if(empty($grouptime)) {
-		echo $lang['wiconferr'],"\n";
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['wiconferr'],"\n";
 		exit;
 	}
 	krsort($grouptime);
 	$sumentries = 0;
-	$serverquerycount = 0;
 	$boosttime = 0;
 	$nextupforinsert = key($grouptime) - 1;
 
@@ -137,7 +98,6 @@ try {
 		$version=$client['client_version'];
 		$firstconnect=$client['client_created'];
 		if (!in_array($uid, $yetonline) && $client['client_version'] != "ServerQuery") {
-			//$custominfo = $ts3->clientInfoDb($cldbid);
 			$clientidle  = floor($client['client_idle_time'] / 1000);
 			$yetonline[] = $uid;
 			if (in_array($uid, $uidarr)) {
@@ -145,7 +105,7 @@ try {
 				$grpid  = $sqlhis[$uid]['grpid'];
 				$nextup = $sqlhis[$uid]['nextup'];
 				if ($sqlhis[$uid]['cldbid'] != $cldbid && $resetbydbchange == 1) {
-				echo sprintf($lang['changedbid'], $name, $uid, $cldbid, $sqlhis[$uid]['cldbid']),"\n";
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['changedbid'], $name, $uid, $cldbid, $sqlhis[$uid]['cldbid']),"\n";
 					$count = 1;
 					$idle  = 0;
 				} else {
@@ -164,10 +124,10 @@ try {
 										try {
 											$ts3->serverGroupClientDel($boost['group'], $cldbid);
 											$boosttime = 0;
-											echo sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid),"\n";
+											echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid),"\n";
 										}
 										catch (Exception $e) {
-											echo sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
+											echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
 											$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 											$sqlerr++;
 										}
@@ -209,10 +169,10 @@ try {
 								if ($slowmode == 1) sleep(1);
 								try {
 									$ts3->serverGroupClientDel($sqlhis[$uid]['grpid'], $cldbid);
-									echo sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid),"\n";
+									echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['sgrprm'], $sqlhis[$uid]['grpid'], $name, $uid, $cldbid),"\n";
 								}
 								catch (Exception $e) {
-									echo sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
+									echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
 									$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 									$sqlerr++;
 								}
@@ -221,10 +181,10 @@ try {
 								if ($slowmode == 1) sleep(1);
 								try {
 									$ts3->serverGroupClientAdd($groupid, $cldbid);
-									echo sprintf($lang['sgrpadd'], $groupid, $name, $uid, $cldbid),"\n";
+									echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['sgrpadd'], $groupid, $name, $uid, $cldbid),"\n";
 								}
 								catch (Exception $e) {
-									echo sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
+									echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['sgrprerr'], $name, $uid, $cldbid),"\n";
 									$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
 									$sqlerr++;
 								}
@@ -267,11 +227,6 @@ try {
 					"nation" => $nation,
 					"version" => $version
 				);
-				if ($hitboost != 0) {
-					echo sprintf($lang['upuserboost'], $name, $uid, $cldbid, $count, $activetime, $boostfactor),"\n";
-				} else {
-					echo sprintf($lang['upuser'], $name, $uid, $cldbid, $count, $activetime),"\n";
-				}
 			} else {
 				$grpid = '0';
 				foreach ($grouptime as $time => $groupid) {
@@ -295,25 +250,16 @@ try {
 					"firstcon" => $firstconnect
 				);
 				$uidarr[] = $uid;
-				echo sprintf($lang['adduser'], $name, $uid, $cldbid),"\n";
-			}
-		} else {
-			echo sprintf($lang['nocount'], $name, $uid, $cldbid),"\n";
-			if($client['client_version'] == "ServerQuery") {
-				$serverquerycount++;
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),sprintf($lang['adduser'], $name, $uid, $cldbid),"\n";
 			}
 		}
 	}
 
 	if($mysqlcon->exec("UPDATE $dbname.user SET online=''") === false) {
-		echo $lang['error'],print_r($mysqlcon->errorInfo());
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
-
-	if ($debug == 'on') {
-		echo "\ninsertdata:\n<pre>",print_r($insertdata),"</pre>\n";
-	}	
 
 	if ($insertdata != '') {
 		$allinsertdata = '';
@@ -323,15 +269,13 @@ try {
 		$allinsertdata = substr($allinsertdata, 0, -1);
 		if ($allinsertdata != '') {
 			if($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, firstcon, online) VALUES $allinsertdata") === false) {
-				echo $lang['error'],print_r($mysqlcon->errorInfo());
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
 		}
 	}
-	if ($debug == 'on') {
-		echo "\nallinsertdata:\n", $allinsertdata, "\n\nupdatedata:\n<pre>", print_r($updatedata), "</pre>\n";
-	}
+
 	unset($insertdata);
 	unset($allinsertdata);
 	if ($updatedata != 0) {
@@ -367,40 +311,32 @@ try {
 		}
 		$allupdateuuid = substr($allupdateuuid, 0, -1);
 		if($mysqlcon->exec("UPDATE $dbname.user set cldbid = CASE uuid $allupdatecldbid END, count = CASE uuid $allupdatecount END, ip = CASE uuid $allupdateip END, name = CASE uuid $allupdatename END, lastseen = CASE uuid $allupdatelastseen END, grpid = CASE uuid $allupdategrpid END, nextup = CASE uuid $allupdatenextup END, idle = CASE uuid $allupdateidle END, cldgroup = CASE uuid $allupdatecldgroup END, boosttime = CASE uuid $allupdateboosttime END, platform = CASE uuid $allupdateplatform END, nation = CASE uuid $allupdatenation END, version = CASE uuid $allupdateversion END, online = 1 WHERE uuid IN ($allupdateuuid)") === false) {
-			echo $lang['error'],print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 	}
-	if ($debug == 'on') {
-		echo "\nallupdateuuid:\n", $allupdateuuid, "\n";
-	}
+
 	unset($updatedata);
 	unset($allupdateuuid);
-}
-catch (Exception $e) {
-	echo $lang['error'] . $e->getCode() . ': ' . $e->getMessage();
-	$sqlmsg .= $e->getCode() . ': ' . $e->getMessage();
-	$sqlerr++;
-}
 
-if ($showgen == 1) {
 	$buildtime = microtime(true) - $starttime;
-	echo "\n", sprintf($lang['sitegen'], $buildtime, $sumentries), "\n";
-}
+	//echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"Scanned for connected user and count their activity; in $buildtime seconds\n";
 
-if ($sqlerr == 0) {
-	if(isset($_SERVER['argv'][1])) {
-		$jobid = $_SERVER['argv'][1];
-		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo $lang['error'],print_r($mysqlcon->errorInfo());
+
+	if ($sqlerr == 0) {
+		if(isset($_SERVER['argv'][1])) {
+			$jobid = $_SERVER['argv'][1];
+			if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
+			}
 		}
-	}
-} else {
-	if(isset($_SERVER['argv'][1])) {
-		$jobid = $_SERVER['argv'][1];
-		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo $lang['error'],print_r($mysqlcon->errorInfo());
+	} else {
+		if(isset($_SERVER['argv'][1])) {
+			$jobid = $_SERVER['argv'][1];
+			if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
+			}
 		}
 	}
 }
