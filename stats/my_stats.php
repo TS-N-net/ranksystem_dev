@@ -75,7 +75,7 @@ require_once('nav.php');
                                 <div class="row">
                                     <div class="col-xs-9 text-left">
                                         <div class="huge"><?PHP echo $_SESSION['tsname'] ?></div>
-                                        <div>Rank #1337</div>
+                                        <div><?PHP echo 'Rank #' .$dbdata_fetched[0]['rank']; ?></div>
                                     </div>
                                     <div class="col-xs-3">
                                         <center>
