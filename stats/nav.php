@@ -10,28 +10,27 @@
 	<title>TS-N.NET Ranksystem</title>
 
 	<!-- Bootstrap Core CSS -->
-	<link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- Custom CSS -->
 	<link href="../bootstrap/addons/sb-admin.css" rel="stylesheet">
-	<link href="../bootstrap/addons/legendaryIcons.css" rel="stylesheet">
 
 	<!-- Morris Charts CSS -->
-	<link href="../bootstrap/addons/morris.css" rel="stylesheet">
+	<link href="../bootstrap/addons/morris/morris.css" rel="stylesheet">
 
 	<!-- Custom Fonts -->
 	<link href="../bootstrap/addons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 	<!-- jQuery -->
-	<script src="../bootstrap/js/jquery.js"></script>
+	<script src="../jquerylib/jquery.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../bootstrap/js/bootstrap.min.js"></script>
 
 	<!-- Morris Charts JavaScript -->
-	<script src="../bootstrap/addons/js-plugins/morris/raphael.min.js"></script>
-	<script src="../bootstrap/addons/js-plugins/morris/morris.min.js"></script>
-	<script src="../bootstrap/addons/js-plugins/morris/morris-data.js"></script>
+	<script src="../bootstrap/addons/morris/raphael.min.js"></script>
+	<script src="../bootstrap/addons/morris/morris.min.js"></script>
+	<script src="../bootstrap/addons/morris/morris-data.js"></script>
 </head>
 
 <body>
@@ -71,24 +70,6 @@
 			</div>
 		</div>
 	</div>
-		<div id="myModal4" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Sicarius Battle Info</h4>
-				</div>
-				<div class="modal-body">
-					<p>Onlinetime in Battle #1337: 04 hours 30 min</p>
-					<p>Battles Won: 1</p>
-					<p>Battles Lost: 1403</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
 	<div id="myModal3" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -105,22 +86,6 @@
 					<p>It will be displayed on the <a href="my_stats.php">My Statistics</a> tab.</p>
 					<p>(Could be online time boost(2x) for 8 hours, instant online time (4 hours), etc.</p>
 					<p>These boosts can be used for example to climb in the top users of the week)</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="battleModal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Battle news</h4>
-				</div>
-				<div class="modal-body">
-					<p>You are currently not in a battle</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -155,53 +120,13 @@
 				<div class="modal-body">
 					<p>This page contains a overall summary of your personal statistics and activity on the server.</p>
 					<p>The informations are collected since the beginning of the Ranksystem, they are not since the beginning of the TeamSpeak server.</p>
-					<p>It also contains your progress in unlocking achievements and an overview of your battles.</p>
+					<p>It also contains your progress in unlocking achievements.</p>
 					<br>
 					<p><h4>Achievements</h4></p>
 					<p>You can unlock achievements in different categories from bronze to legendary depending on your activity on the server.</p>
-					<p>There are three achievements available: Online Time, Total connections to the server and battles won.</p>
-					<p>For every achievement there is four levels.</p>
+					<p>There are two achievements available for the moment: Online Time and Total connections to the server.</p>
+					<p>For every achievement there are four levels.</p>
 					<br>
-					<p><h4>Criterias</h4></p>
-					<p><b>Online Time</b></p>
-					<p><img src="../icons/MyStats/Unranked_Time.png" width="35" height="35" alt=""> 0 - 49 Hours: Unranked</p>
-					<p><img src="../icons/MyStats/Bronze_Time.png" width="35" height="35" alt=""> 50 - 99 Hours: Bronze</p>
-					<p><img src="../icons/MyStats/Silver_Time.png" width="35" height="35" alt=""> 100 - 249 Hours: Silver</p>
-					<p><img src="../icons/MyStats/Gold_Time.png" width="35" height="35" alt=""> 250 - 499 Hours: Gold</p>
-					<p><div id="cf4a" class="shadow">
-							<img src="../icons/MyStats/Legendary_Time_Red.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Time_Orange.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Time_Yellow.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Time_Green.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Time_Blue.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Time_Purple.png" width="35" height="35"/>
-						</div> 500+ Hours: Legendary</p>
-					<p><b>Connections To Server</b></p>
-					<p><img src="../icons/MyStats/Unranked_Connects.png" width="42" height="35" alt=""> 0 - 9 Connections: Unranked</p>
-					<p><img src="../icons/MyStats/Bronze_Connects.png" width="42" height="35" alt=""> 10 - 49 Connections: Bronze</p>
-					<p><img src="../icons/MyStats/Silver_Connects.png" width="42" height="35" alt=""> 50 - 99 Connections: Silver</p>
-					<p><img src="../icons/MyStats/Gold_Connects.png" width="42" height="35" alt=""> 100 - 249 Connections: Gold</p>
-					<p><div id="cf4a" class="shadow">
-							<img src="../icons/MyStats/Legendary_Connects_Red.png" width="42" height="35"/>
-							<img src="../icons/MyStats/Legendary_Connects_Orange.png" width="42" height="35"/>
-							<img src="../icons/MyStats/Legendary_Connects_Yellow.png" width="42" height="35"/>
-							<img src="../icons/MyStats/Legendary_Connects_Green.png" width="42" height="35"/>
-							<img src="../icons/MyStats/Legendary_Connects_Blue.png" width="42" height="35"/>
-							<img src="../icons/MyStats/Legendary_Connects_Purple.png" width="42" height="35"/>
-						</div> 250+ Connections: Legendary</p>
-					<p><b>Battles Won</b></p>
-					<p><img src="../icons/MyStats/Unranked_Battle.png" width="35" height="35" alt=""> 0 - 4 Battles: Unranked</p>
-					<p><img src="../icons/MyStats/Bronze_Battle.png" width="35" height="35" alt=""> 5 - 9 Battles: Bronze</p>
-					<p><img src="../icons/MyStats/Silver_Battle.png" width="35" height="35" alt=""> 10 - 24 Battles: Silver</p>
-					<p><img src="../icons/MyStats/Gold_Battle.png" width="35" height="35" alt=""> 25 - 49 Battles: Gold</p>
-					<p><div id="cf4a" class="shadow">
-							<img src="../icons/MyStats/Legendary_Battle_Red.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Battle_Orange.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Battle_Yellow.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Battle_Green.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Battle_Blue.png" width="35" height="35"/>
-							<img src="../icons/MyStats/Legendary_Battle_Purple.png" width="35" height="35"/>
-						</div> 50+ Battles: Legendary</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -253,9 +178,6 @@
 						<li>
 							<a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> Server news</a>
 						</li>
-						<li>
-							<a href="#battleModal" data-toggle="modal"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle news</a>
-						</li>
 					</ul>
 				</li>
 				<li>
@@ -297,9 +219,6 @@
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "list_rankup.php" ? ' class="active">' : '>'); ?>
 						<a href="list_rankup.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
-					</li>
-					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "battle_area.php" ? ' class="active">' : '>'); ?>
-						<a href="battle_area.php"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Battle Area</a>
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "info.php" ? ' class="active">' : '>'); ?>
 						<a href="info.php"><i class="fa fa-fw fa-info-circle"></i> Ranksystem Info</a>

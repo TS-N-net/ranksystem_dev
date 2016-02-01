@@ -1,4 +1,3 @@
-- observance BSD License from Morris http://morrisjs.github.io/morris.js/
 - top_all.php: Take care about client and servergroup exceptions!
 - all textes to lang.php
 - nations to longtext
@@ -12,12 +11,10 @@
 
 
 - add config timezone
-- sql modprobe still enable?
 - error handling (mail, ts) (rc 9 = not running or timeout)
-- handle bot restart, when database is down
-- handle bot restart, when ts3 is down
-
-
+- Vue.js
+- edit language support
+- termin signal to stop
 
 - documentate update / installation
 - new teamspeak permissions needed?

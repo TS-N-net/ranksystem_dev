@@ -6,7 +6,10 @@ if(isset($db['type']) === false) {
 $dbname = $db['dbname'];
 $dbserver  = $db['type'].':host='.$db['host'].';dbname='.$db['dbname'];
 if ($db['type'] == 'mysql') {
-	$dboptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
+	$dboptions = array(
+		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+		PDO::ATTR_PERSISTENT => true
+	);
 } else {
 	$dboptions = array();
 }

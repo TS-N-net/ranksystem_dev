@@ -13,7 +13,11 @@ function set_session_ts3($hpclientip, $voiceport, $mysqlcon, $dbname) {
 			$_SESSION['tsuid']					= $client['uuid'];
 			$_SESSION['tscldbid']				= $client['cldbid'];
 			$_SESSION['tsname']					= $client['name'];
-			$_SESSION['tscreated']				= date('d-m-Y',$client['firstcon']); 
+			if ($client['firstcon'] == 0) {
+				$_SESSION['tscreated']			= "unkown";
+			} else {
+				$_SESSION['tscreated']				= date('d-m-Y',$client['firstcon']);
+			}
 			if ($client['total_connections'] != NULL) {
 				$_SESSION['tsconnections']			= $client['total_connections'];
 			} else {

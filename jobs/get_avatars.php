@@ -1,5 +1,5 @@
 ﻿<?PHP
-function get_avatars($ts3,$mysqlcon,$lang,$dbname,$slowmode) {
+function get_avatars($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid) {
 	$starttime = microtime(true);
 	$sqlmsg = '';
 	$sqlerr = 0;
@@ -9,7 +9,7 @@ function get_avatars($ts3,$mysqlcon,$lang,$dbname,$slowmode) {
 	try {
 		$tsfilelist = $ts3->channelFileList($cid="0", $cpw="", $path="/");
 	} catch (Exception $e) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$e->getCode(),': ',"Error by getting Avatarlist: ",$e->getMessage(),"\n";
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"get_avatars 1:",$e->getCode(),': ',"Error by getting Avatarlist: ",$e->getMessage(),"\n";
 		$sqlmsg .= $e->getCode() . ': ' . "Error by getting Avatarlist: " . $e->getMessage();
 		$sqlerr++;
 	}
@@ -36,27 +36,23 @@ function get_avatars($ts3,$mysqlcon,$lang,$dbname,$slowmode) {
 					$count++;
 				}
 				catch (Exception $e) {
-					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$e->getCode(),': ',"Error by download Avatar: ",$e->getMessage(),"\n";
+					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"get_avatars 2:",$e->getCode(),': ',"Error by download Avatar: ",$e->getMessage(),"\n";
 					$sqlmsg .= $e->getCode() . ': ' . "Error by download Avatar: " . $e->getMessage();
 					$sqlerr++;
 				}
 			}
 		}
 	}
+	
+	$buildtime = microtime(true) - $starttime;
 
 	if ($sqlerr == 0) {
-		if(isset($_SERVER['argv'][1])) {
-			$jobid = $_SERVER['argv'][1];
-			if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
-			}
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"get_avatars 3:",print_r($mysqlcon->errorInfo());
 		}
 	} else {
-		if(isset($_SERVER['argv'][1])) {
-			$jobid = $_SERVER['argv'][1];
-			if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),$lang['error'],print_r($mysqlcon->errorInfo());
-			}
+		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"get_avatars 4:",print_r($mysqlcon->errorInfo());
 		}
 	}
 }
