@@ -29,7 +29,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$serverinfo
 	}
 	
     if(($dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups")) === false) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 2:",print_r($mysqlcon->errorInfo());
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 2:",print_r($mysqlcon->errorInfo()),"\n";
 		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
@@ -147,7 +147,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$serverinfo
         $allinsertdata = substr($allinsertdata, 0, -1);
         if ($allinsertdata != '') {
             if($mysqlcon->exec("INSERT INTO $dbname.groups (sgid, sgidname, iconid, icondate) VALUES $allinsertdata") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 5:",print_r($mysqlcon->errorInfo());
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 5:",print_r($mysqlcon->errorInfo()),"\n";
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
@@ -166,7 +166,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$serverinfo
         }
         $allsgids = substr($allsgids, 0, -1);
         if($mysqlcon->exec("UPDATE $dbname.groups set sgidname = CASE sgid $allupdatesgid END, iconid = CASE sgid $allupdateiconid END, icondate = CASE sgid $allupdatedate END WHERE sgid IN ($allsgids)") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 6:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 6:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -181,7 +181,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$serverinfo
 	if(isset($delsgroupids)) {
 		$delsgroupids = substr($delsgroupids, 0, -1);
 		if($mysqlcon->exec("DELETE FROM groups WHERE sgid IN ($delsgroupids)") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 7:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 7:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -191,11 +191,11 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$serverinfo
 
 	if ($sqlerr == 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 8:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 8:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	} else {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 9:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"update_groups 9:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	}
 }

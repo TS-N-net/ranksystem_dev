@@ -8,7 +8,7 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 	if ($update == 1) {
 		$updatetime = $nowtime - $updateinfotime;
 		if(($lastupdate = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_update'")) === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 1:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 1:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -33,7 +33,7 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 				}
 			}
 			if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp=$nowtime WHERE job_name='check_update'") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 3:",print_r($mysqlcon->errorInfo());
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 3:",print_r($mysqlcon->errorInfo()),"\n";
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
@@ -41,19 +41,23 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 	}
 
 	if(($dbdata = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='calc_user_lastscan'")) === false) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 4:",print_r($mysqlcon->errorInfo());
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 4:",print_r($mysqlcon->errorInfo()),"\n";
 		exit;
 	}
 	$lastscanarr = $dbdata->fetchAll();
 	$lastscan = $lastscanarr[0]['timestamp'];
+	if($lastscan < ($nowtime - 86400)) {
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"Much time gone since last scan.. reset time difference to zero.\n";
+		$lastscan = $nowtime;
+	}
 	if ($dbdata->rowCount() != 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='calc_user_lastscan'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 5:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 5:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		if(($dbuserdata = $mysqlcon->query("SELECT uuid,cldbid,count,grpid,nextup,idle,boosttime FROM $dbname.user")) === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 6:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 6:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -256,7 +260,7 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 	}
 
 	if($mysqlcon->exec("UPDATE $dbname.user SET online=''") === false) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 11:",print_r($mysqlcon->errorInfo());
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 11:",print_r($mysqlcon->errorInfo()),"\n";
 		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
@@ -269,7 +273,7 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 		$allinsertdata = substr($allinsertdata, 0, -1);
 		if ($allinsertdata != '') {
 			if($mysqlcon->exec("INSERT INTO $dbname.user (uuid, cldbid, count, ip, name, lastseen, grpid, nextup, cldgroup, platform, nation, version, firstcon, online) VALUES $allinsertdata") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 12:",print_r($mysqlcon->errorInfo());
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 12:",print_r($mysqlcon->errorInfo()),"\n";
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
@@ -311,7 +315,7 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 		}
 		$allupdateuuid = substr($allupdateuuid, 0, -1);
 		if($mysqlcon->exec("UPDATE $dbname.user set cldbid = CASE uuid $allupdatecldbid END, count = CASE uuid $allupdatecount END, ip = CASE uuid $allupdateip END, name = CASE uuid $allupdatename END, lastseen = CASE uuid $allupdatelastseen END, grpid = CASE uuid $allupdategrpid END, nextup = CASE uuid $allupdatenextup END, idle = CASE uuid $allupdateidle END, cldgroup = CASE uuid $allupdatecldgroup END, boosttime = CASE uuid $allupdateboosttime END, platform = CASE uuid $allupdateplatform END, nation = CASE uuid $allupdatenation END, version = CASE uuid $allupdateversion END, online = 1 WHERE uuid IN ($allupdateuuid)") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 13:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 13:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -321,11 +325,11 @@ function calc_user($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$showgen,$updat
 
 	if ($sqlerr == 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 14:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 14:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	} else {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 15:",print_r($mysqlcon->errorInfo());
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone('Europe/Berlin'))->format("Y-m-d H:i:s.u "),"calc_user 15:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	}
 }

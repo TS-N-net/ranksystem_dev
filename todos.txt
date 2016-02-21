@@ -1,20 +1,18 @@
-- top_all.php: Take care about client and servergroup exceptions!
 - all textes to lang.php
-- nations to longtext
-- what is with sites top user of week and top users of month?
-- my_stats.php info button legendary icons
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
-- jobmanagement (manage start jobs for predefined time)
-- handle job errors -> message on ts and/or mail as info
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - show on stats an error message, when newest log entry in table job_log is older then 10 minutes and second when uuid in admin list, then warning, when entry older then 1 minute.
 
-
-- add config timezone
+- add config: timezone, joinchannel
 - error handling (mail, ts) (rc 9 = not running or timeout)
 - Vue.js
-- edit language support
+- edit language support, include only needed files (increase performance)
 - termin signal to stop
+- test max level; remove and regive it at same calc_user?
+- Pflichtfelder in webinterface kennzeichnen
+- check download group icons
+- log to file
+- save config in webinterface -> restart bot
 
 - documentate update / installation
 - new teamspeak permissions needed?
@@ -24,5 +22,7 @@
 - all new sql to install.php
 
 
-* Idea: Information when new TeamSpeak Server Version available (inform as server message or perhaps on site)
+IDEAS
+* Information when new TeamSpeak Server Version available (inform as server message or perhaps on site)
 * Inform TeamSpeak User about new Client version as Message on Site (= Release Version > Client Version)
+* Special Servergroup for User of the Week and or user of the Month

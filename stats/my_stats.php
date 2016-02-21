@@ -40,7 +40,7 @@ $connects_for_legendary = 250;
 $achievements_done = 0;
 
 if($count_hours >= $time_for_legendary) {
-   $achievements_done = $achievements_done + 4; 
+	$achievements_done = $achievements_done + 4; 
 } elseif($count_hours >= $time_for_gold) {
 	$achievements_done = $achievements_done + 3;
 } elseif($count_hours >= $time_for_silver) {
@@ -49,7 +49,7 @@ if($count_hours >= $time_for_legendary) {
 	$achievements_done = $achievements_done + 1;
 }
 if($_SESSION['tsconnections'] >= $connects_for_legendary) {
-   $achievements_done = $achievements_done + 4;
+	$achievements_done = $achievements_done + 4;
 } elseif($_SESSION['tsconnections'] >= $connects_for_gold) {
 	$achievements_done = $achievements_done + 3;
 } elseif($_SESSION['tsconnections'] >= $connects_for_silver) {
@@ -114,8 +114,8 @@ require_once('nav.php');
 									<p><strong><font color="#5cb85c">Total Connections To The Server:</font></strong></p>
 									<p><strong><font color="#d9534f">Start Date For Statistics:</font></strong></p>
 									<p><strong><font color="#337ab7">Total Online Time:</font></strong></p>
-									<p><strong><font color="#f0ad4e">Online Time This Week:</font></strong></p>
-									<p><strong><font color="#5cb85c">Online Time This Month:</font></strong></p>
+									<p><strong><font color="#f0ad4e">Online Time Last 7 Days:</font></strong></p>
+									<p><strong><font color="#5cb85c">Online Time Last 30 Days:</font></strong></p>
 									<p><strong><font color="#d9534f">Achievements Completed:</font></strong></p>
 								</span>
 								<span class="pull-right">
@@ -325,5 +325,4 @@ require_once('nav.php');
 	</div>
 	<!-- /#wrapper -->
 </body>
-
 </html>
