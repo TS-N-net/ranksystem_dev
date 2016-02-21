@@ -29,9 +29,7 @@ if(!isset($_GET["seite"])) {
 	$seite = $_GET["seite"];
 }
 $adminlogin = 0;
-if ($mysqlprob === false) {
-	$err_msg = '<span class="wncolor">'.$sqlconerr.'</span><br>';
-}
+
 $keysort  = '';
 $keyorder = '';
 if (isset($_GET['sort'])) {
@@ -162,7 +160,7 @@ if($adminlogin == 1) {
 			<div class="container-fluid">
 
 				<?PHP
-				if(isset($_GET['user']) != "all") {
+				if($user_pro_seite != "all") {
 					pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring);
 				}
 				?>
@@ -331,7 +329,7 @@ if($adminlogin == 1) {
 					echo '<tr><td colspan="6">' , $lang['noentry'] , '</td></tr>';
 				}
 				echo '</tbody></table></div>';
-				if(isset($_GET['user']) != "all") {
+				if($user_pro_seite != "all") {
 					pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$seite,$language,$getstring);
 				}
 				if ($showgen == 1 || $adminlogin == 1) {
