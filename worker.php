@@ -1,20 +1,37 @@
 ﻿<?php
-//require_once(dirname(__FILE__).'/other/config.php');
-
-// select jobs without or with bad status and msg to user on ts alternate email
-//mail('admin@ts-n.net', 'Ranksystem Error Info', "test message");
-
-$GLOBALS['name'] = "RankSystem";
 $GLOBALS['exec'] = FALSE;
+$GLOBALS['logfile'] = dirname(__FILE__).'/logs/log';
+$GLOBALS['pidfile'] = dirname(__FILE__).'/logs/pid';
 
-function checkProcess() {
-	if (exec("screen -d | grep ".$GLOBALS['name'])) { return TRUE; } else { return FALSE; }
+function checkProcess($pid = null) {
+	if(!empty($pid)) {
+		$check_pid = "ps ".$pid;
+		$result = shell_exec($check_pid);
+		if (count(preg_split("/\n/", $result)) > 2) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	} else {
+		if (file_exists($GLOBALS['pidfile'])) {
+			$check_pid = "ps ".file_get_contents($GLOBALS['pidfile']);
+			$result = shell_exec($check_pid);
+			if (count(preg_split("/\n/", $result)) > 2) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+		} else {
+			return FALSE;
+		}
+	}
 }
 
 function start() {
 	if (checkProcess() == FALSE) {
 		echo "Starting the Ranksystem Bot.\n";
-		exec("screen -AdmS ".$GLOBALS['name']." php ".dirname(__FILE__)."/jobs/bot.php > /dev/null &");
+		$start = "php ".dirname(__FILE__)."/jobs/bot.php >> ".$GLOBALS['logfile']." 2>&1 & echo $! >> ".$GLOBALS['pidfile'];
+		exec($start);
 		if (checkProcess() == FALSE) {
 			echo "Failed to start the Ranksystem Bot!\n";
 		} else {
@@ -29,11 +46,22 @@ function start() {
 function stop() {
 	if (checkProcess() == TRUE) {
 		echo "Stopping the Ranksystem Bot.\n";
-		exec("screen -S ".$GLOBALS['name']." -X quit > /dev/null &");
-		if (checkProcess() == TRUE) {
-			echo "Failed to stop the Ranksystem Bot!\n";
+		$pid = file_get_contents($GLOBALS['pidfile']);
+		exec("rm -f ".$GLOBALS['pidfile']);
+		echo "Wait for Bot is closed";
+		$count_check=0;
+		while (checkProcess($pid) == TRUE) {
+			sleep(1);
+			echo ".";
+			$count_check++;
+			if($count_check > 5) {
+				break;
+			}
+		}
+		if (checkProcess($pid) == TRUE) {
+			echo "\nFailed to stop the Ranksystem Bot!\n";
 		} else {
-			echo "Successfully stopped.\n";
+			echo "\nSuccessfully stopped.\n";
 		}
 	} else {
 		echo "The Ranksystem seems not running.\n";
@@ -49,7 +77,10 @@ function restart() {
 
 function check() {
 	if (checkProcess() == FALSE) {
-		exec("screen -AdmS ".$GLOBALS['name']." php ".dirname(__FILE__)."/jobs/bot.php > /dev/null &");
+		if (file_exists($GLOBALS['pidfile'])) {
+			exec("rm -f ".$GLOBALS['pidfile']);
+		}
+		start();
 	}
 	$GLOBALS['exec'] = TRUE;
 }
@@ -68,7 +99,7 @@ function help() {
 		  "\t* start   \t\t [start Ranksystem Bot]\n",
 		  "\t* stop    \t\t [stop Ranksystem Bot]\n",
 		  "\t* restart \t\t [restart Ranksystem Bot]\n",
-		  "\t* check   \t\t [check Ranksystem Bot is running; if not, start it; without any output]\n",
+		  "\t* check   \t\t [check Ranksystem Bot is running; if not, start it; no output if all is ok]\n",
 		  "\t* status  \t\t [output status Ranksystem Bot]\n";
 	$GLOBALS['exec'] = TRUE;
 }

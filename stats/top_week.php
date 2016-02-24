@@ -3,8 +3,6 @@ session_start();
 $starttime = microtime(true);
 
 require_once('../other/config.php');
-require_once('../ts3_lib/TeamSpeak3.php');
-require_once('../lang.php');
 require_once('../other/session.php');
 
 if(!isset($_SESSION['tsuid'])) {

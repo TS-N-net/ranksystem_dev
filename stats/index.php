@@ -1,14 +1,12 @@
 <?PHP
 session_start();
 require_once('../other/config.php');
-require_once('../ts3_lib/TeamSpeak3.php');
-require_once('../lang.php');
 require_once('../other/session.php');
 
 if($language == "de") {
-	require_once('../language/nations_de.php');
+	require_once('../languages/nations_de.php');
 } elseif($language == "en") {
-	require_once('../language/nations_en.php');
+	require_once('../languages/nations_en.php');
 }
 
 if(!isset($_SESSION['tsuid'])) {
@@ -272,11 +270,11 @@ require_once('nav.php');
 										<td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-' : $sql_res[0]['server_ping'] . ' ms'; ?></td>
 									</tr>
 									<tr>
-										<td>Total Bytes Downloaded</td>
+										<td>Total Bytes Received</td>
 										<td><?PHP echo human_readable_size($sql_res[0]['server_bytes_down']); ?></td>
 									</tr>
 									<tr>
-										<td>Total Bytes Uploaded</td>
+										<td>Total Bytes Sent</td>
 										<td><?PHP echo human_readable_size($sql_res[0]['server_bytes_up']); ?></td>
 									</tr>
 									<tr>

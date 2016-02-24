@@ -1,25 +1,27 @@
 - all textes to lang.php
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
-- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 - show on stats an error message, when newest log entry in table job_log is older then 10 minutes and second when uuid in admin list, then warning, when entry older then 1 minute.
 
-- add config: timezone, joinchannel
-- error handling (mail, ts) (rc 9 = not running or timeout)
-- Vue.js
-- edit language support, include only needed files (increase performance)
-- termin signal to stop
+- config param to edit the path of logfile
 - test max level; remove and regive it at same calc_user?
-- Pflichtfelder in webinterface kennzeichnen
-- check download group icons
-- log to file
-- save config in webinterface -> restart bot
+	zusätzlichen scritt
+	if ($sqlhis[$uid]['grpid'] != $groupid) {
+	hier auch prüfen, ob user in höhster gruppe.. sonst wird gruppe removed und neu vergeben
 
+- remove hp_counter stats/nav.php
 - documentate update / installation
-- new teamspeak permissions needed?
 - optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
+- optimze all php files (http://customhost.com.ua/php-minify/)
 - search for errors (stats and jobs) about error-log (no one at 28.11.2015)
 - check all stats site with https://validator.w3.org/ and correct errors
 - all new sql to install.php
+
+Next Version:
+- Redesign Webinterface
+- mark mandatory fields
+- Error Handling (Inform via Mail and/or as TS Msg)
+- Vue.js for live stats
+- add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
 
 
 IDEAS

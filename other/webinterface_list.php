@@ -34,17 +34,30 @@ echo '<table class="tabledefault">
 	<td class="tdlefth"><input type="text" name="queryname" value="', $configs['queryname'], '" class="width" maxlength="30" tabindex="6"></td></tr>
 	<tr><td class="tdrighth tooltip">', $lang['wits3qnm2'], '<span>', $lang['wits3qnm2desc'], '</span></td>
 	<td class="tdlefth"><input type="text" name="queryname2" value="', $configs['queryname2'], '" class="width" maxlength="30" tabindex="7"></td></tr>
+	<tr><td class="tdrighth tooltip">', $lang['wits3dch'], '<span>', $lang['wits3dchdesc'], '</span></td>
+	<td class="tdlefth"><input type="number" name="defchid" value="', $configs['defchid'], '" class="width" tabindex="8"></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td class="tdrighth tooltip">', $lang['wits3sm'], '<span>', $lang['wits3smdesc'], '</span></td>';
-if ($configs['slowmode'] == 1) {
-    echo '<td class="tdlefth"><div><input type="checkbox" id="switch101" name="slowmode" class="switch" checked class="width" tabindex="8">
-		<label for="switch101">&nbsp;</label></div></td></tr>';
-} else {
-    echo '<td class="tdlefth"><div><input type="checkbox" id="switch101" name="slowmode" class="switch" class="width" tabindex="8">
-		<label for="switch101">&nbsp;</label></div></td></tr>';
-}
-echo '<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td>&nbsp;</td><td class="tdlefth"><input type="submit" name="updatets" value="', $lang['wisvconf'], '" tabindex="8"></td></tr>
+	<tr><td class="tdrighth tooltip">', $lang['wits3sm'], '<span>', $lang['wits3smdesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>
+	<td class="tdlefth"><select name="slowmode" class="width" tabindex="9">';
+	echo '<option value="0"'; if($configs['slowmode']=="0") echo "selected=selected"; echo '">Realtime (deactivated) [recommended]</option>';
+	echo '<option value="200000"'; if($configs['slowmode']=="200000") echo "selected=selected"; echo '">Low delay (0,2s)</option>';
+	echo '<option value="500000"'; if($configs['slowmode']=="500000") echo "selected=selected"; echo '">Middle delay (0,5s)</option>';
+	echo '<option value="1000000"'; if($configs['slowmode']=="1000000") echo "selected=selected"; echo '">High delay (1s)</option>';
+	echo '</select></td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td class="tdrighth tooltip">',$lang['witime'],'<span>', $lang['witimedesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>
+	<td class="tdlefth"><select name="timezone" class="width" tabindex="10">';
+	$timezonearr = DateTimeZone::listIdentifiers();
+	foreach ($timezonearr as $timez) {
+		if ($timez == $timezone) {
+			echo '<option value="'.$timezone,'" selected=selected>',$timezone,'</option>';
+		} else {
+			echo '<option value="',$timez,'">',$timez,'</option>';
+		}
+	}
+	echo '</select></td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td>&nbsp;</td><td class="tdlefth"><input type="submit" name="updatets" value="', $lang['wisvconf'], '" tabindex="11"></td></tr>
 	</table></form>
 	</div>
 	</td></tr>
@@ -106,7 +119,7 @@ if ($configs['substridle'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch201" name="substridle" class="switch" class="width" tabindex="2">
 	<label for="switch201">&nbsp;</label></div></td></tr>';
 }
-echo '<tr><td class="tdrighth tooltip">', $lang['wimsgusr'], '<span>', $lang['wimsgusrdesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>';
+echo '<tr><td class="tdrighth tooltip">', $lang['wimsgusr'], '<span>', $lang['wimsgusrdesc'], '</span></td>';
 if ($configs['msgtouser'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch202" name="msgtouser" class="switch" checked class="width" tabindex="3">
 	<label for="switch202">&nbsp;</label></div></td></tr>';
@@ -129,7 +142,7 @@ if ($configs['resetbydbchange'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch203" name="resetbydbchange" class="switch" class="width" tabindex="7">
 	<label for="switch203">&nbsp;</label></div></td></tr>';
 }
-	echo '<tr><td class="tdrighth tooltip">', $lang['cleanc'], '<span>', $lang['cleancdesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>';
+	echo '<tr><td class="tdrighth tooltip">', $lang['cleanc'], '<span>', $lang['cleancdesc'], '</span></td>';
 if ($configs['cleanclients'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch204" name="cleanclients" class="switch" checked class="width" tabindex="8">
 	<label for="switch204">&nbsp;</label></div></td></tr>';
@@ -137,7 +150,7 @@ if ($configs['cleanclients'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch204" name="cleanclients" class="switch" class="width" tabindex="8">
 	<label for="switch204">&nbsp;</label></div></td></tr>';
 }
-echo '<tr><td class="tdrighth tooltip">', $lang['cleanp'], '<span>', $lang['cleanpdesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>
+echo '<tr><td class="tdrighth tooltip">', $lang['cleanp'], '<span>', $lang['cleanpdesc'], '</span></td>
 	<td class="tdlefth"><input type="number" name="cleanperiod" value="', $configs['cleanperiod'], '" class="width" tabindex="9"></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td class="tdrighth tooltip">', $lang['wiupcheck'], '<span>', $lang['wiupcheckdesc'], '</span></td>';
@@ -190,7 +203,7 @@ if ($configs['showexcld'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch302" name="showexcld" class="switch" class="width" tabindex="4">
 	<label for="switch302">&nbsp;</label></div></td></tr>';
 }
-echo '<tr><td class="tdrighth tooltip">', $lang['wishhicld'], '<span>', $lang['wishhiclddesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>';
+echo '<tr><td class="tdrighth tooltip">', $lang['wishhicld'], '<span>', $lang['wishhiclddesc'], '</span></td>';
 if ($configs['showhighest'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch303" name="showhighest" class="switch" checked class="width" tabindex="5">
 	<label for="switch303">&nbsp;</label></div></td></tr>';
@@ -279,7 +292,7 @@ if ($configs['showcolnx'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch313" name="showcolnx" class="switch" class="width" tabindex="15">
 	<label for="switch313">&nbsp;</label></div></td></tr>';
 }
-echo '<tr><td class="tdrighth tooltip">', $lang['wishcolsg'], '<span>', $lang['wishcolsgdesc'], '</span></td>';
+echo '<tr><td class="tdrighth tooltip">', $lang['wishcolsg'], '<span>', $lang['wishcolsgdesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>';
 if ($configs['showcolsg'] == 1) {
     echo '<td class="tdlefth"><div><input type="checkbox" id="switch314" name="showcolsg" class="switch" checked class="width" tabindex="16">
 	<label for="switch314">&nbsp;</label></div></td></tr>';

@@ -11,13 +11,12 @@ ob_start();
 <body>
 <?php
 require_once('other/config.php');
-require_once('lang.php');
 $dbname=$db['dbname'];
 
 
 if($currvers=='0.13-beta') {
 	echo'<span class="wncolor">'.$lang['alrup'].'</span><br>';
-	if(is_file('install.php') or glob('update*.php')) {
+	if(file_exists('install.php') or glob('update*.php')) {
 		unlink('install.php');
 		$unlinkfiles = glob('update*.php');
 		// if(array_map('unlink',$unlinkfiles) === true) {
@@ -38,10 +37,19 @@ if(isset($_POST['updateranksystem'])) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
-	if($mysqlcon->exec("ALTER TABLE $dbname.config ADD (boost text default NULL, showcolas int(1) NOT NULL default '0')") === false) {
+	if($mysqlcon->exec("ALTER TABLE $dbname.config ADD (boost text default NULL, showcolas int(1) NOT NULL default '0', defchid bigint(11) NOT NULL default '0', timezone varchar(29) CHARACTER SET utf8 COLLATE utf8_unicode_ci)") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
 	}
+	if($mysqlcon->exec("ALTER TABLE $dbname.config MODIFY slowmode bigint(11) NOT NULL default '0'") === false) {
+		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+		$errcount++;
+		if($mysqlcon->exec("UPDATE $dbname.config set defchid='0', timezome='Europe/Berlin', slowmode='200000'") === false) {
+			echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
+			$errcount++;
+		}
+	}
+	sleep bigint(11) NOT NULL default '0'
 	if($mysqlcon->exec("ALTER TABLE $dbname.groups ADD (icondate bigint(11) NOT NULL default '0')") === false) {
 		echo $lang['insttberr'].'<span class="wncolor">'.print_r($mysqlcon->errorInfo()).'.</span>';
 		$errcount++;
@@ -128,7 +136,7 @@ if(isset($_POST['updateranksystem'])) {
 		}
 		if ($errcount == 1) {
 			echo'<span class="sccolor"">'.$lang['upsucc'].'</span><br><br>';
-			if(is_file('install.php') or glob('update*.php')) {
+			if(file_exists('install.php') or glob('update*.php')) {
 				unlink('install.php');
 				$unlinkfiles = glob('update*.php');
 				// if(array_map('unlink',$unlinkfiles) === true) {

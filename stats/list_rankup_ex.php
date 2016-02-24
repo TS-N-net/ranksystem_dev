@@ -6,7 +6,6 @@ require_once('../other/config.php');
 if (isset($_GET['lang'])) {
     $language = $_GET['lang'];
 }
-require_once('../lang.php');
 
 if(isset($_POST['username'])) {
 	$_GET["search"] = $_POST['usersuche'];

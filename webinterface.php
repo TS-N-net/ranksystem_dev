@@ -8,8 +8,8 @@ session_start();
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="other/style.css.php" />
 	<link rel="stylesheet" type="text/css" href="jquerylib/jquery.autocomplete.css" />
-	<script type="text/javascript" src="jquerylib/jquery.js"></script>
-	<script type='text/javascript' src='jquerylib/jquery.autocomplete.js'></script>
+	<script type="text/javascript" src="jquerylib/jquery-1.2.6.pack.js"></script>
+	<script type='text/javascript' src='jquerylib/jquery.autocomplete.pack.js'></script>
 	<script type="text/javascript">
 	function disablediv(div)
 	{
@@ -84,7 +84,6 @@ if ($mysqlprob === false) {
 	echo '<span class="wncolor">',$sqlconerr,'</span><br>';
 	exit;
 }
-require_once('lang.php');
 $alert = "&nbsp;";
 if (isset($_POST['changeclients'])) {
     $selectedclients = $_POST['selectedclients'];
@@ -101,10 +100,13 @@ if (isset($_POST['updatets'])) {
     $tspass     = $_POST['tspass'];
     $queryname  = $_POST['queryname'];
     $queryname2 = $_POST['queryname2'];
-	if ($_POST['slowmode'] == "on") $slowmode = 1; else $slowmode = 0;
-    if ($mysqlcon->exec("UPDATE config set tshost='$tshost',tsquery='$tsquery',tsvoice='$tsvoice',tsuser='$tsuser',tspass='$tspass',queryname='$queryname',queryname2='$queryname2',slowmode='$slowmode'") === false) {
+    $defchid = $_POST['defchid'];
+    $timezone = $_POST['timezone'];
+	$slowmode = $_POST['slowmode'];
+    if ($mysqlcon->exec("UPDATE config set tshost='$tshost',tsquery='$tsquery',tsvoice='$tsvoice',tsuser='$tsuser',tspass='$tspass',queryname='$queryname',queryname2='$queryname2',slowmode='$slowmode',defchid='$defchid',timezone='$timezone'") === false) {
         $alert = '<span class="wncolor">' . $mysqlcon->errorCode() . '</span><br>';
     } else {
+		exec("php ".dirname(__FILE__)."/worker.php restart");
         $alert = '<span class="sccolor">' . $lang['wisvsuc'] . '</span>';
     }
     require_once('other/webinterface_list.php');
@@ -125,6 +127,7 @@ if (isset($_POST['updatecore'])) {
     if ($mysqlcon->exec("UPDATE config set grouptime='$grouptime',resetbydbchange='$resetbydbchange',msgtouser='$msgtouser',cleanclients='$cleanclients',cleanperiod='$cleanperiod',upcheck='$upcheck',uniqueid='$uniqueid',updateinfotime='$updateinfotime',substridle='$substridle',exceptuuid='$exceptuuid',exceptgroup='$exceptgroup',boost='$boost'") === false) {
         $alert = '<span class="wncolor">' . $mysqlcon->errorCode() . '</span><br>';
     } else {
+		exec("php ".dirname(__FILE__)."/worker.php restart");
         $alert = '<span class="sccolor">' . $lang['wisvsuc'] . '</span>';
     }
     require_once('other/webinterface_list.php');
@@ -158,6 +161,7 @@ if (isset($_POST['updatestyle'])) {
     if ($mysqlcon->exec("UPDATE config set language='$language',dateformat='$dateformat',showexgrp='$showexgrp',showexcld='$showexcld',showhighest='$showhighest',showcolrg='$showcolrg',showcolcld='$showcolcld',showcoluuid='$showcoluuid',showcoldbid='$showcoldbid',showcolls='$showcolls',showcolot='$showcolot',showcolit='$showcolit',showcolat='$showcolat',showcolas='$showcolas',showcolnx='$showcolnx',showcolsg='$showcolsg',bgcolor='$bgcolor',hdcolor='$hdcolor',txcolor='$txcolor',hvcolor='$hvcolor',ifcolor='$ifcolor',wncolor='$wncolor',sccolor='$sccolor',showgen='$showgen'") === false) {
         $alert = '<span class="wncolor">' . $mysqlcon->errorCode() . '</span><br>';
     } else {
+		exec("php ".dirname(__FILE__)."/worker.php restart");
         $alert = '<span class="sccolor">' . $lang['wisvsuc'] . '</span>';
     }
     require_once('other/webinterface_list.php');
@@ -294,6 +298,7 @@ $db[\'dbname\']="'.$_POST['dbname'].'";
 		{
 			$alert = '<span class="wncolor">' . sprintf($lang['widbcfgerr']) . '</span>';
 		} else {
+			exec("php ".dirname(__FILE__)."/worker.php restart");
 			$alert = '<span class="sccolor">' . sprintf($lang['widbcfgsuc']) . '</span>';
 		}
 		fclose($handle);
@@ -302,7 +307,7 @@ $db[\'dbname\']="'.$_POST['dbname'].'";
 	}
 	require_once('other/webinterface_list.php');
 }
-if (is_file('install.php') || is_file('update_0-02.php') || is_file('update_0-10.php')) {
+if (file_exists('install.php') || file_exists('update_0-02.php') || file_exists('update_0-10.php')) {
     echo sprintf($lang['isntwidel'], "<a href=\"webinterface.php\">webinterface.php</a>");
 } else {
     if (isset($_GET['logout']) == "true") {

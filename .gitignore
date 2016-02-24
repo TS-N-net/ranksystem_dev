@@ -2,3 +2,4 @@ icons/*.png
 icons/!rs.png
 other/dbconfig.php
 avatars/**
+logs/**

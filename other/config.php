@@ -96,5 +96,19 @@ if (($config = $mysqlcon->query("SELECT * FROM config"))  === false) {
     $showgen         = $config[0]['showgen'];
 	$cleanclients    = $config[0]['cleanclients'];
 	$cleanperiod     = $config[0]['cleanperiod'];
+	$defchid         = $config[0]['defchid'];
+	if ($timezone == 0) {
+		$timezone    = "Europe/Berlin";
+	} else {
+		$timezone    = $config[0]['timezone'];
+	}
+	date_default_timezone_set($timezone);
+}
+if(!isset($language) || $language == "en") {
+	require_once(substr(dirname(__FILE__),0,-5).'languages/core_en.php');
+} elseif($language == "de") {
+	require_once(substr(dirname(__FILE__),0,-5).'languages/core_de.php');
+} elseif($language == "ru") {
+	require_once(substr(dirname(__FILE__),0,-5).'languages/core_ru.php');
 }
 ?>
