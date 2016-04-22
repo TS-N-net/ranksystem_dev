@@ -30,10 +30,10 @@ $time_for_silver = 100;
 $time_for_gold = 250;
 $time_for_legendary = 500;
 
-$connects_for_bronze = 10;
-$connects_for_silver = 50;
-$connects_for_gold = 100;
-$connects_for_legendary = 250;
+$connects_for_bronze = 50;
+$connects_for_silver = 100;
+$connects_for_gold = 250;
+$connects_for_legendary = 500;
 
 $achievements_done = 0;
 
@@ -155,8 +155,8 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_gold, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<?PHP echo $lang['stmy0016']; ?>
+							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo  get_percentage($time_for_legendary, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width: <?PHP echo get_percentage($time_for_legendary, $count_hours); ?>%;">
+								<?PHP echo get_percentage($time_for_legendary, $count_hours), $lang['stmy0016']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($count_hours >= $time_for_silver) { ?>
@@ -173,8 +173,8 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_silver, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<?PHP echo $lang['stmy0018']; ?>
+							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_gold, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width: <?PHP echo get_percentage($time_for_gold, $count_hours); ?>%;">
+								<?PHP echo get_percentage($time_for_gold, $count_hours), $lang['stmy0018']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($count_hours >= $time_for_bronze) { ?>
@@ -191,8 +191,8 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_bronze, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<?PHP echo $lang['stmy0020']; ?>
+							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_silver, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width: <?PHP echo get_percentage($time_for_silver, $count_hours); ?>%;">
+								<?PHP echo get_percentage($time_for_silver, $count_hours), $lang['stmy0020']; ?>
 							</div>
 						</div>
 						<?PHP } else { ?>
@@ -209,8 +209,8 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<?PHP echo $lang['stmy0022']; ?>
+							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_bronze, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width: <?PHP echo get_percentage($time_for_bronze, $count_hours); ?>%;">
+								<?PHP echo get_percentage($time_for_bronze, $count_hours), $lang['stmy0022']; ?>
 							</div>
 						</div>
 						<?PHP } ?>
@@ -247,7 +247,7 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_gold, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($connects_for_legendary, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width:<?PHP echo get_percentage($connects_for_legendary, $_SESSION['tsconnections']); ?>%;">
 								<?PHP echo get_percentage($connects_for_legendary, $_SESSION['tsconnections']),$lang['stmy0016']; ?>
 							</div>
 						</div>
@@ -264,7 +264,7 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_silver, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($connects_for_gold, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width:<?PHP echo get_percentage($connects_for_gold, $_SESSION['tsconnections']); ?>%;">
 								<?PHP echo get_percentage($connects_for_gold, $_SESSION['tsconnections']),$lang['stmy0018']; ?>
 							</div>
 						</div>
@@ -281,7 +281,7 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_bronze, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($connects_for_silver, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width:<?PHP echo get_percentage($connects_for_silver, $_SESSION['tsconnections']); ?>%;">
 								<?PHP echo get_percentage($connects_for_silver, $_SESSION['tsconnections']),$lang['stmy0020']; ?>
 							</div>
 						</div>
@@ -298,7 +298,7 @@ require_once('nav.php');
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 15em; width:<?PHP echo get_percentage($connects_for_bronze, $_SESSION['tsconnections']); ?>%;">
 								<?PHP echo get_percentage($connects_for_bronze, $_SESSION['tsconnections']),$lang['stmy0022']; ?>
 							</div>
 						</div>

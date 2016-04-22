@@ -1,13 +1,9 @@
-- ranksystem blogs commands send to the jts, cause same user?
-- top_all: excepted groups will be shown?
-- git: servericon will be download everytime again! only download, if its changed
-- git: timezone not saved, if it got changed about the webinterface?
+- ranksystem blogs commands send to the jts, cause same user? -> create different useracc for jts and ranksystem!
 - problem with restart bot, cause delay is on and old ranksystem dont realize that pid is removed, new one starts and creates new pid; so both instances are running
 - windows worker läuft nicht im hintergrund, sondern im vordergrund und bot dropped, wenn dos fenster geschlossen wird
 - server creation date is for the most server by 0.. wrong php code or empty callback from teamspeak?
-- description server stats: gesamte online zeit alle user
-- description donot: add "all" to user
 - git: check boost for different person on same group with different beginning time.. bug is they ends all with same time
+- check on index column 253; if set timeformat
 
 Next Version(s):
 - list rankup when scrolling the "info header" doesnt sizes the width correctly

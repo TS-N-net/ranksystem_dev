@@ -11,9 +11,9 @@ if(!isset($_SESSION['tsuid'])) {
 }
 
 if ($substridle == 1) {
-	$dbdata = $mysqlcon->query("SELECT uuid,name,count,idle,grpid,online FROM $dbname.user ORDER BY (count - idle) DESC");
+	$dbdata = $mysqlcon->query("SELECT uuid,name,count,idle,cldgroup,online FROM $dbname.user ORDER BY (count - idle) DESC");
 } else {
-	$dbdata = $mysqlcon->query("SELECT uuid,name,count,idle,grpid,online FROM $dbname.user ORDER BY count DESC");
+	$dbdata = $mysqlcon->query("SELECT uuid,name,count,idle,cldgroup,online FROM $dbname.user ORDER BY count DESC");
 }
 $sumentries = $dbdata->rowCount() - 10;
 $db_arr = $dbdata->fetchAll();
@@ -23,7 +23,7 @@ $top10_idle_sum = 0;
 
 
 foreach ($db_arr as $client) {
-	$sgroups  = explode(",", $client['grpid']);
+	$sgroups  = explode(",", $client['cldgroup']);
 	if (!in_array($client['uuid'], $exceptuuid) && !array_intersect($sgroups, $exceptgroup)) {
 		if ($count10 == 10) break;
 		if ($substridle == 1) {

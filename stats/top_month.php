@@ -11,9 +11,9 @@ if(!isset($_SESSION['tsuid'])) {
 }
 
 if ($substridle == 1) {
-	$dbdata = $mysqlcon->query("SELECT s.uuid,s.count_month,s.idle_month,u.name,u.online,u.grpid FROM $dbname.stats_user AS s INNER JOIN $dbname.user AS u ON s.uuid = u.uuid WHERE s.removed='0' ORDER BY (s.count_month - s.idle_month) DESC");
+	$dbdata = $mysqlcon->query("SELECT s.uuid,s.count_month,s.idle_month,u.name,u.online,u.cldgroup FROM $dbname.stats_user AS s INNER JOIN $dbname.user AS u ON s.uuid = u.uuid WHERE s.removed='0' ORDER BY (s.count_month - s.idle_month) DESC");
 } else {
-	$dbdata = $mysqlcon->query("SELECT s.uuid,s.count_month,s.idle_month,u.name,u.online,u.grpid FROM $dbname.stats_user AS s INNER JOIN $dbname.user AS u ON s.uuid = u.uuid WHERE s.removed='0' ORDER BY s.count_month DESC");
+	$dbdata = $mysqlcon->query("SELECT s.uuid,s.count_month,s.idle_month,u.name,u.online,u.cldgroup FROM $dbname.stats_user AS s INNER JOIN $dbname.user AS u ON s.uuid = u.uuid WHERE s.removed='0' ORDER BY s.count_month DESC");
 }
 $sumentries = $dbdata->rowCount() - 10;
 $db_arr = $dbdata->fetchAll();
@@ -23,7 +23,7 @@ $top10_idle_sum = 0;
 
 
 foreach ($db_arr as $client) {
-	$sgroups  = explode(",", $client['grpid']);
+	$sgroups  = explode(",", $client['cldgroup']);
 	if (!in_array($client['uuid'], $exceptuuid) && !array_intersect($sgroups, $exceptgroup)) {
 		if ($count10 == 10) break;
 		if ($substridle == 1) {

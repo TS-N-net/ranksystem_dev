@@ -25,13 +25,13 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 		$ts3->serverGroupListReset();
 		$ts3groups = $ts3->serverGroupList();
 	} catch (Exception $e) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 3:",$e->getCode(),': ',"Error by getting servergrouplist: ",$e->getMessage(),"\n";
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 2:",$e->getCode(),': ',"Error by getting servergrouplist: ",$e->getMessage(),"\n";
 		$sqlmsg .= $e->getCode() . ': ' . "Error by getting servergrouplist: " . $e->getMessage();
 		$sqlerr++;
 	}
 	
     if(($dbgroups = $mysqlcon->query("SELECT * FROM $dbname.groups")) === false) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 2:",print_r($mysqlcon->errorInfo()),"\n";
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 3:",print_r($mysqlcon->errorInfo()),"\n";
 		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
@@ -61,7 +61,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 				$sIconFile = $ts3->iconDownload();
 				file_put_contents(substr(dirname(__FILE__),0,-4) . "icons/servericon.png", $sIconFile);
 			} catch (Exception $e) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 1:",$e->getCode(),': ',"Error by downloading Icon: ",$e->getMessage(),"\n";
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 4:",$e->getCode(),': ',"Error by downloading Icon: ",$e->getMessage(),"\n";
 				$sqlmsg .= $e->getCode() . ': ' . "Error by downloading Icon: " . $e->getMessage();
 				$sqlerr++;
 			}
@@ -100,7 +100,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 					$iconfile = $servergroup->iconDownload();
 					file_put_contents(substr(dirname(__FILE__),0,-4) . "icons/" . $sgid . ".png", $iconfile);
 				} catch (Exception $e) {
-					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 4:",$e->getCode(),': ',"Error by downloading Icon: ",$e->getMessage(),"\n";
+					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 5:",$e->getCode(),': ',"Error by downloading Icon: ",$e->getMessage(),"\n";
 					$sqlmsg .= $e->getCode() . ': ' . "Error by downloading Icon: " . $e->getMessage();
 					$sqlerr++;
 				}
@@ -144,14 +144,14 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
     if (isset($insertgroups)) {
         $allinsertdata = '';
         foreach ($insertgroups as $insertarr) {
-		if($insertarr['sgidname'] != "ServerIcon" && $insertarr['icondate'] != 0) {
+		if($insertarr['icondate'] != 0) {
 				$allinsertdata = $allinsertdata . "('" . $insertarr['sgid'] . "', '" . $insertarr['sgidname'] . "', '" . $insertarr['iconid'] . "', '" . $insertarr['icondate'] . "'),";
 			}
         }
         $allinsertdata = substr($allinsertdata, 0, -1);
         if ($allinsertdata != '') {
             if($mysqlcon->exec("INSERT INTO $dbname.groups (sgid, sgidname, iconid, icondate) VALUES $allinsertdata") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 5:",$allinsertdata,print_r($mysqlcon->errorInfo()),"\n";
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 6:",$allinsertdata,print_r($mysqlcon->errorInfo()),"\n";
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}
@@ -170,7 +170,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
         }
         $allsgids = substr($allsgids, 0, -1);
         if($mysqlcon->exec("UPDATE $dbname.groups set sgidname = CASE sgid $allupdatesgid END, iconid = CASE sgid $allupdateiconid END, icondate = CASE sgid $allupdatedate END WHERE sgid IN ($allsgids)") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 6:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 7:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -185,7 +185,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 	if(isset($delsgroupids)) {
 		$delsgroupids = substr($delsgroupids, 0, -1);
 		if($mysqlcon->exec("DELETE FROM groups WHERE sgid IN ($delsgroupids)") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 7:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 8:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -195,11 +195,11 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 
 	if ($sqlerr == 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 8:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 9:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	} else {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 9:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 10:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	}
 }
