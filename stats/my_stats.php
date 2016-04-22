@@ -67,19 +67,12 @@ require_once('nav.php');
 
 				<!-- Page Heading -->
 				<div class="row">
-					<div class="col-lg-6">
+					<div class="col-lg-12">
 						<h1 class="page-header">
-							My Statistics
-							<div class="btn-group">
+							<?PHP echo $lang['stmy0001']; ?>
 							<a href="#infoModal" data-toggle="modal" class="btn btn-primary">
 								<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 							</a>
-						</div>
-						</h1>
-					</div>
-					<div class="col-lg-6">
-						<h1 class="page-header">
-							<small><font color="#000000">My Achievements</font></small>
 						</h1>
 					</div>
 				</div>
@@ -90,64 +83,62 @@ require_once('nav.php');
 								<div class="row">
 									<div class="col-xs-9 text-left">
 										<div class="huge"><?PHP echo $_SESSION['tsname'] ?></div>
-										<div><?PHP echo 'Rank #' .$dbdata_fetched[0]['rank']; ?></div>
+										<div><?PHP echo $lang['stmy0002'],' #',$dbdata_fetched[0]['rank']; ?></div>
 									</div>
 									<div class="col-xs-3">
-										<center>
 										<?PHP
 											if(isset($_SESSION['tsavatar']) && $_SESSION['tsavatar'] != "none") {
-												echo '<img src="../other/avatars/'.$_SESSION['tsavatar'].'" class="img-rounded" alt="avatar" height="70" align="right">';
+												echo '<img src="../avatars/'.$_SESSION['tsavatar'].'" class="img-rounded pull-right" alt="avatar" height="70">';
 											} else {
-												echo '<i class="fa fa-user fa-5x" align="right"></i>';
+												echo '<span class="fa fa-user fa-5x"></span>';
 											}
 										?>
-										</center>
 									</div>
 								</div>
 							</div>
 							<div class="panel-footer">
-								<span class="pull-left">
-									<p><strong><font color="#337ab7">Database ID:</font></strong></p>
-									<p><strong><font color="#f0ad4e">Unique ID:</font></strong></p>
-									<p><strong><font color="#5cb85c">Total Connections To The Server:</font></strong></p>
-									<p><strong><font color="#d9534f">Start Date For Statistics:</font></strong></p>
-									<p><strong><font color="#337ab7">Total Online Time:</font></strong></p>
-									<p><strong><font color="#f0ad4e">Online Time Last 7 Days:</font></strong></p>
-									<p><strong><font color="#5cb85c">Online Time Last 30 Days:</font></strong></p>
-									<p><strong><font color="#d9534f">Achievements Completed:</font></strong></p>
-								</span>
-								<span class="pull-right">
-									<p align="right"><?PHP echo $dbdata_fetched[0]['cldbid']; ?></p>
-									<p align="right"><?PHP echo $dbdata_fetched[0]['uuid']; ?></p>
-									<p align="right"><?PHP echo $_SESSION['tsconnections']; ?></p>
-									<p align="right"><?PHP echo $_SESSION['tscreated']; ?></p>
-									<p align="right"><?PHP echo $count_total; ?></p>
-									<p align="right"><?PHP echo $count_week; ?></p>
-									<p align="right"><?PHP echo $count_month; ?></p>
-									<p align="right"><?PHP echo $achievements_done .' / 8'; ?></p>
-								</span>
+								<div class="pull-left">
+									<p><strong><?PHP echo $lang['stmy0003']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0004']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0005']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0006']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0007']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0008']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0009']; ?></strong></p>
+									<p><strong><?PHP echo $lang['stmy0010']; ?></strong></p>
+								</div>
+								<div class="pull-right">
+									<p class="text-right"><?PHP echo $dbdata_fetched[0]['cldbid']; ?></p>
+									<p class="text-right"><?PHP echo $dbdata_fetched[0]['uuid']; ?></p>
+									<p class="text-right"><?PHP echo $_SESSION['tsconnections']; ?></p>
+									<p class="text-right"><?PHP echo $_SESSION['tscreated']; ?></p>
+									<p class="text-right"><?PHP echo $count_total; ?></p>
+									<p class="text-right"><?PHP echo $count_week; ?></p>
+									<p class="text-right"><?PHP echo $count_month; ?></p>
+									<p class="text-right"><?PHP echo $achievements_done .' / 8'; ?></p>
+								</div>
 								<div class="clearfix"></div>
 							</div>
 						</div>
 					</div>
 					<div class="col-lg-6">
-						<h3>Time Achievement Progress</h3>
+						<h3><?PHP echo $lang['stmy0011']; ?></h3>
 						<?PHP if($count_hours >= $time_for_legendary) { ?>
 						<div class="panel panel-green">
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-12 text-right">
 										<div class="huge">
-											<small>Time: Legendary</span></small>
+											<small><?PHP echo $lang['stmy0012']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Have A Online Time Of ' .$count_hours .' hours.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0013'], $count_hours); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<font color="#000000">Progress Completed</font>
+								<?PHP echo $lang['stmy0014']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($count_hours >= $time_for_gold) { ?>
@@ -156,16 +147,16 @@ require_once('nav.php');
 								<div class="row">
 									<div class="col-xs-12 text-right">
 										<div class="huge">
-											<small>Time: Gold</span></small>
+											<small><?PHP echo $lang['stmy0015']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Have A Online Time Of ' .$count_hours .' hours.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0013'], $count_hours);; ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_gold, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<font color="#000000">% Completed For Legendary</font>
+								<?PHP echo $lang['stmy0016']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($count_hours >= $time_for_silver) { ?>
@@ -174,16 +165,16 @@ require_once('nav.php');
 								<div class="row">
 									<div class="col-xs-12 text-right">
 										<div class="huge">
-											<small>Time: Silver</span></small>
+											<small><?PHP echo $lang['stmy0017']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Have A Online Time Of ' .$count_hours .' hours.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0013'], $count_hours); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_silver, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<font color="#000000">% Completed For Gold</font>
+								<?PHP echo $lang['stmy0018']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($count_hours >= $time_for_bronze) { ?>
@@ -192,16 +183,16 @@ require_once('nav.php');
 								<div class="row">
 									<div class="col-xs-12 text-right">
 										<div class="huge">
-											<small>Time: Bronze</span></small>
+											<small><?PHP echo $lang['stmy0019']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Have A Online Time Of ' .$count_hours .' hours.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0013'], $count_hours); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP echo get_percentage($time_for_bronze, $count_hours); ?>" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<font color="#000000">% Completed For Silver</font>
+								<?PHP echo $lang['stmy0020']; ?>
 							</div>
 						</div>
 						<?PHP } else { ?>
@@ -210,37 +201,37 @@ require_once('nav.php');
 								<div class="row">
 									<div class="col-xs-12 text-right">
 										<div class="huge">
-											<small>Time: Unranked</span></small>
+											<small><?PHP echo $lang['stmy0021']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Have A Online Time Of ' .$count_hours .' hours.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0013'], $count_hours); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-								<font color="#000000">% Completed For Bronze</font>
+								<?PHP echo $lang['stmy0022']; ?>
 							</div>
 						</div>
 						<?PHP } ?>
 					</div>
 					<div class="col-lg-6">
-						<h3>Connection Achievement Progress</h3>
+						<h3><?PHP echo $lang['stmy0023']; ?></h3>
 						<?PHP if($_SESSION['tsconnections'] >= $connects_for_legendary) { ?>
 						<div class="panel panel-yellow">
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-12 text-right">
-										<div class="huge"><small>Connects: Legendary</span></small>
+										<div class="huge"><small><?PHP echo $lang['stmy0024']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Connected ' .$_SESSION['tsconnections'] .' Times To The Server.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0025'], $_SESSION['tsconnections']); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-								<font color="#000000">Progress Completed</font>
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+								<?PHP echo $lang['stmy0014']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($_SESSION['tsconnections'] >= $connects_for_gold) { ?>
@@ -248,16 +239,16 @@ require_once('nav.php');
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-12 text-right">
-										<div class="huge"><small>Connects: Gold</span></small>
+										<div class="huge"><small><?PHP echo $lang['stmy0026']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Connected ' .$_SESSION['tsconnections'] .' Times To The Server.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0025'], $_SESSION['tsconnections']); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_gold, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-								<font color="#000000"><?PHP echo get_percentage($connects_for_legendary, $_SESSION['tsconnections']); ?>% Completed For Legendary</font>
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_gold, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+								<?PHP echo get_percentage($connects_for_legendary, $_SESSION['tsconnections']),$lang['stmy0016']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($_SESSION['tsconnections'] >= $connects_for_silver) { ?>
@@ -265,16 +256,16 @@ require_once('nav.php');
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-12 text-right">
-										<div class="huge"><small>Connects: Silver</span></small>
+										<div class="huge"><small><?PHP echo $lang['stmy0027']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Connected ' .$_SESSION['tsconnections'] .' Times To The Server.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0025'], $_SESSION['tsconnections']); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_silver, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-								<font color="#000000"><?PHP echo get_percentage($connects_for_gold, $_SESSION['tsconnections']); ?>% Completed For Gold</font>
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_silver, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+								<?PHP echo get_percentage($connects_for_gold, $_SESSION['tsconnections']),$lang['stmy0018']; ?>
 							</div>
 						</div>
 						<?PHP } elseif($_SESSION['tsconnections'] >= $connects_for_bronze) { ?>				
@@ -282,16 +273,16 @@ require_once('nav.php');
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-12 text-right">
-										<div class="huge"><small>Connects: Bronze</span></small>
+										<div class="huge"><small><?PHP echo $lang['stmy0028']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Connected ' .$_SESSION['tsconnections'] .' Times To The Server.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0025'], $_SESSION['tsconnections']); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
-							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_bronze, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-								<font color="#000000"><?PHP echo get_percentage($connects_for_silver, $_SESSION['tsconnections']); ?>% Completed For Silver</font>
+							<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?PHP get_percentage($connects_for_bronze, $_SESSION['tsconnections']); ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+								<?PHP echo get_percentage($connects_for_silver, $_SESSION['tsconnections']),$lang['stmy0020']; ?>
 							</div>
 						</div>
 						<?PHP } else { ?>
@@ -299,16 +290,16 @@ require_once('nav.php');
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-12 text-right">
-										<div class="huge"><small>Connects: Unranked</span></small>
+										<div class="huge"><small><?PHP echo $lang['stmy0029']; ?></small>
 										</div>
-										<div><?PHP echo 'Because You Connected ' .$_SESSION['tsconnections'] .' Times To The Server.'; ?></div>
+										<div><?PHP echo sprintf($lang['stmy0025'], $_SESSION['tsconnections']); ?></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="progress">
 							<div class="progress-bar progress-bar-warning progress-bar-striped active role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-								<font color="#000000"><?PHP echo get_percentage($connects_for_bronze, $_SESSION['tsconnections']); ?>% Completed For Bronze</font>
+								<?PHP echo get_percentage($connects_for_bronze, $_SESSION['tsconnections']),$lang['stmy0022']; ?>
 							</div>
 						</div>
 						<?PHP } ?>

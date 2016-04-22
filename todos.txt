@@ -1,30 +1,30 @@
-- all textes to lang.php
+- ranksystem blogs commands send to the jts, cause same user?
+- top_all: excepted groups will be shown?
+- git: servericon will be download everytime again! only download, if its changed
+- git: timezone not saved, if it got changed about the webinterface?
+- problem with restart bot, cause delay is on and old ranksystem dont realize that pid is removed, new one starts and creates new pid; so both instances are running
+- windows worker läuft nicht im hintergrund, sondern im vordergrund und bot dropped, wenn dos fenster geschlossen wird
+- server creation date is for the most server by 0.. wrong php code or empty callback from teamspeak?
+- description server stats: gesamte online zeit alle user
+- description donot: add "all" to user
+- git: check boost for different person on same group with different beginning time.. bug is they ends all with same time
+
+Next Version(s):
 - list rankup when scrolling the "info header" doesnt sizes the width correctly
-- show on stats an error message, when newest log entry in table job_log is older then 10 minutes and second when uuid in admin list, then warning, when entry older then 1 minute.
-
-- config param to edit the path of logfile
-- test max level; remove and regive it at same calc_user?
-	zusätzlichen scritt
-	if ($sqlhis[$uid]['grpid'] != $groupid) {
-	hier auch prüfen, ob user in höhster gruppe.. sonst wird gruppe removed und neu vergeben
-
-- remove hp_counter stats/nav.php
-- documentate update / installation
-- optimze size of all image-files (http://tinypng.com/ bzw. http://compresspng.com/)
-- optimze all php files (http://customhost.com.ua/php-minify/)
-- search for errors (stats and jobs) about error-log (no one at 28.11.2015)
-- check all stats site with https://validator.w3.org/ and correct errors
-- all new sql to install.php
-
-Next Version:
 - Redesign Webinterface
-- mark mandatory fields
+- mark mandatory fields on webinterface
 - Error Handling (Inform via Mail and/or as TS Msg)
 - Vue.js for live stats
 - add dynamic page for user stats like my_stats.php and add link to all other pages, where users are listed, especially on list_rankup.php; show attribute removed, if user got deleted
+- progress bar for the next level on my_stats.php
+- list_rankup.php: color online users or give them an online icon
+- list_rankup.php: new filter for online and offline user
+- add mailaddress to config; send email to reset password for webinterface (in case of forgotten)
+- stats: dropdown to choose language
 
 
 IDEAS
 * Information when new TeamSpeak Server Version available (inform as server message or perhaps on site)
 * Inform TeamSpeak User about new Client version as Message on Site (= Release Version > Client Version)
 * Special Servergroup for User of the Week and or user of the Month
+* Enable Text-Message on TeamSpeak for Bot; User can write to the Bot for example !nextup and get then their needed time for next rankup

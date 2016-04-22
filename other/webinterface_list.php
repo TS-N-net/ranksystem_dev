@@ -153,20 +153,23 @@ if ($configs['cleanclients'] == 1) {
 echo '<tr><td class="tdrighth tooltip">', $lang['cleanp'], '<span>', $lang['cleanpdesc'], '</span></td>
 	<td class="tdlefth"><input type="number" name="cleanperiod" value="', $configs['cleanperiod'], '" class="width" tabindex="9"></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td class="tdrighth tooltip">'.$lang['wilog'].'<span>', $lang['wilogdesc'], '</span><em class="elevated wncolor">&nbsp;new</em></td>
+	<td class="tdlefth"><input type="text" name="logpath" value="', $configs['logpath'], '" class="width" tabindex="10"></td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td class="tdrighth tooltip">', $lang['wiupcheck'], '<span>', $lang['wiupcheckdesc'], '</span></td>';
 if ($configs['upcheck'] == 1) {
-    echo '<td class="tdlefth"><div><input type="checkbox" id="switch205" name="upcheck" class="switch" checked class="width" tabindex="10">
+    echo '<td class="tdlefth"><div><input type="checkbox" id="switch205" name="upcheck" class="switch" checked class="width" tabindex="11">
 	<label for="switch205">&nbsp;</label></div></td></tr>';
 } else {
-    echo '<td class="tdlefth"><div><input type="checkbox" id="switch205" name="upcheck" class="switch" class="width" tabindex="10">
+    echo '<td class="tdlefth"><div><input type="checkbox" id="switch205" name="upcheck" class="switch" class="width" tabindex="11">
 	<label for="switch205">&nbsp;</label></div></td></tr>';
 }
 echo '<tr><td class="tdrighth tooltip">', $lang['wiupuid'], '<span>', $lang['wiupuiddesc'], '</span></td>
-	<td class="tdlefth"><textarea rows="2" cols="30" name="uniqueid" class="width" tabindex="11">', $configs['uniqueid'], '</textarea></td></tr>
+	<td class="tdlefth"><textarea rows="2" cols="30" name="uniqueid" class="width" tabindex="12">', $configs['uniqueid'], '</textarea></td></tr>
 	<tr><td class="tdrighth tooltip">', $lang['wiuptime'], '<span>', $lang['wiuptimedesc'], '</span></td>
-	<td class="tdlefth"><input type="number" min="1800" name="updateinfotime" value="', $configs['updateinfotime'], '" class="width" tabindex="12" ></td></tr>
+	<td class="tdlefth"><input type="number" min="1800" name="updateinfotime" value="', $configs['updateinfotime'], '" class="width" tabindex="13" ></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td>&nbsp;</td><td class="tdlefth"><input type="submit" name="updatecore" value="', $lang['wisvconf'], '" tabindex="13"></td></tr>
+	<tr><td>&nbsp;</td><td class="tdlefth"><input type="submit" name="updatecore" value="', $lang['wisvconf'], '" tabindex="14"></td></tr>
 	</table></form>
 	</div>
 	<tr><td>&nbsp;</td></tr>

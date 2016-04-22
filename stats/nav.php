@@ -32,20 +32,19 @@
 	<script src="../bootstrap/addons/morris/morris.min.js"></script>
 	<script src="../bootstrap/addons/morris/morris-data.js"></script>
 </head>
-
 <body>
 	<div id="myModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Server News</h4>
+					<h4 class="modal-title"><?PHP echo $lang['stnv0001']; ?></h4>
 				</div>
 				<div class="modal-body">
-					<p>Example Server News Text</p>
+					<p><?PHP include('../server-news'); ?></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?PHP echo $lang['stnv0002']; ?></button>
 				</div>
 			</div>
 		</div>
@@ -55,16 +54,16 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Refresh Client Information</h4>
+					<h4 class="modal-title"><?PHP echo $lang['stnv0003']; ?></h4>
 				</div>
 				<div class="modal-body">
-					<p>Only use this Refresh, when your TS3 information got changed, such as your TS3 username</p>
-					<p>It only works, when you are connected to the TS3 Server at the same time</p>
+					<p><?PHP echo $lang['stnv0004']; ?></p>
+					<p><?PHP echo $lang['stnv0005']; ?></p>
 				</div>
 				<div class="modal-footer">
 					<form method="post">
-							<button class="btn btn-primary" type="submit" name="refresh">Refresh</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" name="refresh"><?PHP echo $lang['stnv0006']; ?></button>
+							<button type="button" class="btn btn-default" data-dismiss="modal"><?PHP echo $lang['stnv0002']; ?></button>
 					</form>
 				</div>
 			</div>
@@ -75,20 +74,20 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Battle Area - Page Content</h4>
+					<h4 class="modal-title"><?PHP echo $lang['stnv0007']; ?></h4>
 				</div>
 				<div class="modal-body">
-					<p>You can challenge other users in a battle between two users or two teams.</p>
-					<p>While the battle is active the online time of the teams/users will be counted.</p>
-					<p>When the battle ends the team/user with the highest online time wins.</p>
-					<p>(The regular battling time is 48 hours)</p>
-					<p>The winning team/user will recieve a price, which the user can use whenever the user wants.</p>
-					<p>It will be displayed on the <a href="my_stats.php">My Statistics</a> tab.</p>
-					<p>(Could be online time boost(2x) for 8 hours, instant online time (4 hours), etc.</p>
-					<p>These boosts can be used for example to climb in the top users of the week)</p>
+					<p><?PHP echo $lang['stnv0008']; ?></p>
+					<p><?PHP echo $lang['stnv0009']; ?></p>
+					<p><?PHP echo $lang['stnv0010']; ?></p>
+					<p><?PHP echo $lang['stnv0011']; ?></p>
+					<p><?PHP echo $lang['stnv0012']; ?></p>
+					<p><?PHP echo $lang['stnv0013']; ?></p>
+					<p><?PHP echo $lang['stnv0014']; ?></p>
+					<p><?PHP echo $lang['stnv0015']; ?></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?PHP echo $lang['stnv0002']; ?></button>
 				</div>
 			</div>
 		</div>
@@ -98,14 +97,14 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Not available</h4>
+					<h4 class="modal-title"><?PHP echo $lang['stnv0016']; ?></h4>
 				</div>
 				<div class="modal-body">
-					<p>You are not connected to the TS3 Server, so it cant display any data for you</p>
-					<p>Please connect to the TS3 Server and then Refresh your Session by pressing the blue Refresh Button at the top-right corner</p>
+					<p><?PHP echo $lang['stnv0017']; ?></p>
+					<p><?PHP echo $lang['stnv0018']; ?></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?PHP echo $lang['stnv0002']; ?></button>
 				</div>
 			</div>
 		</div>
@@ -115,21 +114,17 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">My Statistics - Page Content</h4>
+					<h4 class="modal-title"><?PHP echo $lang['stnv0019']; ?></h4>
 				</div>
 				<div class="modal-body">
-					<p>This page contains a overall summary of your personal statistics and activity on the server.</p>
-					<p>The informations are collected since the beginning of the Ranksystem, they are not since the beginning of the TeamSpeak server.</p>
-					<p>It also contains your progress in unlocking achievements.</p>
-					<br>
-					<p><h4>Achievements</h4></p>
-					<p>You can unlock achievements in different categories from bronze to legendary depending on your activity on the server.</p>
-					<p>There are two achievements available for the moment: Online Time and Total connections to the server.</p>
-					<p>For every achievement there are four levels.</p>
+					<p><?PHP echo $lang['stnv0020']; ?></p>
+					<p><?PHP echo $lang['stnv0021']; ?></p>
+					<p><?PHP echo $lang['stnv0022']; ?></p>
+					<p><?PHP echo $lang['stnv0023']; ?></p>
 					<br>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?PHP echo $lang['stnv0002']; ?></button>
 				</div>
 			</div>
 		</div>
@@ -141,14 +136,14 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
-				<a class="navbar-brand" href="index.php">Ranksystem - Statistics</a>
+				<a class="navbar-brand" href="index.php"><?PHP echo $lang['stnv0024']; ?></a>
 			</div>
 			<!-- Top Menu Items -->
 			<?PHP if(basename($_SERVER['SCRIPT_NAME']) == "list_rankup.php") { ?>
 			<ul class="nav navbar-left top-nav">
-				<div class="navbar-form navbar-right dropdown">
+				<li class="navbar-form navbar-right dropdown">
 					<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-						Limit entries
+						<?PHP echo $lang['stnv0025']; ?>
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -157,26 +152,34 @@
 						<li role="presentation"><a role="menuitem" href="<?PHP echo "?sort=$keysort&amp;order=$keyorder&amp;user=250&amp;lang=$language&amp;search=$getstring"; ?>">250</a></li>
 						<li role="presentation"><a role="menuitem" href="<?PHP echo "?sort=$keysort&amp;order=$keyorder&amp;user=500&amp;lang=$language&amp;search=$getstring"; ?>">500</a></li>
 						<li role="separator" class="divider"></li>
-						<li role="presentation"><a role="menuitem" href="<?PHP echo "?sort=$keysort&amp;order=$keyorder&amp;user=all&amp;lang=$language&amp;search=$getstring"; ?>">all</a></li>
+						<li role="presentation"><a role="menuitem" href="<?PHP echo "?sort=$keysort&amp;order=$keyorder&amp;user=all&amp;lang=$language&amp;search=$getstring"; ?>"><?PHP echo $lang['stnv0026']; ?></a></li>
 					</ul>
-				</div>
-				<div class="navbar-form navbar-right">
+				</li>
+				<li class="navbar-form navbar-right">
 					<form method="post">
 						<div class="form-group">
-							<input class="form-control" type="text" name="usersuche" placeholder="Search"<?PHP if(isset($getstring)) echo 'value="'.$getstring.'"'; ?>>
+							<input class="form-control" type="text" name="usersuche" placeholder="Search"<?PHP if(isset($getstring)) echo ' value="'.$getstring.'"'; ?>>
 						</div>
 						<button class="btn btn-primary" type="submit" name="username"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 					</form>
-				</div>
+				</li>
 			</ul>
 			<?PHP } ?>
 			<ul class="nav navbar-right top-nav">
+				<?PHP
+				$lastscan = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='calc_user_lastscan'");
+				$lastscan = $lastscan->fetchAll();
+				if((time() - $lastscan[0]['timestamp']) > 600) { ?>
+				<li class="navbar-form navbar-left">
+					<span class="label label-warning"><?PHP echo $lang['stnv0027']; ?></span>
+				</li>
+				<?PHP } ?>
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo '&nbsp;&nbsp;' .($_SESSION['connected'] == 0 ? '(Not Connected To TS3!)' : $_SESSION['tsname']); ?>&nbsp;<b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><?PHP echo '&nbsp;&nbsp;' .($_SESSION['connected'] == 0 ? $lang['stnv0028'] : $_SESSION['tsname']); ?>&nbsp;<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<?PHP echo (!isset($_SESSION['tsname']) ? ' ' : '<li><a href="my_stats.php"><i class="fa fa-fw fa-user"></i> My Statistics</a></li>'); ?>
+						<?PHP echo (!isset($_SESSION['tsname']) ? ' ' : '<li><a href="my_stats.php"><i class="fa fa-fw fa-user"></i>&nbsp;'.$lang['stmy0001'].'</a></li>'); ?>
 						<li>
-							<a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> Server news</a>
+							<a href="#myModal" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i>&nbsp;<?PHP echo $lang['stnv0001']; ?></a>
 						</li>
 					</ul>
 				</li>
@@ -194,34 +197,34 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "index.php" ? ' class="active">' : '>'); ?>
-						<a href="index.php"><i class="fa fa-fw fa-area-chart"></i> Server Statistics</a>
+						<a href="index.php"><i class="fa fa-fw fa-area-chart"></i>&nbsp;<?PHP echo $lang['stix0001']; ?></a>
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "my_stats.php" ? ' class="active">' : '>'); ?>
 						<?PHP if($_SESSION['connected'] == 0) {
-							echo '<a href="#myStatsModal" data-toggle="modal"><i class="fa fa-fw fa-exclamation-triangle"></i> *My Statistics</a>';
+							echo '<a href="#myStatsModal" data-toggle="modal"><i class="fa fa-fw fa-exclamation-triangle"></i>&nbsp;*',$lang['stmy0001'],'</a>';
 						} else {
-							echo '<a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> My Statistics</a>';
+							echo '<a href="my_stats.php"><i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;',$lang['stmy0001'],'</a>';
 						}?>
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "top_all.php" ? ' class="active">' : '>'); ?>
-						<a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-trophy"></i> Top Users <i class="fa fa-fw fa-caret-down"></i></a>
+						<a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-trophy"></i>&nbsp;<?PHP echo $lang['sttw0001']; ?>&nbsp;<i class="fa fa-fw fa-caret-down"></i></a>
 						<ul id="demo" class="collapse">
 							<li>
-								<a href="top_week.php">Of The Week</a>
+								<a href="top_week.php"><?PHP echo $lang['sttw0002']; ?></a>
 							</li>
 							<li>
-								<a href="top_month.php">Of The Month</a>
+								<a href="top_month.php"><?PHP echo $lang['sttm0001']; ?></a>
 							</li>
 							<li>
-								<a href="top_all.php">Of All Time</a>
+								<a href="top_all.php"><?PHP echo $lang['stta0001']; ?></a>
 							</li>
 						</ul>
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "list_rankup.php" ? ' class="active">' : '>'); ?>
-						<a href="list_rankup.php"><i class="fa fa-fw fa-list-ul"></i> List Rankup</a>
+						<a href="list_rankup.php"><i class="fa fa-fw fa-list-ul"></i>&nbsp;<?PHP echo $lang['stnv0029']; ?></a>
 					</li>
 					<?PHP echo '<li'.(basename($_SERVER['SCRIPT_NAME']) == "info.php" ? ' class="active">' : '>'); ?>
-						<a href="info.php"><i class="fa fa-fw fa-info-circle"></i> Ranksystem Info</a>
+						<a href="info.php"><i class="fa fa-fw fa-info-circle"></i>&nbsp;<?PHP echo $lang['stnv0030']; ?></a>
 					</li>
 				</ul>
 			</div>
@@ -237,5 +240,4 @@ function error_handling($msg,$type = NULL) {
 	}
 	echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',$msg,'</div>';
 }
-require_once('/var/www_other/hp/counter.php');
 ?>

@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$serverinfo) {
 	$starttime = microtime(true);
 	$sqlmsg = '';
@@ -8,13 +8,15 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 		usleep($slowmode);
 		$iconlist = $ts3->channelFileList($cid="0", $cpw="", $path="/icons/");
 	} catch (Exception $e) {
-		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"get_avatars 1:",$e->getCode(),': ',"Error by getting Avatarlist: ",$e->getMessage(),"\n";
-		$sqlmsg .= $e->getCode() . ': ' . "Error by getting Avatarlist: " . $e->getMessage();
-		$sqlerr++;
+		if ($e->getCode() != 1281) {
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 1:",$e->getCode(),': ',"Error by getting servergrouplist: ",$e->getMessage(),"\n";
+			$sqlmsg .= $e->getCode() . ': ' . "Error by getting servergrouplist: " . $e->getMessage();
+			$sqlerr++;
+		}
 	}
 
 	foreach($iconlist as $icon) {
-		$iconid = substr($icon['name'], 5);
+		$iconid = "i".substr($icon['name'], 5);
 		$iconarr[$iconid] = $icon['datetime'];
 	}
 	
@@ -51,7 +53,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 	$sIconId = $serverinfo['virtualserver_icon_id'];
 	$sIconId = ($sIconId < 0) ? (pow(2, 32)) - ($sIconId * -1) : $sIconId;
 	$sIconFile = 0;
-	if (!isset($sqlhisgroup['0']) || $sqlhisgroup['0']['iconid'] != $sIconId || $iconarr[$sIconId] > $sqlhisgroup['0']['icondate']) {
+	if (!isset($sqlhisgroup['0']) || $sqlhisgroup['0']['iconid'] != $sIconId || $iconarr["i".$sIconId] > $sqlhisgroup['0']['icondate']) {
 		if($sIconId > 600) {
 			try {
 				usleep($slowmode);
@@ -70,7 +72,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 				"sgidname" => "ServerIcon",
 				"iconid" => $sIconId,
 				"icon" => $sIconFile,
-				"icondate" => $iconarr[$sIconId]
+				"icondate" => $iconarr["i".$sIconId]
 			);
 		} else {
 			$updategroups[] = array(
@@ -78,7 +80,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 				"sgidname" => "ServerIcon",
 				"iconid" => $sIconId,
 				"icon" => $sIconFile,
-				"icondate" => $iconarr[$sIconId]
+				"icondate" => $iconarr["i".$sIconId]
 			);
 		}
 	}
@@ -92,7 +94,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
         $iconid   = ($iconid < 0) ? (pow(2, 32)) - ($iconid * -1) : $iconid;
 		$iconfile = 0;
 		if($iconid > 600) {
-			if (!isset($sqlhisgroup[$sgid]) || $sqlhisgroup[$sgid]['iconid'] != $iconid || $iconarr[$iconid] > $sqlhisgroup[$sgid]['icondate']) {
+			if (!isset($sqlhisgroup[$sgid]) || $sqlhisgroup[$sgid]['iconid'] != $iconid || $iconarr["i".$iconid] > $sqlhisgroup[$sgid]['icondate']) {
 				try {
 					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"Download new ServerGroupIcon for group ",$servergroup['name']," with ID: ",$sgid,"\n";
 					$iconfile = $servergroup->iconDownload();
@@ -114,7 +116,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 						"sgidname" => $sgname,
 						"iconid" => $iconid,
 						"icon" => $iconfile,
-						"icondate" => $iconarr[$iconid]
+						"icondate" => $iconarr["i".$iconid]
 					);
 					break;
 				}
@@ -125,7 +127,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 					"sgidname" => $sgname,
 					"iconid" => $iconid,
 					"icon" => $iconfile,
-					"icondate" => $iconarr[$iconid]
+					"icondate" => $iconarr["i".$iconid]
 				);
 			}
 		} else {
@@ -134,7 +136,7 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
 				"sgidname" => $sgname,
 				"iconid" => $iconid,
 				"icon" => $iconfile,
-				"icondate" => $iconarr[$iconid]
+				"icondate" => $iconarr["i".$iconid]
 			);
 		}
     }
@@ -142,12 +144,14 @@ function update_groups($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$
     if (isset($insertgroups)) {
         $allinsertdata = '';
         foreach ($insertgroups as $insertarr) {
-            $allinsertdata = $allinsertdata . "('" . $insertarr['sgid'] . "', '" . $insertarr['sgidname'] . "', '" . $insertarr['iconid'] . "', '" . $insertarr['icondate'] . "'),";
+		if($insertarr['sgidname'] != "ServerIcon" && $insertarr['icondate'] != 0) {
+				$allinsertdata = $allinsertdata . "('" . $insertarr['sgid'] . "', '" . $insertarr['sgidname'] . "', '" . $insertarr['iconid'] . "', '" . $insertarr['icondate'] . "'),";
+			}
         }
         $allinsertdata = substr($allinsertdata, 0, -1);
         if ($allinsertdata != '') {
             if($mysqlcon->exec("INSERT INTO $dbname.groups (sgid, sgidname, iconid, icondate) VALUES $allinsertdata") === false) {
-				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 5:",print_r($mysqlcon->errorInfo()),"\n";
+				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"update_groups 5:",$allinsertdata,print_r($mysqlcon->errorInfo()),"\n";
 				$sqlmsg .= print_r($mysqlcon->errorInfo());
 				$sqlerr++;
 			}

@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 function clean($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$cleanclients,$cleanperiod) {
 	$starttime = microtime(true);
 	$sqlmsg = '';
@@ -6,17 +6,31 @@ function clean($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$cleancli
 	$count_tsuser['count'] = 0;
 	$nowtime = time();
 
+	// clean old logs
+	if($mysqlcon->query("DELETE a FROM $dbname.job_log AS a CROSS JOIN(SELECT id FROM $dbname.job_log ORDER BY id DESC LIMIT 1 OFFSET 1000) AS b WHERE b.id>a.id") === false) {
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 1:",print_r($mysqlcon->errorInfo()),"\n";
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
+		$sqlerr++;
+	}
+	
+	// clean usersnaps older then 1 month
+	if($mysqlcon->query("DELETE a FROM $dbname.user_snapshot AS a CROSS JOIN(SELECT DISTINCT(timestamp) FROM $dbname.user_snapshot ORDER BY timestamp DESC LIMIT 1000 OFFSET 121) AS b WHERE a.timestamp=b.timestamp") === false) {
+		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 2:",print_r($mysqlcon->errorInfo()),"\n";
+		$sqlmsg .= print_r($mysqlcon->errorInfo());
+		$sqlerr++;
+	}
+	
 	// clean old clients out of the database
 	if ($cleanclients == 1) {
 		$cleantime = $nowtime - $cleanperiod;
 		if(($lastclean = $mysqlcon->query("SELECT * FROM $dbname.job_check WHERE job_name='check_clean'")) === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 1:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 3:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
 		$lastclean = $lastclean->fetchAll();
 		if(($dbuserdata = $mysqlcon->query("SELECT uuid FROM $dbname.user")) === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 2:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 4:",print_r($mysqlcon->errorInfo()),"\n";
 			$sqlmsg .= print_r($mysqlcon->errorInfo());
 			$sqlerr++;
 		}
@@ -66,13 +80,13 @@ function clean($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$cleancli
 				$alldeldata = "(".$alldeldata.")";
 				if ($alldeldata != '') {
 					if($mysqlcon->exec("DELETE FROM $dbname.user WHERE uuid IN $alldeldata") === false) {
-						echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 3:",print_r($mysqlcon->errorInfo()),"\n";
+						echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 5:",print_r($mysqlcon->errorInfo()),"\n";
 						$sqlmsg .= print_r($mysqlcon->errorInfo());
 						$sqlerr++;
 					} else {
 						echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),sprintf($lang['cleandel'], $countdel),"\n";
 						if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='check_clean'") === false) {
-							echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 4:",print_r($mysqlcon->errorInfo()),"\n";
+							echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 6:",print_r($mysqlcon->errorInfo()),"\n";
 							$sqlmsg .= print_r($mysqlcon->errorInfo());
 							$sqlerr++;
 						}
@@ -81,7 +95,7 @@ function clean($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$cleancli
 			} else {
 				echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),$lang['cleanno'],"\n";
 				if($mysqlcon->exec("UPDATE $dbname.job_check SET timestamp='$nowtime' WHERE job_name='check_clean'") === false) {
-					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 5:",print_r($mysqlcon->errorInfo()),"\n";
+					echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 7:",print_r($mysqlcon->errorInfo()),"\n";
 					$sqlmsg .= print_r($mysqlcon->errorInfo());
 					$sqlerr++;
 				}
@@ -93,11 +107,11 @@ function clean($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$cleancli
 
 	if ($sqlerr == 0) {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='0', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 6:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 8:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	} else {
 		if($mysqlcon->exec("UPDATE $dbname.job_log SET status='1', err_msg='$sqlmsg', runtime='$buildtime' WHERE id='$jobid'") === false) {
-			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 7:",print_r($mysqlcon->errorInfo()),"\n";
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"clean 9:",print_r($mysqlcon->errorInfo()),"\n";
 		}
 	}
 }

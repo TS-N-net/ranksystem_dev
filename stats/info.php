@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 session_start();
 $starttime = microtime(true);
 
@@ -19,68 +19,64 @@ require_once('nav.php');
 				<div class="row">
 					<div class="col-lg-12">
 						<h1 class="page-header">
-							Ranksystem Information
+							<?PHP echo $lang['stri0001']; ?>
 						</h1>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-lg-12">
-						<h4><strong><font color="#337ab7">What Is The Ranksystem?</font></strong></h4>
-						<p>A TS3 Bot, which gathers information and statistics about every user and displays the result on <strong>this</strong> site.
-						</p>
+						<h4><strong><span class="text-info"><?PHP echo $lang['stri0002']; ?></span></strong></h4>
+						<p><?PHP echo $lang['stri0003']; ?></p>
 						<br>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-lg-12">
-						<h4><strong><font color="#5cb85c">Who Created The Ranksystem?</font></strong></h4>
-						<p>The <a href="http://ts-n.net/ranksystem.php" target="_blank">Ranksystem</a> was coded by <strong>Newcomer1989</strong> Copyright &copy 2009-2016 <a href="http://ts-n.net/" target="_blank">TeamSpeak Sponsoring TS-N.NET</a>. All rights reserved.</p>
+						<h4><strong><span class="text-success"><?PHP echo $lang['stri0004']; ?></span></strong></h4>
+						<p>The <a href="http://ts-n.net/ranksystem.php" target="_blank">Ranksystem</a> was coded by <strong>Newcomer1989</strong> Copyright &copy; 2009-2016 <a href="http://ts-n.net/" target="_blank">TeamSpeak Sponsoring TS-N.NET</a>. All rights reserved.</p>
 						<br>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-lg-12">
-						<h4><strong><font color="#f0ad4e">When Did You Create The Ranksystem?</font></strong></h4>
-						<p>First alpha release: 05/10/2014.</p>
-						<p>First beta release: 01/02/2015.</p>
-						<p>You can see the newest version on the <a href="http://ts-n.net/ranksystem.php" target="_blank">Ranksystem Website</a>.</p>
+						<h4><strong><span class="text-warning"><?PHP echo $lang['stri0005']; ?></span></strong></h4>
+						<p><?PHP echo $lang['stri0006']; ?></p>
+						<p><?PHP echo $lang['stri0007']; ?></p>
+						<p><?PHP echo $lang['stri0008']; ?></p>
 						<br>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-lg-12">
-						<h4><strong><font color="#d9534f">How Did You Create The Ranksystem?</font></strong></h4>
-						<p>The Ranksystem is coded in</p>
-						<p><a href="http://php.net/" target="_blank">PHP</a> - Copyright &copy 2001-2016 the <a href="https://secure.php.net/credits.php" target="_blank">PHP Group</a></p><br>
-						<p>It uses also the following libraries:</p>
-						<p><a href="http://jquery.com/" target="_blank">jQuery v2.2.0</a> - Copyright &copy 2016 The jQuery Foundation</p> 
-						<p>jQuery Autocomplete plugin 1.1 - Copyright (c) 2009 J&ouml;rn Zaefferer</p> 
-						<p><a href="http://fontawesome.io" target="_blank">Font Awesome 4.2.0</a> - Copyright &copy davegandy</p>
-						<p><a href="http://jquery.com/plugins/project/ajaxqueue" target="_blank">Ajax Queue Plugin</a> - Copyright &copy 2013 Corey Frang</p> 
-						<p><a href="http://planetteamspeak.com/" target="_blank">TeamSpeak 3 PHP Framework 1.1.23</a> - Copyright &copy 2010 Planet TeamSpeak</p> 
-						<p><a href="http://getbootstrap.com/" target="_blank">Bootstrap 3.3.6</a> - Copyright &copy 2011-2016 Twitter, Inc.</p>
-						<p><a href="http://morrisjs.github.io/morris.js/" target="_blank">morris.js</a> - Copyright &copy 2013 Olly Smith</p>
-						<p><a href="http://raphaeljs.com" target="_blank">Rapha&euml;l 2.1.4 - JavaScript Vector Library</a> - Copyright © 2008-2012 Dmitry Baranovskiy</p>
-						<p><a href="http://startbootstrap.com" target="_blank">SB Admin Bootstrap Admin Template</a> - Copyright &copy 2013-2016 Blackrock Digital LLC.</p>
+						<h4><strong><span class="text-danger"><?PHP echo $lang['stri0009']; ?></span></strong></h4>
+						<p><?PHP echo $lang['stri0010']; ?></p>
+						<p><a href="http://php.net/" target="_blank">PHP</a> - Copyright &copy; 2001-2016 the <a href="https://secure.php.net/credits.php" target="_blank">PHP Group</a></p><br>
+						<p><?PHP echo $lang['stri0011']; ?></p>
+						<p><a href="http://jquery.com/" target="_blank">jQuery v2.2.0</a> - Copyright &copy; 2016 The jQuery Foundation</p> 
+						<p>jQuery Autocomplete plugin 1.1 - Copyright &copy; 2009 J&ouml;rn Zaefferer</p> 
+						<p><a href="http://fontawesome.io" target="_blank">Font Awesome 4.2.0</a> - Copyright &copy; davegandy</p>
+						<p><a href="http://jquery.com/plugins/project/ajaxqueue" target="_blank">Ajax Queue Plugin</a> - Copyright &copy; 2013 Corey Frang</p> 
+						<p><a href="http://planetteamspeak.com/" target="_blank">TeamSpeak 3 PHP Framework 1.1.23</a> - Copyright &copy; 2010 Planet TeamSpeak</p> 
+						<p><a href="http://getbootstrap.com/" target="_blank">Bootstrap 3.3.6</a> - Copyright &copy; 2011-2016 Twitter, Inc.</p>
+						<p><a href="http://morrisjs.github.io/morris.js/" target="_blank">morris.js</a> - Copyright &copy; 2013 Olly Smith</p>
+						<p><a href="http://raphaeljs.com" target="_blank">Rapha&euml;l 2.1.4 - JavaScript Vector Library</a> - Copyright &copy; 2008-2012 Dmitry Baranovskiy</p>
+						<p><a href="http://startbootstrap.com" target="_blank">SB Admin Bootstrap Admin Template</a> - Copyright &copy; 2013-2016 Blackrock Digital LLC.</p>
 						<br>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-lg-12">
-						<h4><strong><font color="#337ab7">Special Thanks To:</font></strong></h4>
-						<p><a href="http://nya-pw.ru/" target="_blank">sergey</a> - for russian translation</p>
-						<p>Bejamin Frost - for initialisation the bootstrap design</p>
+						<h4><strong><span class="text-info"><?PHP echo $lang['stri0012']; ?></span></strong></h4>
+						<p><?PHP echo $lang['stri0013']; ?></p>
+						<p><?PHP echo $lang['stri0014']; ?></p>
 						<br>
 					</div>
 				</div>
 			</div>
 			<!-- /.container-fluid -->
-
 		</div>
 		<!-- /#page-wrapper -->
-
 	</div>
 	<!-- /#wrapper -->
 </body>
-
 </html>

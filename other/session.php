@@ -30,8 +30,8 @@ function set_session_ts3($hpclientip, $voiceport, $mysqlcon, $dbname) {
 				$uuidasbase16 .= $convert[($char & 0xF0) >> 4];
 				$uuidasbase16 .= $convert[$char & 0x0F];
 			}
-			if(is_file('../other/avatars/'.$uuidasbase16)) {
-				$_SESSION['tsavatar']			= $uuidasbase16;
+			if(is_file('../avatars/'.$uuidasbase16.'.png')) {
+				$_SESSION['tsavatar']			= $uuidasbase16.'.png';
 			} else {
 				$_SESSION['tsavatar']			= "none";
 			}

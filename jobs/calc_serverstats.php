@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 function calc_serverstats($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$serverinfo,$substridle,$grouptime) {
 	$starttime = microtime(true);
 	$nowtime = time();
@@ -114,6 +114,14 @@ function calc_serverstats($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezon
 	arsort($country_array);
 	$country_counter = 0;
 	$country_nation_other = 0;
+	$country_nation_name_2 = 0;
+	$country_nation_name_3 = 0;
+	$country_nation_name_4 = 0;
+	$country_nation_name_5 = 0;
+	$country_nation_2 = 0;
+	$country_nation_3 = 0;
+	$country_nation_4 = 0;
+	$country_nation_5 = 0;
 	foreach ($country_array as $k => $v) {
 		$country_counter++;
 		if ($country_counter == 1) {
@@ -288,7 +296,7 @@ function calc_serverstats($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezon
 		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;
 	}
-	if($mysqlcon->exec("UPDATE $dbname.user u INNER JOIN (SELECT @a:=@a+1 nr,uuid FROM $dbname.user ORDER BY count DESC) s USING (uuid) SET u.rank=s.nr") === false) {
+	if($mysqlcon->exec("UPDATE $dbname.user u INNER JOIN (SELECT @a:=@a+1 nr,uuid FROM $dbname.user WHERE except!=1 ORDER BY count DESC) s USING (uuid) SET u.rank=s.nr") === false) {
 		echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"calc_serverstats 14:",print_r($mysqlcon->errorInfo()),"\n";
 		$sqlmsg .= print_r($mysqlcon->errorInfo());
 		$sqlerr++;

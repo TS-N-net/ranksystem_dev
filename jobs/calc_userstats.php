@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 function calc_userstats($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone) {
 	$starttime = microtime(true);
 	$sqlmsg = '';

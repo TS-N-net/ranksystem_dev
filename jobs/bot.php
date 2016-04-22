@@ -7,14 +7,14 @@ setlocale(LC_ALL, 'UTF-8');
 error_reporting(0);
 
 echo "Initialize Bot...";
-require_once(substr(dirname(__FILE__),0,-4).'other/config.php');
-require_once(substr(dirname(__FILE__),0,-4).'ts3_lib/TeamSpeak3.php');
-require_once(substr(dirname(__FILE__),0,-4).'jobs/calc_user.php');
-require_once(substr(dirname(__FILE__),0,-4).'jobs/get_avatars.php');
-require_once(substr(dirname(__FILE__),0,-4).'jobs/update_groups.php');
-require_once(substr(dirname(__FILE__),0,-4).'jobs/calc_serverstats.php');
-require_once(substr(dirname(__FILE__),0,-4).'jobs/calc_userstats.php');
-require_once(substr(dirname(__FILE__),0,-4).'jobs/clean.php');
+require_once(substr(__DIR__,0,-4).'other/config.php');
+require_once(substr(__DIR__,0,-4).'ts3_lib/TeamSpeak3.php');
+require_once(substr(__DIR__,0,-4).'jobs/calc_user.php');
+require_once(substr(__DIR__,0,-4).'jobs/get_avatars.php');
+require_once(substr(__DIR__,0,-4).'jobs/update_groups.php');
+require_once(substr(__DIR__,0,-4).'jobs/calc_serverstats.php');
+require_once(substr(__DIR__,0,-4).'jobs/calc_userstats.php');
+require_once(substr(__DIR__,0,-4).'jobs/clean.php');
 echo " finished\n";
 
 function log_mysql($jobname, $mysqlcon) {
@@ -26,19 +26,19 @@ function log_mysql($jobname, $mysqlcon) {
 	}
 }
 
-echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"Connect to TS3 Server...";
+echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"Connect to TS3 Server (Address: \"",$ts['host'],"\" Voice-Port: \"",$ts['voice'],"\" Query-Port: \"",$ts['query'],"\") ...";
 try {
     $ts3 = TeamSpeak3::factory("serverquery://" . $ts['user'] . ":" . $ts['pass'] . "@" . $ts['host'] . ":" . $ts['query'] . "/?server_port=" . $ts['voice'] . "&blocking=0");
 	echo " finished\n";
 	
     try {
 		usleep($slowmode);
-        $ts3->selfUpdate(array('client_nickname' => "RankSystem"));
+        $ts3->selfUpdate(array('client_nickname' => $queryname));
     }
     catch (Exception $e) {
         try {
 			usleep($slowmode);
-            $ts3->selfUpdate(array('client_nickname' => "Ranksystem"));
+            $ts3->selfUpdate(array('client_nickname' => $queryname2));
         }
         catch (Exception $e) {
             echo "\n",DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),$lang['error'], $e->getCode(), ': ', $e->getMessage(),"\n";
@@ -51,17 +51,25 @@ try {
 		try {
 			usleep($slowmode);
 			$ts3->clientMove($whoami['client_id'],$defchid);
+			echo " finished\n";
 		} catch (Exception $e) {
-			echo "\n",DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),$lang['error'], $e->getCode(), ': ', $e->getMessage(),"\n";
+			if($e->getCode() != 770) {
+				echo "\n",DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),$lang['error'], $e->getCode(), ': ', $e->getMessage(),"\n";
+			} else {
+				echo " finished\n";
+			}
 		}
+	} else {
+		echo " no Channel defined\n";
 	}
-	echo " finished\n";
 
 	echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"Bot starts now his work!\n";
 	while(1) {
 		usleep($slowmode);
+		$ts3->clientListReset();
 		$allclients = $ts3->clientList();
 		usleep($slowmode);
+		$ts3->serverInfoReset();
 		$serverinfo = $ts3->serverInfo();
 		if($defchid != 0) {
 			try { usleep($slowmode); $ts3->clientMove($whoami['client_id'],$defchid); } catch (Exception $e) {}
@@ -85,7 +93,10 @@ try {
 		clean($ts3,$mysqlcon,$lang,$dbname,$slowmode,$jobid,$timezone,$cleanclients,$cleanperiod);
 		usleep($slowmode);
 		//check auf fehler in job_log
-		if(!is_file(substr(dirname(__FILE__),0,-4).'logs/pid')) { exit; }
+		if(!is_file(substr(__DIR__,0,-4).'logs/pid')) {
+			echo DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimeZone(new DateTimeZone($timezone))->format("Y-m-d H:i:s.u "),"Received signal to stop. Shutting down...\n";
+			exit;
+		}
 	}
 }
 catch (Exception $e) {

@@ -39,26 +39,6 @@ if(isset($_GET['usage'])) {
 }
 require_once('nav.php');
 ?>
-		<div id="infoModal" class="modal fade">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Server Statistics - Page Content</h4>
-					</div>
-					<div class="modal-body">
-						<p>This page contains a overall summary about the user statistics and data on the server.</p>
-						<p>&nbsp;</p>
-						<p>This page receives its values out of a database. So the values might be delayed a bit.</p>
-						<p>&nbsp;</p>
-						<p>The sum inside of the donut charts may differ to the amount of 'Total user'. The reason is that this data weren't collect with older version of the Ranksystem.</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div id="page-wrapper">
 <?PHP if(isset($err_msg)) error_handling($err_msg, 3); ?>
 			<div class="container-fluid">
@@ -67,13 +47,10 @@ require_once('nav.php');
 				<div class="row">
 					<div class="col-lg-12">
 						<h1 class="page-header">
-							Server Statistics
-						<div class="btn-group">
+							<?PHP echo $lang['stix0001']; ?>
 							<a href="#infoModal" data-toggle="modal" class="btn btn-primary">
 								<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 							</a>
-						</div>
-						<div class="pull-right"><small><font color="#000000">TS3 Address: </font><a href="ts3server://<?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?>"><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?></a></small></div>
 						</h1>
 					</div>
 				</div>
@@ -87,13 +64,13 @@ require_once('nav.php');
 									</div>
 									<div class="col-xs-9 text-right">
 										<div class="huge"><?PHP echo $sql_res[0]['total_user'] ?></div>
-										<div>Total Users</div>
+										<div><?PHP echo $lang['stix0002']; ?></div>
 									</div>
 								</div>
 							</div>
 							<a href="list_rankup.php">
 								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
+									<span class="pull-left"><?PHP echo $lang['stix0003']; ?></span>
 									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 									<div class="clearfix"></div>
 								</div>
@@ -108,14 +85,14 @@ require_once('nav.php');
 										<i class="fa fa-clock-o fa-5x"></i>
 									</div>
 									<div class="col-xs-9 text-right">
-										<div class="huge"><?PHP echo round(($sql_res[0]['total_online_time'] / 86400)). ' <small>days</small>';?></div>
-										<div>Online Time / Total</div>
+										<div class="huge"><?PHP echo round(($sql_res[0]['total_online_time'] / 86400)). ' <small>'.$lang['days'].'</small>';?></div>
+										<div><?PHP echo $lang['stix0004']; ?></div>
 									</div>
 								</div>
 							</div>
 							<a href="top_all.php">
 								<div class="panel-footer">
-									<span class="pull-left">View Top Of All Time</span>
+									<span class="pull-left"><?PHP echo $lang['stix0005']; ?></span>
 									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 									<div class="clearfix"></div>
 								</div>
@@ -130,14 +107,14 @@ require_once('nav.php');
 										<i class="fa fa-clock-o fa-5x"></i>
 									</div>
 									<div class="col-xs-9 text-right">
-										<div class="huge"><?PHP echo round(($sql_res[0]['total_online_month'] / 86400)). ' <small>days</small>';?></div>
-										<div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? 'not enough data yet...' : 'Online Time / Last Month') ?></div>
+										<div class="huge"><?PHP echo round(($sql_res[0]['total_online_month'] / 86400)). ' <small>'.$lang['days'].'</small>';?></div>
+										<div><?PHP echo ($sql_res[0]['total_online_month'] == 0 ? $lang['stix0048'] : $lang['stix0049']) ?></div>
 									</div>
 								</div>
 							</div>
 							<a href="top_month.php">
 								<div class="panel-footer">
-									<span class="pull-left">View Top Of The Month</span>
+									<span class="pull-left"><?PHP echo $lang['stix0006']; ?></span>
 									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 									<div class="clearfix"></div>
 								</div>
@@ -152,14 +129,14 @@ require_once('nav.php');
 										<i class="fa fa-clock-o fa-5x"></i>
 									</div>
 									<div class="col-xs-9 text-right">
-										<div class="huge"><?PHP echo round(($sql_res[0]['total_online_week'] / 86400)). ' <small>days</small>';?></div>
-										<div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? 'not enough data yet...' : 'Online Time / Last Week') ?></div>
+										<div class="huge"><?PHP echo round(($sql_res[0]['total_online_week'] / 86400)). ' <small>'.$lang['days'].'</small>';?></div>
+										<div><?PHP echo ($sql_res[0]['total_online_week'] == 0 ? $lang['stix0048'] : $lang['stix0050']) ?></div>
 									</div>
 								</div>
 							</div>
 							<a href="top_week.php">
 								<div class="panel-footer">
-									<span class="pull-left">View Top Of The Week</span>
+									<span class="pull-left"><?PHP echo $lang['stix0007']; ?></span>
 									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 									<div class="clearfix"></div>
 								</div>
@@ -174,17 +151,17 @@ require_once('nav.php');
 							<div class="panel-heading">
 								<div class="row">
 									<div class="col-xs-9">
-										<h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Server Usage <i><?PHP if($usage == 'week') { echo 'In The Last 7 Days'; } elseif ($usage == 'month') { echo 'In The Last 30 Days'; } else { echo 'In The Last 24 Hours'; } ?></i></h3>
+										<h3 class="panel-title"><i class="fa fa-bar-chart-o"></i>&nbsp;<?PHP echo $lang['stix0008']; ?>&nbsp;<i><?PHP if($usage == 'week') { echo $lang['stix0009']; } elseif ($usage == 'month') { echo $lang['stix0010']; } else { echo $lang['stix0011']; } ?></i></h3>
 									</div>
 									<div class="col-xs-3">
 										<div class="btn-group dropup pull-right">
 										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											select period <span class="caret"></span>
+											<?PHP echo $lang['stix0012']; ?>&nbsp;&nbsp;<span class="caret"></span>
 										  </button>
 										  <ul class="dropdown-menu">
-											<li><a href="<?PHP echo "?usage=day"; ?>">Last Day</a></li>
-											<li><a href="<?PHP echo "?usage=week"; ?>">Last Week</a></li>
-											<li><a href="<?PHP echo "?usage=month"; ?>">Last Month</a></li>
+											<li><a href=<?PHP echo "\"?usage=day\">",$lang['stix0013']; ?></a></li>
+											<li><a href=<?PHP echo "\"?usage=week\">",$lang['stix0014']; ?></a></li>
+											<li><a href=<?PHP echo "\"?usage=month\">",$lang['stix0015']; ?></a></li>
 										  </ul>
 										</div>
 									</div>
@@ -202,7 +179,7 @@ require_once('nav.php');
 					<div class="col-lg-3">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Active / Inactive Time</h3>
+								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i>&nbsp;<?PHP echo $lang['stix0016']; ?></h3>
 							</div>
 							<div class="panel-body">
 								<div id="time-gap-donut"></div>
@@ -212,7 +189,7 @@ require_once('nav.php');
 					<div class="col-lg-3">
 						<div class="panel panel-green">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Versions</h3>
+								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i>&nbsp;<?PHP echo $lang['stix0017']; ?></h3>
 							</div>
 							<div class="panel-body">
 								<div id="client-version-donut"></div>
@@ -222,7 +199,7 @@ require_once('nav.php');
 					<div class="col-lg-3">
 						<div class="panel panel-yellow">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Nationalities</h3>
+								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i>&nbsp;<?PHP echo $lang['stix0018']; ?></h3>
 							</div>
 							<div class="panel-body">
 								<div id="user-descent-donut"></div>
@@ -232,7 +209,7 @@ require_once('nav.php');
 					<div class="col-lg-3">
 						<div class="panel panel-red">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Client Platforms</h3>
+								<h3 class="panel-title"><i class="fa fa-long-arrow-right"></i>&nbsp;<?PHP echo $lang['stix0019']; ?></h3>
 							</div>
 							<div class="panel-body">
 								<div id="user-platform-donut"></div>
@@ -243,46 +220,40 @@ require_once('nav.php');
 				<!-- /.row -->
 				<div class="row">
 					<div class="col-lg-6">
-						<h2>Current Statistics</h2>
+						<h2><?PHP echo $lang['stix0020']; ?></h2>
 						<div class="table-responsive">
 							<table class="table table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>Requested Information</th>
-										<th>Result</th>
-									</tr>
-								</thead>
 								<tbody>
 									<tr>
-										<td>Server Status</td>
-										<td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">Online</span>' : '<span class="text-danger">Offline</span>'; ?></td>
+										<td><?PHP echo $lang['stix0023']; ?></td>
+										<td><?PHP echo ($sql_res[0]['server_status'] == 1 || $sql_res[0]['server_status'] == 3) ? '<span class="text-success">'.$lang['stix0024'].'</span>' : '<span class="text-danger">'.$lang['stix0025'].'</span>'; ?></td>
 									</tr>
 									<tr>
-										<td>Clients (Online / Max)</td>
+										<td><?PHP echo $lang['stix0026']; ?></td>
 										<td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '0' :  $sql_res[0]['server_used_slots'] , ' / ' ,($sql_res[0]['server_used_slots'] + $sql_res[0]['server_free_slots']); ?></td>
 									</tr>
 									<tr>
-										<td>Amount Of Channels</td>
+										<td><?PHP echo $lang['stix0027']; ?></td>
 										<td><?PHP echo $sql_res[0]['server_channel_amount']; ?></td>
 									</tr>
 									<tr>
-										<td>Average Server Ping</td>
+										<td><?PHP echo $lang['stix0028']; ?></td>
 										<td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-' : $sql_res[0]['server_ping'] . ' ms'; ?></td>
 									</tr>
 									<tr>
-										<td>Total Bytes Received</td>
+										<td><?PHP echo $lang['stix0029']; ?></td>
 										<td><?PHP echo human_readable_size($sql_res[0]['server_bytes_down']); ?></td>
 									</tr>
 									<tr>
-										<td>Total Bytes Sent</td>
+										<td><?PHP echo $lang['stix0030']; ?></td>
 										<td><?PHP echo human_readable_size($sql_res[0]['server_bytes_up']); ?></td>
 									</tr>
 									<tr>
-										<td>Server Uptime</td>
-										<td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-&nbsp;&nbsp;&nbsp;(<i>before offline: '.(new DateTime("@0"))->diff(new DateTime("@".$sql_res[0]['server_uptime']))->format($timeformat).')</i>' : '<text id="days">00</text> Days, <text id="hours">00</text> Hours, <text id="minutes">00</text> Mins, <text id="seconds">00</text> Secs'; ?></td>
+										<td><?PHP echo $lang['stix0031']; ?></td>
+										<td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-&nbsp;&nbsp;&nbsp;(<i>'.$lang['stix0032'].'&nbsp;'.(new DateTime("@0"))->diff(new DateTime("@".$sql_res[0]['server_uptime']))->format($timeformat).')</i>' : $lang['stix0033']; ?></td>
 									</tr>
 									<tr>
-										<td>Average Packet Loss</td>
+										<td><?PHP echo $lang['stix0034']; ?></td>
 										<td><?PHP echo ($sql_res[0]['server_status'] == 0) ? '-' : $sql_res[0]['server_packet_loss'] * 100 .' %'; ?></td>
 									</tr>
 								</tbody>
@@ -290,47 +261,41 @@ require_once('nav.php');
 						</div>
 					</div>
 					<div class="col-lg-6">
-						<h2>Overall Statistics</h2>
+						<h2><?PHP echo $lang['stix0035']; ?></h2>
 						<div class="table-responsive">
 							<table class="table table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>Requested Information</th>
-										<th>Result</th>
-									</tr>
-								</thead>
 								<tbody>
 									<tr>
-										<td>Server Name</td>
+										<td><?PHP echo $lang['stix0036']; ?></td>
 										<td><?PHP echo (file_exists("../icons/servericon.png") ? $sql_res[0]['server_name'] .'<div class="pull-right"><img src="../icons/servericon.png" alt="servericon"></div>' : $sql_res[0]['server_name']) ?></td>
 									</tr>
 									<tr>
-										<td>Server Address (Host Address : Port)</td>
-										<td><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']) .':' .$_SESSION['serverport'] ?></td>
+										<td><?PHP echo $lang['stix0037']; ?></td>
+										<td><a href="ts3server://<?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?>"><?PHP echo ($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice']; ?></a></td>
 									</tr>
 									<tr>
-										<td>Server Password</td>
-										<td><?PHP echo ($sql_res[0]['server_pass'] == '0') ? 'No (Server is Public)' : 'Yes (Server Is Private)' ?></td>
+										<td><?PHP echo $lang['stix0038']; ?></td>
+										<td><?PHP echo ($sql_res[0]['server_pass'] == '0') ? $lang['stix0039'] : $lang['stix0040'] ?></td>
 									</tr>
 									<tr>
-										<td>Server ID</td>
+										<td><?PHP echo $lang['stix0041']; ?></td>
 										<td><?PHP echo $sql_res[0]['server_id'] ?></td>
 									</tr>
 									<tr>
-										<td>Server Platform</td>
+										<td><?PHP echo $lang['stix0042']; ?></td>
 										<td><?PHP echo $sql_res[0]['server_platform'] ?></td>
 									</tr>
 									<tr>
-										<td>Server Version</td>
+										<td><?PHP echo $lang['stix0043']; ?></td>
 										<td><?PHP echo substr($sql_res[0]['server_version'], 0, strpos($sql_res[0]['server_version'], ' ')); ?></td>
 									</tr>
 									<tr>
-										<td>Server Creation Date (dd/mm/yyyy)</td>
+										<td><?PHP echo $lang['stix0044']; ?></td>
 										<td><?PHP echo date('d/m/Y', $sql_res[0]['server_creation_date']) ?></td>
 									</tr>
 									<tr>
-										<td>Report To Server List</td>
-										<td><?PHP echo ($sql_res[0]['server_weblist'] == 1) ? '<a href="https://www.planetteamspeak.com/serverlist/result/server/ip/' .($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice'] .'" target="_blank">Activated</a>' : 'Not Activated' ?></td>
+										<td><?PHP echo $lang['stix0045']; ?></td>
+										<td><?PHP echo ($sql_res[0]['server_weblist'] == 1) ? '<a href="https://www.planetteamspeak.com/serverlist/result/server/ip/' .($ts['host']=='localhost' ? $_SERVER['HTTP_HOST'] : $ts['host']).':'.$ts['voice'] .'" target="_blank">'.$lang['stix0046'].'</a>' : $lang['stix0047'] ?></td>
 									</tr>
 								</tbody>
 							</table>
@@ -346,6 +311,34 @@ require_once('nav.php');
 	</div>
 	<!-- /#wrapper -->
 	<!-- Scripts -->
+	<script type="text/javascript">
+		var daysLabel = document.getElementById("days");
+		var hoursLabel = document.getElementById("hours");
+		var minutesLabel = document.getElementById("minutes");
+		var secondsLabel = document.getElementById("seconds");
+		var totalSeconds = <?PHP echo $sql_res[0]['server_uptime'] ?>;
+		setInterval(setTime, 1000);
+		function setTime()
+		{
+			++totalSeconds;
+			secondsLabel.innerHTML = pad(totalSeconds%60);
+			minutesLabel.innerHTML = pad(parseInt(totalSeconds/60)%60);
+			hoursLabel.innerHTML = pad(parseInt(totalSeconds/3600)%24)
+			daysLabel.innerHTML = pad(parseInt(totalSeconds/86400))
+		}
+		function pad(val)
+		{
+			var valString = val + "";
+			if(valString.length < 2)
+			{
+				return "0" + valString;
+			}
+			else
+			{
+				return valString;
+			}
+		}
+	</script>
 	<script>
 		Morris.Donut({
 		  element: 'time-gap-donut',
@@ -374,15 +367,14 @@ require_once('nav.php');
 		  ]
 		});
 		Morris.Donut({
-		  element: 'user-descent-donut',
-		  data: [
-			   {label: "<?PHP echo $nation[$sql_res[0]['country_nation_name_1']] ?>", value: <?PHP echo $sql_res[0]['country_nation_1'] ?>},
-			   {label: "<?PHP echo $nation[$sql_res[0]['country_nation_name_2']] ?>", value: <?PHP echo $sql_res[0]['country_nation_2'] ?>},
-			   {label: "<?PHP echo $nation[$sql_res[0]['country_nation_name_3']] ?>", value: <?PHP echo $sql_res[0]['country_nation_3'] ?>},
-			   {label: "<?PHP echo $nation[$sql_res[0]['country_nation_name_4']] ?>", value: <?PHP echo $sql_res[0]['country_nation_4'] ?>},
-			   {label: "<?PHP echo $nation[$sql_res[0]['country_nation_name_5']] ?>", value: <?PHP echo $sql_res[0]['country_nation_5'] ?>},
-			   {label: "Others", value: <?PHP echo $sql_res[0]['country_nation_other'] ?>},
-		  ],
+			element: 'user-descent-donut', data: [
+				{label: "<?PHP echo isset($nation[$sql_res[0]['country_nation_name_1']]) ? $nation[$sql_res[0]['country_nation_name_1']] : "unkown"; ?>", value: <?PHP echo isset($sql_res[0]['country_nation_1']) ? $sql_res[0]['country_nation_1'] : "0" ?>},
+				{label: "<?PHP echo isset($nation[$sql_res[0]['country_nation_name_2']]) ? $nation[$sql_res[0]['country_nation_name_2']] : "unkown"; ?>", value: <?PHP echo isset($sql_res[0]['country_nation_2']) ? $sql_res[0]['country_nation_2'] : "0"; ?>},
+				{label: "<?PHP echo isset($nation[$sql_res[0]['country_nation_name_3']]) ? $nation[$sql_res[0]['country_nation_name_3']] : "unkown"; ?>", value: <?PHP echo isset($sql_res[0]['country_nation_3']) ? $sql_res[0]['country_nation_3'] : "0"; ?>},
+				{label: "<?PHP echo isset($nation[$sql_res[0]['country_nation_name_4']]) ? $nation[$sql_res[0]['country_nation_name_4']] : "unkown"; ?>", value: <?PHP echo isset($sql_res[0]['country_nation_4']) ? $sql_res[0]['country_nation_4'] : "0"; ?>},
+				{label: "<?PHP echo isset($nation[$sql_res[0]['country_nation_name_5']]) ? $nation[$sql_res[0]['country_nation_name_5']] : "unkown"; ?>", value: <?PHP echo isset($sql_res[0]['country_nation_5']) ? $sql_res[0]['country_nation_5'] : "0"; ?>},
+				{label: "Others", value: <?PHP echo $sql_res[0]['country_nation_other'] ?>}
+			],
 			colors: [
 				'#f0ad4e',
 				'#ffc675',
@@ -390,7 +382,7 @@ require_once('nav.php');
 				'#ffdfb1',
 				'#fce8cb',
 				'#fdf3e5'
-		  ]
+			]
 		});
 		Morris.Donut({
 			element: 'user-platform-donut',
@@ -427,7 +419,8 @@ require_once('nav.php');
 				$server_usage = $server_usage->fetchAll(PDO::FETCH_ASSOC);
 				foreach($server_usage as $chart_value) {
 					$chart_time = date('Y-m-d H:i:s',$chart_value['timestamp']);
-					$chart_data = $chart_data . '{ y: \''.$chart_time.'\', a: '.$chart_value['clients'].', b: '.$chart_value['channel'].' }, ';
+					$channel = $chart_value['channel'] - $chart_value['clients'];
+					$chart_data = $chart_data . '{ y: \''.$chart_time.'\', a: '.$chart_value['clients'].', b: '.$channel.', c: '. $chart_value['channel'].' }, ';
 				}
 				$chart_data = substr($chart_data, 0, -2);
 				echo $chart_data;
@@ -435,39 +428,13 @@ require_once('nav.php');
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a', 'b'],
+		  hideHover: 'auto',
+		  hoverCallback:  
+				function (index, options, content, row) {
+					return "<b>" + row.y + "</b><br><div class='morris-hover-point' style='color:#2677B5'>Clients: " + row.a + "</div><div class='morris-hover-point' style='color:#868F96'>Channel: " + (row.b + row.a) + "</div>";
+				} ,
 		  labels: ['Clients', 'Channel']
 		});
 	</script>
-	<script type="text/javascript">
-		var daysLabel = document.getElementById("days");
-		var hoursLabel = document.getElementById("hours");
-		var minutesLabel = document.getElementById("minutes");
-		var secondsLabel = document.getElementById("seconds");
-		var totalSeconds = <?PHP echo $sql_res[0]['server_uptime'] ?>;
-		setInterval(setTime, 1000);
-
-		function setTime()
-		{
-			++totalSeconds;
-			secondsLabel.innerHTML = pad(totalSeconds%60);
-			minutesLabel.innerHTML = pad(parseInt(totalSeconds/60)%60);
-			hoursLabel.innerHTML = pad(parseInt(totalSeconds/3600)%24)
-			daysLabel.innerHTML = pad(parseInt(totalSeconds/86400))
-		}
-
-		function pad(val)
-		{
-			var valString = val + "";
-			if(valString.length < 2)
-			{
-				return "0" + valString;
-			}
-			else
-			{
-				return valString;
-			}
-		}
-	</script>
 </body>
-
 </html>

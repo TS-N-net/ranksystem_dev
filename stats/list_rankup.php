@@ -84,7 +84,7 @@ function pagination($keysort,$keyorder,$user_pro_seite,$seiten_anzahl_gerundet,$
 				for($a=0; $a < $seiten_anzahl_gerundet; $a++) {
 					$b = $a + 1;
 					if($seite == $b) {
-						echo '<li class="active"><a href="">'.$b.'<span class="sr-only">(aktuell)</span></a></li>';
+						echo '<li class="active"><a href="">'.$b.'</a></li>';
 					} elseif ($b > $seite - 5 && $b < $seite + 5) {
 						echo '<li><a href="?sort='.$keysort.'&amp;order='.$keyorder.'&amp;seite='.$b.'&amp;user='.$user_pro_seite.'&lang='.$language.'&amp;search='.$getstring.'">'.$b.'</a></li>';
 					}
@@ -283,7 +283,7 @@ if($adminlogin == 1) {
 									if ($sqlhis[$uid]['grpid'] == 0) {
 										echo '<td class="text-center"></td>';
 									} elseif ($sqlhisgroup_file[$sqlhis[$uid]['grpid']]===true) {
-										echo '<td class="text-center"><img src="../icons/'.$sqlhis[$uid]['grpid'].'.png">&nbsp;&nbsp;' , $sqlhisgroup[$usergroupid] , '</td>';
+										echo '<td class="text-center"><img src="../icons/'.$sqlhis[$uid]['grpid'].'.png" alt="groupicon">&nbsp;&nbsp;' , $sqlhisgroup[$usergroupid] , '</td>';
 									} else {
 										echo '<td class="text-center">' , $sqlhisgroup[$usergroupid] , '</td>';
 									}
@@ -311,7 +311,7 @@ if($adminlogin == 1) {
 										echo '<td class="text-center">',$lang['highest'],'</td>';
 										$highest++;
 									} elseif ($sqlhisgroup_file[$groupid]===true) {
-										echo '<td class="text-center"><img src="../icons/'.$groupid.'.png">&nbsp;&nbsp;' , $sqlhisgroup[$groupid] , '</td>';
+										echo '<td class="text-center"><img src="../icons/'.$groupid.'.png" alt="groupicon">&nbsp;&nbsp;' , $sqlhisgroup[$groupid] , '</td>';
 									} else {
 										echo '<td class="text-center">' , $sqlhisgroup[$groupid] , '</td>';
 									}
