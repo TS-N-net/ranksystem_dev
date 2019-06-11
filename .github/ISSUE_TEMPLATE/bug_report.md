@@ -9,13 +9,13 @@ assignees: ''
 
 **Ranksystem Version:**
 
-_Try to answer the following questions.._
+**Description:**
+**1) What did you do?**
 
-_- What you did?_
+**2) What did you expect?**
 
-_- What did you expect?_
+**3) What result did you get?**
 
-_- What result did you get?_
-
-_Add a Ranksystem-log extract of the last startup._
+**Ranksystem Log**
+_Add a Ranksystem-Log extract of the last startup._
 _You can also use https://pastebin.com/ for this and share us the link._
